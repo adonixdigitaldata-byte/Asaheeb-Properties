@@ -485,7 +485,7 @@ export default function WhatWeDoSection() {
           },
         });
       });
-    }, wrapperRef);
+    }, wrapperRef.current || undefined);
 
     return () => ctx.revert();
   }, [t]);

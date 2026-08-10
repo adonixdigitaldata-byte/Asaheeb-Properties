@@ -529,7 +529,7 @@ function BlogDetailContent({ id }: { id: string }) {
               className={`inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-[#B8873B] hover:underline ${isAr ? "flex-row-reverse" : ""}`}
             >
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
-                <path d="M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span>{isAr ? "العودة للجميع المقالات" : "Back to All Articles"}</span>
             </Link>

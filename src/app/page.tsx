@@ -12,7 +12,7 @@ import PivotSection from "@/components/sections/PivotSection";
 import WhyNowSection from "@/components/sections/WhyNowSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import SocialProofSection from "@/components/sections/SocialProofSection";
-import FooterSection from "@/components/sections/FooterSection";
+import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
 export default function Home() {
   return (
@@ -57,8 +57,8 @@ export default function Home() {
         {/* ── Section 12: Social Proof ── */}
         <SocialProofSection />
 
-        {/* ── Section 13: Footer ── */}
-        <FooterSection />
+        {/* ── Section 13: Standardized Shared Footer ── */}
+        <PageFooter />
 
       </main>
 

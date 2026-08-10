@@ -287,10 +287,10 @@ export default function ServicesPage() {
       <section className="relative min-h-[55vh] flex items-center justify-center overflow-hidden pt-28 sm:pt-36 pb-16 px-6 sm:px-10 lg:px-20">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <svg className="absolute w-full h-full opacity-[0.04]" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-            <polygon points="600,50 1150,750 50,750" fill="none" stroke="#B8873B" strokeWidth="1"/>
-            <polygon points="600,150 1050,700 150,700" fill="none" stroke="#B8873B" strokeWidth="0.5"/>
-            <polygon points="600,250 950,650 250,650" fill="none" stroke="#B8873B" strokeWidth="0.3"/>
-            <circle cx="600" cy="400" r="300" fill="none" stroke="#7FA8B3" strokeWidth="0.5" strokeDasharray="8 12"/>
+            <polygon points="600,50 1150,750 50,750" fill="none" stroke="#B8873B" strokeWidth="1" />
+            <polygon points="600,150 1050,700 150,700" fill="none" stroke="#B8873B" strokeWidth="0.5" />
+            <polygon points="600,250 950,650 250,650" fill="none" stroke="#B8873B" strokeWidth="0.3" />
+            <circle cx="600" cy="400" r="300" fill="none" stroke="#7FA8B3" strokeWidth="0.5" strokeDasharray="8 12" />
           </svg>
         </div>
 
@@ -392,7 +392,7 @@ export default function ServicesPage() {
           >
             {c.ctaBtn}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
-              <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
         </div>

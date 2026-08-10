@@ -110,10 +110,10 @@ const POSTS = [
 ];
 
 const CATEGORIES = [
-  { key: "all",    en: "All Topics",        ar: "جميع المواضيع" },
-  { key: "market", en: "Market Insights",   ar: "رؤى السوق" },
-  { key: "guide",  en: "Investment Guides", ar: "أدلة الاستثمار" },
-  { key: "legal",  en: "Legal",             ar: "قانوني" },
+  { key: "all", en: "All Topics", ar: "جميع المواضيع" },
+  { key: "market", en: "Market Insights", ar: "رؤى السوق" },
+  { key: "guide", en: "Investment Guides", ar: "أدلة الاستثمار" },
+  { key: "legal", en: "Legal", ar: "قانوني" },
 ];
 
 const CONTENT = {
@@ -207,7 +207,7 @@ function PostCard({ post, isAr, readMore }: {
           <div className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 pt-3 border-t border-white/5 ${isAr ? "flex-row-reverse" : ""}`} style={{ color: post.accent }}>
             <span>{readMore}</span>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className={`transition-transform duration-300 group-hover:${isAr ? "-translate-x-1" : "translate-x-1"}`}>
-              <path d={isAr ? "M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" : "M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d={isAr ? "M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" : "M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
@@ -331,7 +331,7 @@ export default function BlogPage() {
                 <div className={`inline-flex items-center gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#B8873B] font-semibold ${isAr ? "flex-row-reverse" : ""}`}>
                   <span>{c.readMore}</span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={`transition-transform duration-300 group-hover:${isAr ? "-translate-x-1" : "translate-x-1"}`}>
-                    <path d={isAr ? "M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" : "M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d={isAr ? "M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" : "M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
               </div>
