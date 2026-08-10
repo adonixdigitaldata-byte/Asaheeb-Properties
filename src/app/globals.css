@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #12130F;
+  --color-dune: #E8DFCE;
+  --color-horizon-gold: #B8873B;
+  --color-dusk-navy: #1F2937;
+  --color-stone: #8C8477;
+  --color-sky-glass: #7FA8B3;
+}
+
+@theme {
+  --color-ink: var(--color-ink);
+  --color-dune: var(--color-dune);
+  --color-horizon-gold: var(--color-horizon-gold);
+  --color-dusk-navy: var(--color-dusk-navy);
+  --color-stone: var(--color-stone);
+  --color-sky-glass: var(--color-sky-glass);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-dune);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ─── Hero: cinematic vignette ───────────────────────────────────────────── */
+.hero-vignette {
+  background: 
+    /* top fade to dark — makes nav text legible */
+    linear-gradient(to bottom, rgba(18,19,15,0.55) 0%, transparent 30%),
+    /* bottom fade — frames text overlays, reveals section below */
+    linear-gradient(to top, rgba(18,19,15,0.92) 0%, rgba(18,19,15,0.4) 35%, transparent 65%),
+    /* subtle perimeter darkening */
+    radial-gradient(ellipse at center, transparent 40%, rgba(18,19,15,0.45) 100%);
+}
+
+/* ─── Hero: text overlay positioning base ───────────────────────────────── */
+.hero-overlay-text,
+.hero-overlay-tagline {
+  z-index: 5;
+}
+
+/* ─── Hero: animated horizon-gold underline on nav logo ─────────────────── */
+.hero-nav-logo::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 1px;
+  background: var(--color-horizon-gold);
+  transition: width 0.4s ease;
+}
+.hero-nav-logo:hover::after {
+  width: 100%;
+}
+
+/* ─── Reduced motion: suppress all hero animations ──────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-desktop,
+  .hero-mobile {
+    /* No scroll-scrub, no timer — handled in component via JS check */
+    overflow: hidden;
+  }
+  .hero-overlay-text,
+  .hero-overlay-tagline {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .animate-bounce {
+    animation: none !important;
+  }
+}
+
