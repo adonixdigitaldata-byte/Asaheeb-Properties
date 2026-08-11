@@ -37,7 +37,12 @@ export const metadata: Metadata = {
     "عقارات الرياض",
     "رؤية 2030 عقارات",
   ],
-  authors: [{ name: "Asaheeb Properties" }],
+  authors: [{ name: "Asaheeb Real Estate" }],
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
+  },
   creator: "Asaheeb Properties",
   publisher: "Asaheeb Properties",
   robots: {

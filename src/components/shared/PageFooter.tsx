@@ -177,35 +177,21 @@ export default function PageFooter() {
               </p>
             </div>
 
-            {/* Logos Grid */}
+            {/* Logos Grid — Highlighted crisp white background cards */}
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4">
-              {GOV_LOGOS.map((logo, idx) => {
-                if (logo.isStandaloneCard) {
-                  return (
-                    <img
-                      key={idx}
-                      src={logo.src}
-                      alt={isAr ? logo.nameAr : logo.name}
-                      title={isAr ? logo.nameAr : logo.name}
-                      className="h-12 sm:h-14 lg:h-16 w-auto object-contain rounded-md shadow-md hover:scale-105 transition-transform duration-300 flex-shrink-0"
-                    />
-                  );
-                }
-
-                return (
-                  <div
-                    key={idx}
-                    title={isAr ? logo.nameAr : logo.name}
-                    className="h-12 sm:h-14 lg:h-16 bg-white rounded-md px-3 py-1.5 flex items-center justify-center border border-white/20 hover:border-[#B8873B] hover:shadow-[0_0_20px_rgba(184,135,59,0.35)] transition-all duration-300 hover:scale-105 flex-shrink-0"
-                  >
-                    <img
-                      src={logo.src}
-                      alt={isAr ? logo.nameAr : logo.name}
-                      className="h-full w-auto object-contain"
-                    />
-                  </div>
-                );
-              })}
+              {GOV_LOGOS.map((logo, idx) => (
+                <div
+                  key={idx}
+                  title={isAr ? logo.nameAr : logo.name}
+                  className="h-12 sm:h-14 lg:h-16 bg-white rounded-xl px-3.5 py-2 flex items-center justify-center border border-white/80 shadow-[0_4px_16px_rgba(255,255,255,0.18)] hover:border-[#B8873B] hover:shadow-[0_4px_25px_rgba(184,135,59,0.4)] transition-all duration-300 hover:scale-105 flex-shrink-0"
+                >
+                  <img
+                    src={logo.src}
+                    alt={isAr ? logo.nameAr : logo.name}
+                    className="h-full w-auto object-contain max-w-[135px]"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

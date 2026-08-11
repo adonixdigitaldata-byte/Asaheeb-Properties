@@ -217,7 +217,7 @@ export default function MegaProjectsSection() {
               >
                 {featured.badge}
               </span>
-              <h3 className="font-display text-6xl lg:text-8xl text-white font-normal leading-none mb-3">
+              <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-3">
                 {isAr ? featured.nameAr : featured.nameEn}
               </h3>
               <p className="font-sans text-base text-[#C5BAB0] leading-[1.7] max-w-md">
