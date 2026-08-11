@@ -63,17 +63,20 @@ function ProjectCard({ project, isAr }: { project: ProjectDetail; isAr: boolean 
           />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(15,17,23,0.95) 0%, transparent 60%)" }} />
           
-          {/* Status badge */}
-          <div
-            className="absolute top-4 left-4 px-3 py-1 font-mono text-[9px] tracking-[0.2em] uppercase font-semibold"
-            style={{ backgroundColor: "rgba(18,19,15,0.85)", borderLeft: `3px solid #B8873B`, color: "#B8873B" }}
-          >
-            {isAr ? project.statusAr : project.statusEn}
-          </div>
+          {/* Badges Container */}
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2 pointer-events-none z-10">
+            {/* Status badge */}
+            <div
+              className="px-3 py-1 font-mono text-[9px] tracking-[0.2em] uppercase font-semibold shrink-0"
+              style={{ backgroundColor: "rgba(18,19,15,0.85)", borderLeft: `3px solid #B8873B`, color: "#B8873B" }}
+            >
+              {isAr ? project.statusAr : project.statusEn}
+            </div>
 
-          {/* City Badge */}
-          <div className="absolute top-4 right-4 px-3 py-1 font-mono text-[9px] tracking-[0.2em] uppercase text-white bg-black/60 backdrop-blur-sm border border-white/20">
-            {isAr ? project.cityAr : project.cityEn}
+            {/* City Badge */}
+            <div className="px-3 py-1 font-mono text-[9px] tracking-[0.2em] uppercase text-white bg-black/60 backdrop-blur-sm border border-white/20 shrink-0">
+              {isAr ? project.cityAr : project.cityEn}
+            </div>
           </div>
         </div>
 

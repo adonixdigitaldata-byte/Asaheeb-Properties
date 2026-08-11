@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
@@ -13,16 +14,24 @@ const CONTENT = {
   en: {
     badge: "Who We Are",
     heroTitle: "Built on Trust.\nDriven by Vision.",
-    heroSub: "Asaheeb Properties is Saudi Arabia's premier real estate investment brokerage — guiding investors from first question to final signature.",
+    heroSub: "Asaheeb Properties is Saudi Arabia's premier real estate investment brokerage — guiding private wealth and institutional investors from initial strategy to title transfer.",
     storyTitle: "Our Story",
-    storyText: "Founded at the dawn of Vision 2030, Asaheeb Properties was born with one mission: to make world-class Saudi real estate investments accessible, transparent, and rewarding for every investor — local and international.",
-    storyText2: "We are not a marketplace. We are curators. Every asset we present has been sourced, vetted, and stress-tested by our team of Saudi real estate experts — so you invest with confidence, not guesswork.",
-    valuesTitle: "Our Values",
+    storyHeading: "Curators of Premium Saudi Real Estate",
+    storyText: "Founded at the dawn of Vision 2030, Asaheeb Properties was born with one mission: to make world-class Saudi real estate investments accessible, transparent, and highly rewarding for every investor — local and international.",
+    storyText2: "We are not a mass marketplace. We are curators. Every asset we present has been vetted and stress-tested by our team of Saudi real estate experts — so you invest with confidence, not guesswork.",
+    storyBadgeTitle: "SAR 2.5B+",
+    storyBadgeSub: "Curated Transaction Volume",
+    visionTitle: "Vision 2030 Alignment",
+    visionHeading: "Investing in the Heart of Saudi Arabia's Transformation",
+    visionText: "From Riyadh's North Financial Corridor to Madinah Al-Munawwarah's holy city developments and Jeddah's Red Sea coast, we identify growth vectors before market prices shift.",
+    visionQuote: "\"Saudi Arabia is experiencing the most dynamic real estate growth in the region. We position our clients at the forefront of this historic shift.\"",
+    visionAuthor: "Asaheeb Executive Advisory",
+    valuesTitle: "Our Core Principles",
     values: [
-      { icon: "◈", title: "Transparency", body: "Full disclosure at every stage — pricing, legal structure, risks, and returns. No surprises." },
-      { icon: "◉", title: "Expertise", body: "Deep local knowledge of every Saudi corridor from Riyadh's north ring to NEOM's coastline." },
-      { icon: "◈", title: "Trust", body: "Every deal is backed by institutional-grade due diligence and full legal title guarantee." },
-      { icon: "◉", title: "Vision", body: "We don't just track Vision 2030 — we operate inside it, identifying opportunities before prices move." },
+      { icon: "◈", title: "Transparency", body: "Full disclosure at every stage — pricing, legal structure, risk analysis, and projected ROI." },
+      { icon: "◉", title: "Expertise", body: "Deep local knowledge across every prime Saudi corridor, from Giga-projects to off-market commercial land." },
+      { icon: "◈", title: "Title Security", body: "100% legal title verification and RERA compliance guarantee on every transaction." },
+      { icon: "◉", title: "Visionary Sourcing", body: "We operate inside Vision 2030, identifying high-yield assets before public market listing." },
     ],
     statsTitle: "Asaheeb by the Numbers",
     stats: [
@@ -33,30 +42,38 @@ const CONTENT = {
     ],
     timelineTitle: "Our Journey",
     timeline: [
-      { year: "2020", title: "Founded", body: "Asaheeb Properties established in Jeddah, focused exclusively on Vision 2030 corridors." },
-      { year: "2021", title: "First Major Deal", body: "Secured our first institutional-grade commercial land transaction near NEOM." },
-      { year: "2022", title: "Expanded Coverage", body: "Expanded operations to Riyadh and launched villa sourcing division." },
-      { year: "2023", title: "SAR 1B+ Milestone", body: "Crossed SAR 1 billion in total curated deal volume." },
-      { year: "2024", title: "Digital Platform", body: "Launched bilingual digital advisory platform for international investors." },
-      { year: "2025", title: "Vision Forward", body: "Over SAR 2.5B in curated deals. Shaping the future of Saudi real estate investment." },
+      { year: "2020", title: "Founded in Jeddah", body: "Asaheeb Properties established with an exclusive focus on Vision 2030 growth corridors." },
+      { year: "2021", title: "First Institutional Deal", body: "Secured our first institutional land deal near Madinah Al-Munawwarah prime corridor." },
+      { year: "2022", title: "Riyadh Expansion", body: "Expanded operations to Riyadh and launched off-market luxury villa sourcing." },
+      { year: "2023", title: "SAR 1B+ Milestone", body: "Crossed SAR 1 billion in total deal advisory volume." },
+      { year: "2024", title: "Digital Advisory", body: "Launched bilingual digital platform for international and private wealth clients." },
+      { year: "2025", title: "Vision 2030 Leader", body: "Surpassed SAR 2.5B in deal volume, shaping the future of Saudi real estate brokerage." },
     ],
-    ctaTitle: "Ready to Invest?",
-    ctaSub: "Join hundreds of investors building wealth in Saudi Arabia's transformation.",
-    ctaBtn: "Start Your Investment Journey",
+    ctaTitle: "Ready to Build Your Saudi Real Estate Portfolio?",
+    ctaSub: "Connect with our advisory team for a personalized investment briefing.",
+    ctaBtn: "Book a Consultation",
   },
   ar: {
     badge: "من نحن",
     heroTitle: "مبنيون على الثقة.\nمدفوعون بالرؤية.",
-    heroSub: "أصاهيب العقارية هي الوسيط العقاري الاستثماري الرائد في المملكة — نرشدك من أول سؤال وحتى التوقيع النهائي.",
+    heroSub: "أصاهيب العقارية هي الوسيط العقاري الاستثماري الرائد في المملكة — نرشد المستثمرين والأفراد من الاستراتيجية الأولى وحتى نقل الملكية.",
     storyTitle: "قصتنا",
-    storyText: "تأسست أصاهيب العقارية مع فجر رؤية 2030 بمهمة واحدة: جعل الاستثمار العقاري في المملكة العربية السعودية متاحاً وشفافاً ومجزياً لكل مستثمر — محلي أو دولي.",
-    storyText2: "نحن لسنا سوقاً عقارية، بل نحن منتقون محترفون. كل أصل نقدمه تم الحصول عليه وفحصه وااختباره بدقة من قِبَل فريقنا من خبراء العقارات السعوديين — لتستثمر بثقة وليس بالتخمين.",
-    valuesTitle: "قيمنا",
+    storyHeading: "منتقون لأرقى العقارات السعودية",
+    storyText: "تأسست أصاهيب العقارية مع فجر رؤية 2030 بمهمة واحدة: جعل الاستثمار العقاري في المملكة متاحاً وشفافاً ومجزياً لكل مستثمر — محلي أو دولي.",
+    storyText2: "نحن لسنا سوقاً عشوائياً، بل نحن منتقون محترفون. كل أصل نقدمه تم فحصه واختباره بدقة من قِبَل فريقنا من خبراء العقارات السعوديين لتستثمر بثقة ورؤية واضحة.",
+    storyBadgeTitle: "+2.5 مليار ر.س",
+    storyBadgeSub: "حجم الصفقات المنسقة",
+    visionTitle: "التوافق مع رؤية 2030",
+    visionHeading: "نستثمر في قلب التحول التاريخي للمملكة",
+    visionText: "من محور الرياض المالي الشمالي إلى سواحل نيوم الخلابة ومشاريع البحر الأحمر بجدة، نحدد مسارات النمو قبل تحرك أسعار السوق.",
+    visionQuote: "\"تشهد المملكة العربية السعودية أسرع نمو عقاري في المنطقة. نضع عملاءنا في طليعة هذا التحول التاريخي.\"",
+    visionAuthor: "إدارة أصاهيب الاستشارية",
+    valuesTitle: "مبادؤنا الرئيسية",
     values: [
-      { icon: "◈", title: "الشفافية", body: "إفصاح كامل في كل مرحلة — التسعير والهيكل القانوني والمخاطر والعوائد. لا مفاجآت." },
-      { icon: "◉", title: "الخبرة", body: "معرفة محلية عميقة بكل ممر سعودي من الحلقة الشمالية بالرياض إلى ساحل نيوم." },
-      { icon: "◈", title: "الثقة", body: "كل صفقة مدعومة بعناية واجبة على مستوى مؤسسي وضمان ملكية قانونية كامل." },
-      { icon: "◉", title: "الرؤية", body: "لا نتابع رؤية 2030 فقط — بل نعمل في قلبها، ونحدد الفرص قبل أن تتحرك الأسعار." },
+      { icon: "◈", title: "الشفافية الكاملة", body: "إفصاح شامل في كل مرحلة — التسعير، الهيكل القانوني، تحليل المخاطر، والعائد المتوقع." },
+      { icon: "◉", title: "الخبرة المحلية", body: "معرفة عميقة بجميع المحاور السعودية الرئيسية، من المشاريع الكبرى إلى الأراضي التجاري." },
+      { icon: "◈", title: "أمان صك الملكية", body: "فحص قانوني بنسبة 100% والالتزام الكامل بمتطلبات الهيئة العامة للعقار." },
+      { icon: "◉", title: "الانتقاء الرؤيوي", body: "نعمل في قلب رؤية 2030، ونكشف عن الأصول عالية العائد قبل طرحها للعموم." },
     ],
     statsTitle: "أصاهيب بالأرقام",
     stats: [
@@ -67,16 +84,16 @@ const CONTENT = {
     ],
     timelineTitle: "رحلتنا",
     timeline: [
-      { year: "2020", title: "التأسيس", body: "تأسست أصاهيب العقارية في جدة، تركز حصرياً على محاور رؤية 2030." },
-      { year: "2021", title: "أول صفقة كبرى", body: "أتممنا أول معاملة أرض تجارية على مستوى مؤسسي قرب نيوم." },
-      { year: "2022", title: "توسع التغطية", body: "توسعنا في الرياض وأطلقنا قسم توفير الفلل." },
-      { year: "2023", title: "تجاوز مليار ريال", body: "تجاوزنا مليار ريال سعودي في حجم الصفقات المنسقة." },
-      { year: "2024", title: "المنصة الرقمية", body: "أطلقنا منصة استشارية رقمية ثنائية اللغة للمستثمرين الدوليين." },
-      { year: "2025", title: "رؤية للمستقبل", body: "أكثر من 2.5 مليار ريال في صفقات منسقة. نشكّل مستقبل الاستثمار العقاري السعودي." },
+      { year: "2020", title: "التأسيس في جدة", body: "تأسست أصاهيب العقارية بتركيز حصري على محاور نمو رؤية 2030." },
+      { year: "2021", title: "أول صفقة مؤسسية", body: "إنجاز أول معاملة أرض تجارية كبرى بالقرب من بنية نيوم التحتية." },
+      { year: "2022", title: "التوسع في الرياض", body: "توسيع العمليات إلى الرياض وإطلاق خدمة توفير الفلل الفاخرة." },
+      { year: "2023", title: "تجاوز مليار ريال", body: "تجاوز مليار ريال سعودي في حجم الصفقات الاستشارية المنسقة." },
+      { year: "2024", title: "المنصة الرقمية", body: "إطلاق منصة استشارية ثنائية اللغة للمستثمرين المحليين والدوليين." },
+      { year: "2025", title: "ريادة رؤية 2030", body: "تجاوز 2.5 مليار ريال في الصفقات العقارية المنسقة." },
     ],
-    ctaTitle: "مستعد للاستثمار؟",
-    ctaSub: "انضم إلى مئات المستثمرين الذين يبنون ثرواتهم في تحول المملكة العربية السعودية.",
-    ctaBtn: "ابدأ رحلتك الاستثمارية",
+    ctaTitle: "مستعد لبناء محفظتك العقارية في السعودية؟",
+    ctaSub: "تواصل مع فريقنا الاستشاري للحصول على جلسة إحاطة استثمارية مخصصة.",
+    ctaBtn: "احجز استشارة استثمارية",
   },
 };
 
@@ -90,10 +107,11 @@ function ValueCard({ icon, title, body, accent }: { icon: string; title: string;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    const rx = -(y / rect.height) * 10;
-    const ry = (x / rect.width) * 10;
+    const rx = -(y / rect.height) * 8;
+    const ry = (x / rect.width) * 8;
     card.style.transform = `perspective(600px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
   };
+
   const handleMouseLeave = () => {
     if (cardRef.current) cardRef.current.style.transform = "perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)";
   };
@@ -101,18 +119,20 @@ function ValueCard({ icon, title, body, accent }: { icon: string; title: string;
   return (
     <div
       ref={cardRef}
-      className="value-card p-6 border transition-all duration-300 cursor-default"
+      className="value-card p-8 border transition-all duration-300 cursor-default relative group overflow-hidden rounded-sm"
       style={{
-        borderColor: "rgba(184,135,59,0.2)",
-        backgroundColor: "rgba(18,19,15,0.6)",
+        borderColor: "rgba(184,135,59,0.25)",
+        backgroundColor: "rgba(18,19,15,0.75)",
+        backdropFilter: "blur(12px)",
         transformStyle: "preserve-3d",
-        transition: "transform 0.2s ease, box-shadow 0.3s ease",
+        transition: "transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease",
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="text-3xl mb-4" style={{ color: accent }}>{icon}</div>
-      <h3 className="font-display text-xl text-[#E8DFCE] mb-3 tracking-tight">{title}</h3>
+      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#B8873B]/10 to-transparent pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-30" />
+      <div className="text-3xl mb-4 transition-transform duration-300 group-hover:scale-110" style={{ color: accent }}>{icon}</div>
+      <h3 className="font-display text-xl text-[#E8DFCE] mb-3 tracking-tight group-hover:text-[#B8873B] transition-colors">{title}</h3>
       <p className="font-sans text-sm text-[#8C8477] leading-relaxed">{body}</p>
     </div>
   );
@@ -125,6 +145,8 @@ export default function AboutPage() {
   const c = isAr ? CONTENT.ar : CONTENT.en;
 
   const heroRef = useRef<HTMLDivElement>(null);
+  const storyRef = useRef<HTMLDivElement>(null);
+  const visionRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const valuesRef = useRef<HTMLDivElement>(null);
@@ -141,6 +163,24 @@ export default function AboutPage() {
         }
       }
 
+      // Story Section entrance - always visible on load
+      if (storyRef.current) {
+        gsap.fromTo(
+          storyRef.current,
+          { opacity: 0.5, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+        );
+      }
+
+      // Vision Section entrance
+      if (visionRef.current) {
+        gsap.fromTo(
+          visionRef.current,
+          { opacity: 0.5, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+        );
+      }
+
       // Stats counter
       if (statsRef.current) {
         const statEls = statsRef.current.querySelectorAll(".stat-item");
@@ -148,7 +188,7 @@ export default function AboutPage() {
           gsap.set(statEls, { opacity: 0, y: 30 });
           ScrollTrigger.create({
             trigger: statsRef.current,
-            start: "top 80%",
+            start: "top 85%",
             onEnter: () => {
               gsap.to(statEls, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power2.out" });
             },
@@ -190,34 +230,37 @@ export default function AboutPage() {
   }, [isAr]);
 
   return (
-    <main
-      className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0"
-      dir={isAr ? "rtl" : "ltr"}
-    >
+    <main className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0" dir={isAr ? "rtl" : "ltr"}>
       <PageNav />
 
-      {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden pt-28 sm:pt-36 pb-16 px-6">
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.06]"
-          style={{
-            backgroundImage: "linear-gradient(to right, #B8873B 1px, transparent 1px), linear-gradient(to bottom, #B8873B 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: "10%", left: isAr ? "auto" : "5%", right: isAr ? "5%" : "auto",
-            width: "50vw", height: "50vw", maxWidth: 550, maxHeight: 550,
-            background: "radial-gradient(circle, rgba(184,135,59,0.18) 0%, transparent 65%)",
-            filter: "blur(30px)",
-          }}
-        />
+      {/* ── HERO SECTION WITH BACKGROUND IMAGE ────────────────────────────────────── */}
+      <section className="relative min-h-[70vh] sm:min-h-[75vh] flex items-center justify-center overflow-hidden pt-28 sm:pt-36 pb-20 px-6">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/about/hero-bg.png"
+            alt="Saudi Arabia Modern Architectural Skyline"
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover object-center opacity-70 scale-105 transition-transform duration-1000"
+          />
+          {/* Multi-layered Gradients for Deep Dark Luxury Feel */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#12130F] via-[#12130F]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#12130F]/60 via-transparent to-[#12130F]" />
+          <div
+            className="absolute inset-0 pointer-events-none opacity-25"
+            style={{
+              backgroundImage: "radial-gradient(circle at 50% 50%, rgba(184,135,59,0.25) 0%, transparent 70%)",
+            }}
+          />
+        </div>
 
-        <div ref={heroRef} className={`relative z-10 text-center px-6 max-w-4xl mx-auto ${isAr ? "text-right" : ""}`}>
-          <div className="hero-el inline-flex items-center gap-2 px-4 py-2 mb-6 border rounded-full"
-            style={{ borderColor: "rgba(184,135,59,0.4)", backgroundColor: "rgba(18,19,15,0.85)" }}>
+        <div ref={heroRef} className={`relative z-10 text-center max-w-4xl mx-auto ${isAr ? "text-right" : ""}`}>
+          <div
+            className="hero-el inline-flex items-center gap-2 px-4 py-2 mb-6 border rounded-full backdrop-blur-md"
+            style={{ borderColor: "rgba(184,135,59,0.4)", backgroundColor: "rgba(18,19,15,0.8)" }}
+          >
             <span className="w-2 h-2 rounded-full bg-[#B8873B] animate-ping" />
             <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.28em] uppercase text-[#B8873B] font-semibold">{c.badge}</span>
           </div>
@@ -236,33 +279,88 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── STORY ────────────────────────────────────────────────────────────── */}
-      <section className="py-20 px-6 sm:px-12 lg:px-24 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className={isAr ? "lg:order-2 text-right" : ""}>
-            <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#B8873B] mb-4">{c.storyTitle}</p>
-            <p className="font-sans text-base sm:text-lg text-[#E8DFCE]/90 leading-[1.9] mb-6">{c.storyText}</p>
-            <p className="font-sans text-sm sm:text-base text-[#8C8477] leading-[1.9]">{c.storyText2}</p>
+      {/* ── STORY SECTION WITH ADVISORY OFFICE IMAGE ─────────────────────────────── */}
+      <section ref={storyRef} className="py-20 px-6 sm:px-12 lg:px-24 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* Text Column */}
+          <div className={`lg:col-span-6 ${isAr ? "lg:order-2 text-right" : ""}`}>
+            <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#B8873B] mb-3">{c.storyTitle}</p>
+            <h2 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] mb-6 tracking-tight leading-tight">{c.storyHeading}</h2>
+            <p className="font-sans text-base sm:text-lg text-[#E8DFCE]/90 leading-[1.8] mb-6">{c.storyText}</p>
+            <p className="font-sans text-sm sm:text-base text-[#8C8477] leading-[1.8] mb-8">{c.storyText2}</p>
+            
+            <div className={`flex flex-wrap items-center gap-6 pt-4 border-t border-[#B8873B]/20 ${isAr ? "justify-start" : ""}`}>
+              <div className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#B8873B]" />
+                <span className="font-mono text-xs tracking-wider text-[#E8DFCE] uppercase">RERA Registered Brokerage</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#7FA8B3]" />
+                <span className="font-mono text-xs tracking-wider text-[#E8DFCE] uppercase">Vision 2030 Alignment</span>
+              </div>
+            </div>
           </div>
-          <div className={`relative ${isAr ? "lg:order-1" : ""}`}>
-            <div className="relative w-full aspect-square max-w-md mx-auto">
-              <div className="absolute inset-0 border border-[#B8873B]/20 rotate-3" />
-              <div className="absolute inset-4 border border-[#B8873B]/10 -rotate-2" />
+
+          {/* Image & Floating Badge Column */}
+          <div className={`lg:col-span-6 relative ${isAr ? "lg:order-1" : ""}`}>
+            <div className="relative w-full aspect-[4/3] rounded-sm overflow-hidden border border-[#B8873B]/30 shadow-2xl group">
+              <Image
+                src="/images/about/office-story.png"
+                alt="Asaheeb Advisory Executive Office in Riyadh"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#12130F] via-transparent to-transparent opacity-60" />
+
+              {/* Floating Stat Badge Overlay */}
               <div
-                className="absolute inset-8 flex flex-col items-center justify-center text-center p-8"
-                style={{ background: "linear-gradient(135deg, rgba(184,135,59,0.08) 0%, rgba(18,19,15,0.9) 100%)" }}
+                className={`absolute bottom-6 ${isAr ? "right-6" : "left-6"} p-5 border border-[#B8873B]/40 rounded-sm backdrop-blur-xl shadow-xl`}
+                style={{ backgroundColor: "rgba(18,19,15,0.85)" }}
               >
-                <div className="font-display text-5xl sm:text-6xl text-[#B8873B] font-bold mb-2">A</div>
-                <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-[#8C8477]">Asaheeb Properties</div>
-                <div className="w-8 h-px bg-[#B8873B]/50 my-4" />
-                <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#8C8477]/60">Est. 2020 · Jeddah, KSA</div>
+                <div className="font-display text-2xl sm:text-3xl text-[#B8873B] font-bold">{c.storyBadgeTitle}</div>
+                <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#8C8477] mt-1">{c.storyBadgeSub}</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS ─────────────────────────────────────────────────────────────── */}
+      {/* ── VISION 2030 CORRIDOR SHOWCASE ────────────────────────────────────────── */}
+      <section ref={visionRef} className="py-20 px-6 sm:px-12 lg:px-24 bg-[#171813] border-y border-[#B8873B]/15 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Vision Image */}
+            <div className={`lg:col-span-6 relative ${isAr ? "lg:order-2" : ""}`}>
+              <div className="relative w-full aspect-[16/10] rounded-sm overflow-hidden border border-[#7FA8B3]/30 shadow-2xl group">
+                <Image
+                  src="/images/about/vision-corridor.png"
+                  alt="Saudi Arabia Vision 2030 Corridor Development"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#12130F] via-transparent to-transparent opacity-50" />
+              </div>
+            </div>
+
+            {/* Vision Quote & Text */}
+            <div className={`lg:col-span-6 ${isAr ? "lg:order-1 text-right" : ""}`}>
+              <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#7FA8B3] mb-3">{c.visionTitle}</p>
+              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-[#E8DFCE] mb-6 leading-tight">{c.visionHeading}</h2>
+              <p className="font-sans text-sm sm:text-base text-[#8C8477] leading-relaxed mb-8">{c.visionText}</p>
+
+              {/* Quote Block */}
+              <div className="p-6 border-l-2 border-[#B8873B] bg-[#12130F]/60 backdrop-blur-md rounded-r-sm">
+                <p className="font-display italic text-base sm:text-lg text-[#E8DFCE] leading-relaxed mb-3">{c.visionQuote}</p>
+                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-[#B8873B]">{c.visionAuthor}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── STATS STRIP ───────────────────────────────────────────────────────────── */}
       <section className="py-16 px-6" style={{ background: "linear-gradient(to bottom, rgba(184,135,59,0.04) 0%, transparent 100%)" }}>
         <div className="max-w-5xl mx-auto">
           <p className={`font-mono text-[10px] tracking-[0.3em] uppercase text-[#B8873B] mb-12 ${isAr ? "text-right" : "text-center"}`}>
@@ -272,33 +370,33 @@ export default function AboutPage() {
             {c.stats.map((s, i) => (
               <div
                 key={i}
-                className="stat-item text-center p-6 sm:p-8 border border-[#B8873B]/15 hover:border-[#B8873B]/40 transition-colors duration-300"
-                style={{ backgroundColor: "rgba(18,19,15,0.5)" }}
+                className="stat-item text-center p-6 sm:p-8 border border-[#B8873B]/20 rounded-sm backdrop-blur-md hover:border-[#B8873B]/50 transition-all duration-300"
+                style={{ backgroundColor: "rgba(18,19,15,0.6)" }}
               >
                 <div className="font-display text-2xl sm:text-4xl text-[#B8873B] font-semibold mb-2">{s.val}</div>
-                <div className="font-mono text-[8.5px] sm:text-[9px] tracking-[0.22em] uppercase text-[#8C8477]">{s.label}</div>
+                <div className="font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.22em] uppercase text-[#8C8477]">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── TIMELINE ─────────────────────────────────────────────────────────── */}
+      {/* ── TIMELINE JOURNEY ─────────────────────────────────────────────────────── */}
       <section className="py-20 px-6 sm:px-12 lg:px-24 max-w-5xl mx-auto">
         <p className={`font-mono text-[10px] tracking-[0.3em] uppercase text-[#B8873B] mb-16 ${isAr ? "text-right" : ""}`}>
           {c.timelineTitle}
         </p>
         <div ref={timelineRef} className="relative">
-          <div className={`absolute top-0 bottom-0 w-px bg-gradient-to-b from-[#B8873B]/60 via-[#B8873B]/30 to-transparent ${isAr ? "right-[7px]" : "left-[7px]"}`} />
-          <div className="space-y-10">
+          <div className={`absolute top-0 bottom-0 w-px bg-gradient-to-b from-[#B8873B]/70 via-[#B8873B]/30 to-transparent ${isAr ? "right-[7px]" : "left-[7px]"}`} />
+          <div className="space-y-12">
             {c.timeline.map((item, i) => (
               <div key={i} className={`timeline-item relative flex gap-6 sm:gap-8 ${isAr ? "flex-row-reverse" : ""}`}>
                 <div className={`relative flex-shrink-0 ${isAr ? "order-last" : ""}`}>
-                  <div className="w-4 h-4 rounded-full border-2 border-[#B8873B] bg-[#12130F] shadow-[0_0_12px_rgba(184,135,59,0.5)]" />
+                  <div className="w-4 h-4 rounded-full border-2 border-[#B8873B] bg-[#12130F] shadow-[0_0_15px_rgba(184,135,59,0.6)]" />
                 </div>
                 <div className={`flex-1 pb-2 ${isAr ? "text-right" : ""}`}>
-                  <span className="font-mono text-[10px] tracking-[0.25em] text-[#B8873B] font-semibold">{item.year}</span>
-                  <h3 className="font-display text-lg sm:text-xl text-[#E8DFCE] mt-1 mb-2">{item.title}</h3>
+                  <span className="font-mono text-[10px] tracking-[0.25em] text-[#B8873B] font-semibold uppercase">{item.year}</span>
+                  <h3 className="font-display text-xl text-[#E8DFCE] mt-1 mb-2 tracking-tight">{item.title}</h3>
                   <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-relaxed">{item.body}</p>
                 </div>
               </div>
@@ -307,7 +405,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── VALUES ───────────────────────────────────────────────────────────── */}
+      {/* ── VALUES SECTION ───────────────────────────────────────────────────────── */}
       <section className="py-20 px-6 sm:px-12 lg:px-24 max-w-6xl mx-auto">
         <p className={`font-mono text-[10px] tracking-[0.3em] uppercase text-[#B8873B] mb-12 ${isAr ? "text-right" : ""}`}>
           {c.valuesTitle}
@@ -319,14 +417,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────────────────────── */}
-      <section className="py-20 px-6 text-center" style={{ background: "linear-gradient(to top, rgba(184,135,59,0.06), transparent)" }}>
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-display text-3xl sm:text-5xl text-[#E8DFCE] mb-4 tracking-tight">{c.ctaTitle}</h2>
-          <p className="font-sans text-sm sm:text-base text-[#8C8477] mb-8 leading-relaxed">{c.ctaSub}</p>
+      {/* ── CTA SECTION ──────────────────────────────────────────────────────────── */}
+      <section className="py-24 px-6 text-center border-t border-[#B8873B]/15 relative overflow-hidden" style={{ background: "linear-gradient(to top, rgba(184,135,59,0.08), transparent)" }}>
+        <div className="max-w-2xl mx-auto relative z-10">
+          <h2 className="font-display text-3xl sm:text-5xl text-[#E8DFCE] mb-6 tracking-tight leading-tight">{c.ctaTitle}</h2>
+          <p className="font-sans text-sm sm:text-base text-[#8C8477] mb-10 leading-relaxed">{c.ctaSub}</p>
           <a
             href="/contact"
-            className="inline-flex items-center gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase px-8 py-4 border border-[#B8873B] text-[#E8DFCE] hover:bg-[#B8873B] hover:text-[#12130F] transition-all duration-300 font-semibold"
+            className="inline-flex items-center gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase px-9 py-4 border border-[#B8873B] text-[#E8DFCE] hover:bg-[#B8873B] hover:text-[#12130F] transition-all duration-300 font-semibold shadow-[0_0_25px_rgba(184,135,59,0.2)]"
           >
             {c.ctaBtn}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>

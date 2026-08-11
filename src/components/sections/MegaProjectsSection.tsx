@@ -8,16 +8,16 @@ import Image from "next/image";
 
 const MEGA_PROJECTS = [
   {
-    nameEn: "NEOM",
-    nameAr: "نيوم",
-    tagEn: "A 26,500 km² city of the future — the world's most ambitious construction",
-    tagAr: "مدينة المستقبل على ٢٦٥٠٠ كم² — أطموح مشروع بناء في العالم",
-    stat: "USD 500B",
-    statLabelEn: "Investment",
-    statLabelAr: "استثمار",
-    badge: "FLAGSHIP",
+    nameEn: "Madinah Al-Munawwarah",
+    nameAr: "المدينة المنورة",
+    tagEn: "Sacred heritage transformation & 47,000 luxury hospitality suites — Vision 2030 holy city development",
+    tagAr: "التحول الحضري والتطوير الفندقي الفاخر بقيمة ١٤٠ مليار ريال بجوار المسجد النبوي الشريف",
+    stat: "SAR 140B",
+    statLabelEn: "Masterplan",
+    statLabelAr: "المخطط الشامل",
+    badge: "HOLY CITY FLAGSHIP",
     accent: "#B8873B",
-    bg: "/images/bg-neom.png",
+    bg: "/images/madinah.jpg",
     featured: true,
   },
   {
@@ -196,14 +196,14 @@ export default function MegaProjectsSection() {
             src={featured.bg}
             alt={featured.nameEn}
             fill
-            className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
-            sizes="100vw"
+            unoptimized
             priority
+            className="object-cover object-center transition-transform duration-[1.5s] ease-out group-hover:scale-105"
           />
           {/* Dark overlay */}
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(to right, rgba(6,8,9,0.92) 0%, rgba(6,8,9,0.5) 50%, rgba(6,8,9,0.2) 100%)" }}
+            style={{ background: "linear-gradient(to right, rgba(6,8,9,0.85) 0%, rgba(6,8,9,0.4) 55%, rgba(6,8,9,0.15) 100%)" }}
           />
           {/* Gold top accent */}
           <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(to right, #B8873B 0%, transparent 60%)" }} />

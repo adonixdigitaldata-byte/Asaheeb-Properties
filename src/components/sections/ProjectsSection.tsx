@@ -60,25 +60,29 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
             }}
           />
 
-          {/* Type badge */}
-          <div
-            className="absolute top-3 left-3 px-2.5 py-1 font-mono text-[8px] tracking-[0.22em] uppercase font-bold"
-            style={{ color: "#12130F", backgroundColor: "#B8873B" }}
-          >
-            {type}
-          </div>
+          {/* Top Badges Container */}
+          <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none z-10">
+            {/* Type badge */}
+            <div
+              className="px-2.5 py-1 font-mono text-[8px] tracking-[0.18em] uppercase font-bold truncate max-w-[62%]"
+              style={{ color: "#12130F", backgroundColor: "#B8873B" }}
+              title={type}
+            >
+              {type}
+            </div>
 
-          {/* Status */}
-          <div
-            className="absolute top-3 right-3 px-2.5 py-1 font-mono text-[8px] tracking-[0.18em] uppercase"
-            style={{
-              color: "#E8DFCE",
-              border: "1px solid rgba(232,223,206,0.25)",
-              backgroundColor: "rgba(8,11,15,0.75)",
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            {status}
+            {/* Status */}
+            <div
+              className="px-2.5 py-1 font-mono text-[8px] tracking-[0.18em] uppercase shrink-0"
+              style={{
+                color: "#E8DFCE",
+                border: "1px solid rgba(232,223,206,0.25)",
+                backgroundColor: "rgba(8,11,15,0.75)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              {status}
+            </div>
           </div>
         </div>
 

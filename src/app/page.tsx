@@ -13,19 +13,22 @@ import WhyNowSection from "@/components/sections/WhyNowSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import SocialProofSection from "@/components/sections/SocialProofSection";
 import PageFooter from "@/components/shared/PageFooter";
+import PageNav from "@/components/shared/PageNav";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
+
 export default function Home() {
   return (
     <>
+      <PageNav />
       <main className="relative bg-[var(--color-ink)] selection:bg-[var(--color-horizon-gold)] selection:text-[var(--color-ink)] transition-all duration-300 pb-16 md:pb-0">
 
-        {/* ── Section 1: "What Asaheeb Does" (2D Layered Parallax Hero) ── */}
-        <WhatWeDoSection />
-
-        {/* ── Section 2: "Why Invest in Saudi Arabia" (Cinematic Transformation Video) ── */}
-        <div id="section-transformation">
+        {/* ── Section 1: Cinematic Transformation Hero Video (Hero Desktop & Mobile) ── */}
+        <div id="section-hero" className="pt-[68px]">
           <Hero />
         </div>
+
+        {/* ── Section 2: "What Asaheeb Does" (2D Layered Parallax) ── */}
+        <WhatWeDoSection />
 
         {/* ── Section 3: Featured Projects (curated, not marketplace) ── */}
         <ProjectsSection />

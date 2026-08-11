@@ -7,7 +7,7 @@ export type Language = "en" | "ar";
 export const translations = {
   en: {
     // Nav & Common
-    brandName: "ASAHEEB",
+    brandName: "ASAHEEB REAL ESTATE",
     investNow: "Invest Now",
     switchLang: "عربي",
     scrollExplore: "Scroll to Explore",
@@ -24,9 +24,9 @@ export const translations = {
     // Intro section
     introBadge: "Saudi Arabia Real Estate Brokerage",
     visionAligned: "Vision 2030 Aligned",
-    headlinePart1: "Apartments. Villas.",
-    headlinePart2: "Commercial Land.",
-    headlinePart3: "Buildings.",
+    headlinePart1: "Own Your",
+    headlinePart2: "Apartments, Villas, Lands, Buildings,",
+    headlinePart3: "Properties.",
     subtext: "We help you invest in Saudi Arabia's future — from first question to final signature.",
     
     // Metrics
@@ -51,7 +51,7 @@ export const translations = {
         headline: "Life Elevated,\nReturns Compounded",
         body: "High-rise residential units in Saudi Arabia's fastest-growing cities deliver rental yields that outperform the region. We source, vet, and manage the entire acquisition so you never have to guess.",
         bullets: [
-          "Riyadh, Jeddah & NEOM-adjacent zones",
+          "Riyadh, Jeddah & Madinah Al-Munawwarah zones",
           "High-yield rental portfolio strategy",
           "Property management introductions",
         ],
@@ -113,7 +113,7 @@ export const translations = {
   },
   ar: {
     // Nav & Common
-    brandName: "أصاهيب",
+    brandName: "أصاهيب العقارية",
     investNow: "استثمر الآن",
     switchLang: "English",
     scrollExplore: "تمرير للتصفح",
@@ -130,9 +130,9 @@ export const translations = {
     // Intro section
     introBadge: "وساطة عقارية فاخرة في المملكة العربية السعودية",
     visionAligned: "متوافقة مع رؤية 2030",
-    headlinePart1: "شقق سكنية. فلل فاخرة.",
-    headlinePart2: "أراضي تجارية.",
-    headlinePart3: "مباني واستثمارات.",
+    headlinePart1: "امتلك",
+    headlinePart2: "شققك، وفيللك، وأراضيك، ومبانيك،",
+    headlinePart3: "وعقاراتك.",
     subtext: "نساعدك على الاستثمار في مستقبل المملكة — من الاستفسار الأول وحتى التوقيع النهائي.",
 
     // Metrics
@@ -157,7 +157,7 @@ export const translations = {
         headline: "حياة متميزة،\nوعوائد متضاعفة",
         body: "تُحقق الوحدات السكنية في الأبراج الفاخرة بأسرع مدن المملكة نمواً عوائد إيجارية تتفوق على المنطقة. نقوم بالبحث والتدقيق وإدارة الاستحواذ بالكامل.",
         bullets: [
-          "مناطق راقية في الرياض وجدة ومحيط نيوم",
+          "مناطق راقية في الرياض وجدة والمدينة المنورة",
           "استراتيجية محفظة إيجارية عالية العائد",
           "خدمات إدارة الأملاك والشراكات الاستثمارية",
         ],

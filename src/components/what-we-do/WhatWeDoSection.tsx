@@ -105,9 +105,8 @@ function Chapter({
       />
 
       <div
-        className={`relative z-10 w-full h-full flex flex-col ${
-          imageOnRight ? "lg:flex-row" : "lg:flex-row-reverse"
-        } items-center justify-center px-5 sm:px-12 lg:px-20 gap-8 lg:gap-16 max-w-7xl mx-auto pt-16 lg:pt-0`}
+        className={`relative z-10 w-full h-full flex flex-col ${imageOnRight ? "lg:flex-row" : "lg:flex-row-reverse"
+          } items-center justify-center px-5 sm:px-12 lg:px-20 gap-8 lg:gap-16 max-w-7xl mx-auto pt-16 lg:pt-0`}
       >
         {/* ── TEXT COLUMN ─────────────────────────────────────────────────── */}
         <div className="chapter-text flex-shrink-0 w-full lg:max-w-[460px] flex flex-col justify-center text-left overflow-visible">
@@ -297,18 +296,17 @@ export default function WhatWeDoSection() {
 
     const ctx = gsap.context(() => {
       // ── Intro entrance choreography ─────────────────────────────────────
-      if (!prefersReduced) {
-        gsap.set(introBadgeRef.current, { opacity: 0, scale: 0.9, y: 15 });
-        gsap.set(introHeadlineRef.current, { opacity: 0, y: 24 });
-        gsap.set(introSubRef.current, { opacity: 0, y: 18 });
-        gsap.set(introScrollRef.current, { opacity: 0, y: 12 });
-
-        const introTl = gsap.timeline({ delay: 0.1 });
-        introTl
-          .to(introBadgeRef.current, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "power2.out" })
-          .to(introHeadlineRef.current, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out" }, "-=0.4")
-          .to(introSubRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, "-=0.5")
-          .to(introScrollRef.current, { opacity: 1, y: 0, duration: 0.6, ease: "power1.out" }, "-=0.3");
+      if (!prefersReduced && introWrapRef.current) {
+        ScrollTrigger.create({
+          trigger: introWrapRef.current,
+          start: "top 85%",
+          onEnter() {
+            gsap.fromTo(introBadgeRef.current, { opacity: 0, scale: 0.9, y: 15 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "power2.out" });
+            gsap.fromTo(introHeadlineRef.current, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out", delay: 0.1 });
+            gsap.fromTo(introSubRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", delay: 0.2 });
+            gsap.fromTo(introScrollRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: "power1.out", delay: 0.3 });
+          },
+        });
 
         gsap.to(blobGoldRef.current, { x: 40, y: -30, duration: 9, ease: "sine.inOut", repeat: -1, yoyo: true });
         gsap.to(blobNavyRef.current, { x: -50, y: 40, duration: 11, ease: "sine.inOut", repeat: -1, yoyo: true });
@@ -319,43 +317,27 @@ export default function WhatWeDoSection() {
         trigger: wrapperRef.current,
         start: "top top",
         end: "bottom bottom",
+        onLeave() {
+          if (journeyMarkerRef.current) journeyMarkerRef.current.style.opacity = "0";
+          if (journeyRailRef.current) journeyRailRef.current.style.opacity = "0";
+        },
+        onLeaveBack() {
+          if (journeyMarkerRef.current) journeyMarkerRef.current.style.opacity = "0";
+          if (journeyRailRef.current) journeyRailRef.current.style.opacity = "0";
+        },
         onUpdate(self) {
           if (progressFillRef.current) {
-            progressFillRef.current.style.width = `${self.progress * 100}%`;
+            progressFillRef.current.style.width = self.isActive ? `${self.progress * 100}%` : "0%";
           }
 
           if (journeyRailRef.current && journeyMarkerRef.current) {
             const p = self.progress;
 
-            if (p < 0.01) {
+            // Dragger & character marker only appear once user reaches Chapter 01 (Apartments)
+            if (!self.isActive || p < 0.24) {
               journeyMarkerRef.current.style.opacity = "0";
               journeyRailRef.current.style.opacity = "0";
               if (horizonFillRef.current) horizonFillRef.current.style.width = "0%";
-            } else if (p >= 0.01 && p < 0.18) {
-              const t = (p - 0.01) / (0.18 - 0.01);
-              const leftPct = 12 + (100 - 12 - 5) * t;
-              const topVh = 88;
-
-              journeyMarkerRef.current.style.opacity = `${Math.min(1, t * 2.5)}`;
-              journeyMarkerRef.current.style.left = `calc(${leftPct}% - ${t * 80}px)`;
-              journeyMarkerRef.current.style.top = `${topVh}vh`;
-              journeyMarkerRef.current.style.transform = `translate(-50%, -50%)`;
-              journeyRailRef.current.style.opacity = "0";
-
-              if (horizonFillRef.current) horizonFillRef.current.style.width = `${t * 100}%`;
-              if (journeyTextRef.current) journeyTextRef.current.textContent = `EXPLORING ASAHEEB`;
-            } else if (p >= 0.18 && p < 0.24) {
-              const t = (p - 0.18) / (0.24 - 0.18);
-              const topVh = 88 - (88 - 22) * t;
-
-              journeyMarkerRef.current.style.opacity = "1";
-              journeyMarkerRef.current.style.left = "calc(100% - 90px)";
-              journeyMarkerRef.current.style.top = `${topVh}vh`;
-              journeyMarkerRef.current.style.transform = `translate(-50%, -50%)`;
-              journeyRailRef.current.style.opacity = `${t}`;
-
-              if (horizonFillRef.current) horizonFillRef.current.style.width = "100%";
-              if (journeyTextRef.current) journeyTextRef.current.textContent = `01 · ${CHAPTERS[0].label.toUpperCase()}`;
             } else if (p >= 0.24 && p <= 0.99) {
               const t = Math.min(1, (p - 0.24) / (0.94 - 0.24));
               const topVh = 22 + (82 - 22) * t;
@@ -492,106 +474,6 @@ export default function WhatWeDoSection() {
 
   return (
     <div ref={wrapperRef} className="relative w-full">
-      {/* ── Fixed Top Nav with Category Tabs (Mobile & Desktop) ─────────────── */}
-      <nav
-        ref={navRef}
-        className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-3 sm:px-8 lg:px-16 h-[68px] gap-2 sm:gap-4"
-        style={{
-          backgroundColor: "rgba(18,19,15,0.92)",
-          backdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(184,135,59,0.15)",
-        }}
-      >
-        <a href="/" className="flex items-center gap-2 group flex-shrink-0">
-          <span className="font-display text-lg sm:text-xl tracking-[0.22em] font-semibold text-[#E8DFCE] group-hover:text-[#B8873B] transition-colors duration-300">
-            {t.brandName}
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B] opacity-90 shadow-[0_0_8px_#B8873B]" />
-        </a>
-
-        {/* Page Navigation Links */}
-        <div className="hidden md:flex items-center gap-0.5 py-1 px-1">
-          {[
-            { en: "About Us", ar: "من نحن", href: "/about" },
-            { en: "Our Projects", ar: "مشاريعنا", href: "/projects" },
-            { en: "Services", ar: "خدماتنا", href: "/services" },
-            { en: "Blog", ar: "المدونة", href: "/blog" },
-            { en: "Contact", ar: "تواصل معنا", href: "/contact" },
-          ].map((link) => (
-            <a
-              key={link.en}
-              href={link.href}
-              className="flex-shrink-0 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase text-[#8C8477] hover:text-[#E8DFCE] hover:bg-[#B8873B]/10 border border-transparent hover:border-[#B8873B]/20 transition-all duration-300"
-            >
-              {lang === "ar" ? link.ar : link.en}
-            </a>
-          ))}
-        </div>
-
-        {/* Right side compulsory 3 items on mobile: EN/AR, Invest Now, Hamburger */}
-        <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
-          <button
-            onClick={toggleLanguage}
-            className="font-mono text-[9px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase px-2 sm:px-3 py-1.5 rounded-full border border-[#B8873B]/50 hover:bg-[#B8873B] hover:text-[#12130F] text-[#E8DFCE] transition-all duration-300 cursor-pointer flex items-center gap-1 shadow-sm"
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="2" y1="12" x2="22" y2="12"/>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-            </svg>
-            <span>{t.switchLang}</span>
-          </button>
-          <a
-            href="/contact"
-            className="font-mono text-[9px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase px-2.5 sm:px-5 py-1.5 sm:py-2 border text-[#E8DFCE] hover:text-[#12130F] hover:bg-[#B8873B] transition-all duration-300 whitespace-nowrap"
-            style={{ borderColor: "rgba(184,135,59,0.45)" }}
-          >
-            {t.investNow}
-          </a>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 border border-[#B8873B]/30 rounded text-[#E8DFCE] hover:text-[#B8873B] transition-colors focus:outline-none"
-            aria-label="Toggle menu"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {mobileMenuOpen ? (
-                <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 top-[68px] z-[195] md:hidden flex flex-col p-6 space-y-3"
-          style={{
-            backgroundColor: "rgba(18,19,15,0.98)",
-            backdropFilter: "blur(25px)",
-            borderBottom: "1px solid rgba(184,135,59,0.3)",
-          }}
-        >
-          {[
-            { en: "About Us", ar: "من نحن", href: "/about" },
-            { en: "Our Projects", ar: "مشاريعنا", href: "/projects" },
-            { en: "Services", ar: "خدماتنا", href: "/services" },
-            { en: "Blog", ar: "المدونة", href: "/blog" },
-            { en: "Contact", ar: "تواصل معنا", href: "/contact" },
-          ].map((link) => (
-            <a
-              key={link.en}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="py-3 px-4 rounded border border-[rgba(184,135,59,0.15)] font-mono text-sm tracking-[0.2em] uppercase text-[#E8DFCE] hover:text-[#B8873B] hover:bg-[#B8873B]/10 transition-colors"
-            >
-              {lang === "ar" ? link.ar : link.en}
-            </a>
-          ))}
-        </div>
-      )}
 
       {/* ── Progress bar ─────────────────────────────────────────────────────── */}
       <div
@@ -610,12 +492,12 @@ export default function WhatWeDoSection() {
         />
       </div>
 
-      {/* ── 2D Journey Rail Track (Fixed Right Margin) ────────────────────────── */}
+      {/* ── 2D Journey Rail Track & Character Marker (Commented out for now) ──────
       <div
         ref={journeyRailRef}
         className="fixed right-8 sm:right-12 lg:right-14 top-[20vh] h-[62vh] z-[190] hidden lg:flex flex-col items-center opacity-0 transition-opacity duration-700 pointer-events-none"
+        style={{ opacity: 0 }}
       >
-        {/* Glowing Vertical Guide Line Track */}
         <div
           className="absolute top-0 bottom-0 w-[3px] rounded-full shadow-[0_0_12px_rgba(184,135,59,0.6)]"
           style={{
@@ -624,7 +506,6 @@ export default function WhatWeDoSection() {
           }}
         />
 
-        {/* Chapter Nodes along Rail */}
         <div className="h-full w-full flex flex-col justify-between items-center py-2 relative z-10">
           {CHAPTERS.map((ch, i) => (
             <button
@@ -650,7 +531,6 @@ export default function WhatWeDoSection() {
                 />
               </div>
 
-              {/* Node label tooltip */}
               <span className="absolute right-7 font-mono text-[9px] tracking-widest uppercase text-[#8C8477] opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap bg-[#12130f]/90 px-2.5 py-1 rounded border border-[#B8873B]/30 shadow-md">
                 {ch.index} · {ch.label}
               </span>
@@ -659,7 +539,6 @@ export default function WhatWeDoSection() {
         </div>
       </div>
 
-      {/* ── Prominent 2D Travelling Asaheeb Saudi Advisor Character Marker ────── */}
       <div
         ref={journeyMarkerRef}
         className="fixed z-[200] hidden lg:block opacity-0 pointer-events-none will-change-transform transition-opacity duration-500"
@@ -670,10 +549,8 @@ export default function WhatWeDoSection() {
         }}
       >
         <div className="relative group flex items-center justify-center">
-          {/* Outer gold pulsing glow ring */}
           <span className="absolute -inset-4 rounded-full bg-[#B8873B]/40 animate-ping opacity-80" />
 
-          {/* 128px High-Visibility Asaheeb Advisor Avatar Badge */}
           <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full border-[3px] border-[#B8873B] overflow-hidden bg-[#12130F] shadow-[0_0_50px_rgba(184,135,59,1)] p-1">
             <Image
               src="/images/asaheeb_marker.png"
@@ -684,7 +561,6 @@ export default function WhatWeDoSection() {
             />
           </div>
 
-          {/* Floating Gold Active Step Tag */}
           <div className="absolute -top-9 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full border border-[#B8873B] bg-[#12130f]/95 backdrop-blur-md shadow-[0_6px_25px_rgba(0,0,0,0.95)]">
             <span
               ref={journeyTextRef}
@@ -695,6 +571,7 @@ export default function WhatWeDoSection() {
           </div>
         </div>
       </div>
+      ───── */}
 
       {/* ── Catchy Luxury Intro Entrance with 3D Video Showcase ────────────────── */}
       <div

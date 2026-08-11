@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 
 const NAV_LINKS = [
@@ -9,6 +10,33 @@ const NAV_LINKS = [
   { en: "Services",     ar: "خدماتنا",    href: "/services" },
   { en: "Blog",         ar: "المدونة",     href: "/blog" },
   { en: "Contact Us",   ar: "تواصل معنا", href: "/contact" },
+];
+
+const GOV_LOGOS = [
+  {
+    name: "Vision 2030",
+    nameAr: "رؤية 2030",
+    src: "/images/vision-2030.jpg",
+    isStandaloneCard: false,
+  },
+  {
+    name: "REGA - Real Estate General Authority",
+    nameAr: "الهيئة العامة للعقار",
+    src: "/images/gov-rega.webp",
+    isStandaloneCard: false,
+  },
+  {
+    name: "Wafi Program",
+    nameAr: "برنامج وافي",
+    src: "/images/Wafi%20logo.jpg",
+    isStandaloneCard: false,
+  },
+  {
+    name: "FAL Real Estate License",
+    nameAr: "رخصة فال العقارية",
+    src: "/images/Fal.png",
+    isStandaloneCard: true,
+  },
 ];
 
 const SOCIAL = [
@@ -55,32 +83,32 @@ export default function PageFooter() {
         style={{ background: "linear-gradient(to right, transparent, rgba(184,135,59,0.5) 50%, transparent)" }}
       />
       <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-10 lg:px-20">
-        <div className={`grid grid-cols-1 lg:grid-cols-3 gap-12 py-16 border-b border-[rgba(255,255,255,0.05)] ${isAr ? "text-right" : ""}`}>
-          {/* Brand */}
-          <div>
-            <div className={`flex items-center gap-2 mb-4 ${isAr ? "justify-end" : ""}`}>
-              <div
-                className="w-8 h-8 flex items-center justify-center text-sm font-bold font-display"
-                style={{ backgroundColor: "#B8873B", color: "#12130F" }}
-              >
-                A
+        <div className={`grid grid-cols-2 md:grid-cols-3 gap-8 py-10 sm:py-16 border-b border-[rgba(255,255,255,0.05)] ${isAr ? "text-right" : ""}`}>
+          {/* Brand - Spans both columns on Mobile */}
+          <div className="col-span-2 md:col-span-1">
+            <div className={`flex flex-col gap-2 mb-4 ${isAr ? "items-end text-right" : "items-start"}`}>
+              <div className="relative w-56 sm:w-72 h-16 sm:h-20 overflow-hidden">
+                <Image
+                  src="/images/asaheeb-horizontal-logo.png"
+                  alt="Asaheeb Real Estate"
+                  fill
+                  unoptimized
+                  className={`object-contain ${isAr ? "object-right" : "object-left"}`}
+                />
               </div>
-              <span className="font-display text-lg tracking-[-0.02em] text-[#E8DFCE]">
-                {isAr ? "أصاهيب العقارية" : "Asaheeb Properties"}
-              </span>
             </div>
-            <p className="font-sans text-sm text-[#8C8477] leading-[1.8] max-w-xs">
+            <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-[1.7] max-w-sm">
               {isAr
                 ? "شركة وساطة عقارية متخصصة في فرص الاستثمار الراقية عبر المملكة العربية السعودية."
                 : "A premium real estate investment brokerage specialising in curated opportunities across Saudi Arabia."}
             </p>
-            <div className={`flex gap-3 mt-6 ${isAr ? "justify-end" : ""}`}>
+            <div className={`flex gap-2.5 mt-4 ${isAr ? "justify-end" : ""}`}>
               {SOCIAL.map((s) => (
                 <a
                   key={s.name}
                   href={s.href}
                   aria-label={s.name}
-                  className="w-8 h-8 border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[#8C8477] transition-all duration-300 hover:border-[#B8873B]/50 hover:text-[#B8873B]"
+                  className="w-7 h-7 sm:w-8 sm:h-8 border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[#8C8477] transition-all duration-300 hover:border-[#B8873B]/50 hover:text-[#B8873B]"
                 >
                   {s.icon}
                 </a>
@@ -88,17 +116,17 @@ export default function PageFooter() {
             </div>
           </div>
 
-          {/* Navigation */}
-          <div>
-            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-6">
+          {/* Navigation - Column 1 on Mobile */}
+          <div className="col-span-1">
+            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#B8873B] mb-4 font-semibold">
               {isAr ? "التنقل" : "Navigation"}
             </p>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {NAV_LINKS.map((link) => (
                 <li key={link.en}>
                   <Link
                     href={link.href}
-                    className="font-sans text-sm text-[#8C8477] transition-colors duration-300 hover:text-[#B8873B]"
+                    className="font-sans text-xs sm:text-sm text-[#8C8477] transition-colors duration-300 hover:text-[#B8873B]"
                   >
                     {isAr ? link.ar : link.en}
                   </Link>
@@ -107,34 +135,85 @@ export default function PageFooter() {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-6">
+          {/* Contact - Column 2 on Mobile */}
+          <div className="col-span-1">
+            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#B8873B] mb-4 font-semibold">
               {isAr ? "التواصل" : "Contact"}
             </p>
-            <div className="space-y-3 mb-8">
-              <a href="mailto:invest@asaheeb.com" className="block font-sans text-sm text-[#8C8477] hover:text-[#B8873B] transition-colors duration-300">
+            <div className="space-y-2 mb-4">
+              <a href="mailto:invest@asaheeb.com" className="block font-sans text-xs sm:text-sm text-[#8C8477] hover:text-[#B8873B] transition-colors duration-300 truncate">
                 invest@asaheeb.com
               </a>
-              <a href="tel:+966500000000" className="block font-sans text-sm text-[#8C8477] hover:text-[#B8873B] transition-colors duration-300">
+              <a href="tel:+966500000000" className="block font-sans text-xs sm:text-sm text-[#8C8477] hover:text-[#B8873B] transition-colors duration-300">
                 +966 50 000 0000
               </a>
-              <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer" className="block font-sans text-sm text-[#25D366] hover:opacity-80 transition-opacity duration-300">
-                {isAr ? "واتساب — رد فوري" : "WhatsApp — Instant Reply"}
+              <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer" className="block font-sans text-xs sm:text-sm text-[#25D366] hover:opacity-80 transition-opacity duration-300 font-medium">
+                {isAr ? "واتساب — رد فوري" : "WhatsApp — Instant"}
               </a>
             </div>
-            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-3">
+            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-1">
               {isAr ? "المقر الرئيسي" : "Headquarters"}
             </p>
-            <p className="font-sans text-sm text-[#8C8477]">
+            <p className="font-sans text-xs sm:text-sm text-[#8C8477]">
               {isAr ? "جدة، المملكة العربية السعودية" : "Jeddah, Saudi Arabia"}
             </p>
           </div>
         </div>
 
+        {/* ── GOVERNMENT ACCREDITATION & LICENSING STRIP ───────────────────── */}
+        <div className="py-8 border-b border-[rgba(255,255,255,0.05)]">
+          <div className={`flex flex-col md:flex-row items-center justify-between gap-6 ${isAr ? "md:flex-row-reverse" : ""}`}>
+            <div className={`text-center ${isAr ? "md:text-right" : "md:text-left"}`}>
+              <div className={`flex items-center justify-center md:justify-start gap-2 mb-1 ${isAr ? "md:flex-row-reverse" : ""}`}>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B]" />
+                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-[#B8873B] font-semibold">
+                  {isAr ? "التراخيص والاعتماد الحكومي" : "Government Accreditation & Compliance"}
+                </p>
+              </div>
+              <p className="font-sans text-xs text-[#8C8477]">
+                {isAr
+                  ? "مرخص ومطابق للأنظمة من قِبل الهيئة العامة للعقار ووافي ورؤية 2030"
+                  : "Officially registered & compliant with REGA, Wafi & Vision 2030 standards"}
+              </p>
+            </div>
+
+            {/* Logos Grid */}
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4">
+              {GOV_LOGOS.map((logo, idx) => {
+                if (logo.isStandaloneCard) {
+                  return (
+                    <img
+                      key={idx}
+                      src={logo.src}
+                      alt={isAr ? logo.nameAr : logo.name}
+                      title={isAr ? logo.nameAr : logo.name}
+                      className="h-12 sm:h-14 lg:h-16 w-auto object-contain rounded-md shadow-md hover:scale-105 transition-transform duration-300 flex-shrink-0"
+                    />
+                  );
+                }
+
+                return (
+                  <div
+                    key={idx}
+                    title={isAr ? logo.nameAr : logo.name}
+                    className="h-12 sm:h-14 lg:h-16 bg-white rounded-md px-3 py-1.5 flex items-center justify-center border border-white/20 hover:border-[#B8873B] hover:shadow-[0_0_20px_rgba(184,135,59,0.35)] transition-all duration-300 hover:scale-105 flex-shrink-0"
+                  >
+                    <img
+                      src={logo.src}
+                      alt={isAr ? logo.nameAr : logo.name}
+                      className="h-full w-auto object-contain"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Copyright */}
         <div className={`py-6 flex flex-col sm:flex-row items-center justify-between gap-4 ${isAr ? "sm:flex-row-reverse" : ""}`}>
           <p className="font-mono text-[9px] tracking-[0.18em] text-[#8C8477]/60">
-            © 2025 Asaheeb Properties. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
+            © 2025 Asaheeb Real Estate. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
           <div className={`flex gap-5 ${isAr ? "flex-row-reverse" : ""}`}>
             <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#8C8477]/50 hover:text-[#8C8477] transition-colors duration-300">
