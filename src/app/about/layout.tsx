@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us — Asaheeb Properties | Saudi Real Estate Investment Brokerage",
+  title: "About Us — Asaheeb Real Estate | Saudi Real Estate Investment Brokerage",
   description:
-    "Learn about Asaheeb Properties, Saudi Arabia's premier real estate investment brokerage. Curated deal sourcing, Vision 2030 corridor alignment, and institutional due diligence.",
+    "Learn about Asaheeb Real Estate, Saudi Arabia's premier real estate investment brokerage. Curated deal sourcing, Vision 2030 corridor alignment, and institutional due diligence.",
   keywords: [
-    "About Asaheeb Properties",
+    "About Asaheeb Real Estate",
     "Saudi real estate brokerage",
     "Vision 2030 real estate advisory",
     "Riyadh property investment firm",
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     "شركة استثمار عقاري السعودية",
   ],
   openGraph: {
-    title: "About Us — Asaheeb Properties",
+    title: "About Us — Asaheeb Real Estate",
     description: "Saudi Arabia's premier real estate investment brokerage. Curated deals aligned with Vision 2030.",
-    url: "https://asaheeb.com/about",
-    siteName: "Asaheeb Properties",
+    url: "https://asaheebrealestate.com/about",
+    siteName: "Asaheeb Real Estate",
   },
   alternates: {
-    canonical: "https://asaheeb.com/about",
+    canonical: "https://asaheebrealestate.com/about",
   },
 };
 

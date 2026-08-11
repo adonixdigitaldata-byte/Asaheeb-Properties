@@ -22,14 +22,14 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Asaheeb Properties — Premium Saudi Real Estate Investment",
+  title: "Asaheeb Real Estate — Premium Saudi Real Estate Investment",
   description:
-    "Invest in Saudi Arabia's Vision 2030 transformation. Asaheeb Properties offers curated, vetted real estate investment opportunities — apartments, villas, commercial land, and buildings. Arabic & English advisory.",
+    "Invest in Saudi Arabia's Vision 2030 transformation. Asaheeb Real Estate offers curated, vetted real estate investment opportunities — apartments, villas, commercial land, and buildings. Arabic & English advisory.",
   keywords: [
     "Saudi Arabia real estate investment",
     "Vision 2030 property",
     "Riyadh property investment",
-    "NEOM investment",
+    "Madinah property investment",
     "buy property Saudi Arabia",
     "luxury villas Saudi Arabia",
     "commercial land Saudi Arabia",
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/icon.png",
   },
-  creator: "Asaheeb Properties",
-  publisher: "Asaheeb Properties",
+  creator: "Asaheeb Real Estate",
+  publisher: "Asaheeb Real Estate",
   robots: {
     index: true,
     follow: true,
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     alternateLocale: "ar_SA",
-    url: "https://asaheeb.com",
-    siteName: "Asaheeb Properties",
-    title: "Asaheeb Properties — Premium Saudi Real Estate Investment",
+    url: "https://asaheebrealestate.com",
+    siteName: "Asaheeb Real Estate",
+    title: "Asaheeb Real Estate — Premium Saudi Real Estate Investment",
     description:
       "Curated real estate investments aligned with Saudi Arabia's Vision 2030. Apartments, villas, commercial land, and buildings — vetted by experts.",
     images: [
@@ -64,13 +64,13 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Asaheeb Properties — Saudi Arabia Real Estate Investment",
+        alt: "Asaheeb Real Estate — Saudi Arabia Real Estate Investment",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Asaheeb Properties — Invest in Saudi Arabia's Future",
+    title: "Asaheeb Real Estate — Invest in Saudi Arabia's Future",
     description: "Premium real estate investment opportunities aligned with Vision 2030.",
   },
   alternates: {

@@ -20,7 +20,7 @@ const CONTENT = {
   en: {
     badge: "Curated Investment Portfolio",
     heroTitle: "Curated Properties.\nExceptional Value.",
-    heroSub: "Explore the exact investment opportunities sourced and vetted by Asaheeb Properties — aligned with Saudi Arabia's Vision 2030.",
+    heroSub: "Explore the exact investment opportunities sourced and vetted by Asaheeb Real Estate — aligned with Saudi Arabia's Vision 2030.",
     filterLabel: "Filter by City Location",
     inquireBtn: "Enquire Now",
     ctaTitle: "Need a Custom Portfolio?",

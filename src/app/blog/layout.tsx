@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog & Market Intelligence — Asaheeb Properties",
+  title: "Blog & Market Intelligence — Asaheeb Real Estate",
   description:
     "Saudi Arabia real estate market insights, Vision 2030 analysis, rental yield reports, and legal investment guides for foreign & domestic investors.",
   keywords: [
@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     "مدونة العقارات السعودية",
   ],
   openGraph: {
-    title: "Blog & Market Intelligence — Asaheeb Properties",
+    title: "Blog & Market Intelligence — Asaheeb Real Estate",
     description: "Market intelligence, legal guides, and Vision 2030 updates.",
-    url: "https://asaheeb.com/blog",
-    siteName: "Asaheeb Properties",
+    url: "https://asaheebrealestate.com/blog",
+    siteName: "Asaheeb Real Estate",
   },
   alternates: {
-    canonical: "https://asaheeb.com/blog",
+    canonical: "https://asaheebrealestate.com/blog",
   },
 };
 

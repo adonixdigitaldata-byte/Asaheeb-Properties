@@ -14,10 +14,10 @@ const CONTENT = {
   en: {
     badge: "Who We Are",
     heroTitle: "Built on Trust.\nDriven by Vision.",
-    heroSub: "Asaheeb Properties is Saudi Arabia's premier real estate investment brokerage — guiding private wealth and institutional investors from initial strategy to title transfer.",
+    heroSub: "Asaheeb Real Estate is Saudi Arabia's premier real estate investment brokerage — guiding private wealth and institutional investors from initial strategy to title transfer.",
     storyTitle: "Our Story",
     storyHeading: "Curators of Premium Saudi Real Estate",
-    storyText: "Founded at the dawn of Vision 2030, Asaheeb Properties was born with one mission: to make world-class Saudi real estate investments accessible, transparent, and highly rewarding for every investor — local and international.",
+    storyText: "Founded at the dawn of Vision 2030, Asaheeb Real Estate was born with one mission: to make world-class Saudi real estate investments accessible, transparent, and highly rewarding for every investor — local and international.",
     storyText2: "We are not a mass marketplace. We are curators. Every asset we present has been vetted and stress-tested by our team of Saudi real estate experts — so you invest with confidence, not guesswork.",
     storyBadgeTitle: "SAR 2.5B+",
     storyBadgeSub: "Curated Transaction Volume",
