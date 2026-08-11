@@ -23,16 +23,16 @@ export default function PageNav() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-3 sm:px-8 lg:px-16 h-[68px] gap-2 sm:gap-4"
+        className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-3 sm:px-6 lg:px-12 h-[72px] sm:h-[76px] gap-2 sm:gap-4"
         style={{
-          backgroundColor: "rgba(18,19,15,0.92)",
+          backgroundColor: "rgba(18,19,15,0.96)",
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(184,135,59,0.15)",
         }}
       >
-        {/* Company Horizontal Logo */}
+        {/* Company Horizontal Logo — High Clarity & Balanced Padding */}
         <Link href="/" className="flex items-center group flex-shrink-0">
-          <div className="relative h-12 sm:h-14 w-52 sm:w-64 overflow-hidden">
+          <div className="relative h-12 sm:h-14 lg:h-16 w-56 sm:w-72 lg:w-80 overflow-hidden">
             <Image
               src="/images/asaheeb-horizontal-logo.png"
               alt="Asaheeb Real Estate"

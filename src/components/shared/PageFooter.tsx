@@ -87,7 +87,7 @@ export default function PageFooter() {
           {/* Brand - Spans both columns on Mobile */}
           <div className="col-span-2 md:col-span-1">
             <div className={`flex flex-col gap-2 mb-4 ${isAr ? "items-end text-right" : "items-start"}`}>
-              <div className="relative w-56 sm:w-72 h-16 sm:h-20 overflow-hidden">
+              <div className="relative w-52 sm:w-64 lg:w-72 h-14 sm:h-16 lg:h-20 overflow-hidden">
                 <Image
                   src="/images/asaheeb-horizontal-logo.png"
                   alt="Asaheeb Real Estate"
