@@ -9,11 +9,13 @@ import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
 import { PROJECTS_DATA, ProjectDetail } from "@/data/projectsData";
+import { getWhatsAppLink } from "@/data/contactConfig";
 
 const CATEGORIES = [
   { key: "all",  en: "All Projects",    ar: "جميع المشاريع" },
   { key: "Jeddah", en: "Jeddah",         ar: "جدة" },
   { key: "Riyadh", en: "Riyadh",         ar: "الرياض" },
+  { key: "Madinah", en: "Madinah",       ar: "المدينة المنورة" },
 ];
 
 const CONTENT = {
@@ -88,14 +90,14 @@ function ProjectCard({ project, isAr }: { project: ProjectDetail; isAr: boolean 
             <h3 className="font-display text-2xl text-[#E8DFCE] mb-2 tracking-tight group-hover:text-[#B8873B] transition-colors">
               {isAr ? project.nameAr : project.nameEn}
             </h3>
-            <p className="font-sans text-xs text-[#8C8477] leading-relaxed mb-4 line-clamp-2">
+            <p className="font-sans text-xs text-[#C5BCAD] leading-relaxed mb-4 line-clamp-2">
               {isAr ? project.overviewAr : project.overviewEn}
             </p>
           </div>
 
-          <div className={`pt-4 border-t border-white/5 flex items-end justify-between ${isAr ? "flex-row-reverse" : ""}`}>
+          <div className={`pt-4 border-t border-white/10 flex items-end justify-between ${isAr ? "flex-row-reverse" : ""}`}>
             <div>
-              <div className="font-mono text-[8px] uppercase tracking-widest text-[#8C8477] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</div>
+              <div className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</div>
               <div className="font-display text-lg text-[#B8873B] font-semibold">{isAr ? project.priceRangeAr : project.priceRangeEn}</div>
             </div>
             <div className="font-mono text-[10px] tracking-widest uppercase text-[#B8873B] font-semibold group-hover:underline">
@@ -108,19 +110,46 @@ function ProjectCard({ project, isAr }: { project: ProjectDetail; isAr: boolean 
   );
 }
 
+const ITEMS_PER_PAGE = 9;
+
 // ─── Main Projects Page Component ─────────────────────────────────────────────
 export default function ProjectsPage() {
   const { lang } = useLanguage();
   const isAr = lang === "ar";
   const c = isAr ? CONTENT.ar : CONTENT.en;
   const [activeCategory, setActiveCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const heroRef = useRef<HTMLDivElement>(null);
+  const filterSectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
   const filtered = activeCategory === "all"
     ? PROJECTS_DATA
     : PROJECTS_DATA.filter((p) => p.cityEn === activeCategory);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedProjects = filtered.slice(startIndex, endIndex);
+
+  // Reset page when category filter changes
+  const handleCategoryChange = (key: string) => {
+    setActiveCategory(key);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    
+    if (filterSectionRef.current) {
+      const topOffset = filterSectionRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: Math.max(0, topOffset), behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -139,11 +168,11 @@ export default function ProjectsPage() {
     if (cardsRef.current) {
       const cards = cardsRef.current.querySelectorAll(".project-card-wrap");
       if (cards.length > 0) {
-        gsap.set(cards, { opacity: 0, y: 30 });
-        gsap.to(cards, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: "power2.out" });
+        gsap.set(cards, { opacity: 0, y: 25 });
+        gsap.to(cards, { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: "power2.out" });
       }
     }
-  }, [activeCategory]);
+  }, [activeCategory, currentPage]);
 
   return (
     <main className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0" dir={isAr ? "rtl" : "ltr"} suppressHydrationWarning>
@@ -170,44 +199,123 @@ export default function ProjectsPage() {
             <span className="italic text-[#B8873B]">{c.heroTitle.split("\n")[1]}</span>
           </h1>
 
-          <p className="hero-el font-sans text-base sm:text-lg text-[#8C8477] leading-relaxed max-w-xl">{c.heroSub}</p>
+          <p className="hero-el font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-xl">{c.heroSub}</p>
         </div>
       </section>
 
       {/* ── FILTER TABS ───────────────────────────────────────────────────── */}
-      <section className="px-6 sm:px-10 lg:px-20 py-6 border-y border-white/10">
-        <div className={`max-w-7xl mx-auto ${isAr ? "text-right" : ""}`}>
-          <p className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#8C8477] mb-4">{c.filterLabel}</p>
-          <div className={`flex flex-wrap gap-3 ${isAr ? "justify-end" : ""}`}>
-            {CATEGORIES.map((cat) => {
-              const isActive = activeCategory === cat.key;
-              return (
-                <button
-                  key={cat.key}
-                  onClick={() => setActiveCategory(cat.key)}
-                  className="px-6 py-2.5 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer font-medium border rounded-sm"
-                  style={{
-                    borderColor: isActive ? "#B8873B" : "rgba(255,255,255,0.1)",
-                    color: isActive ? "#12130F" : "#8C8477",
-                    backgroundColor: isActive ? "#B8873B" : "transparent",
-                  }}
-                >
-                  {isAr ? cat.ar : cat.en}
-                </button>
-              );
-            })}
+      <section ref={filterSectionRef} className="px-6 sm:px-10 lg:px-20 py-6 border-y border-white/10">
+        <div className={`max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${isAr ? "text-right" : ""}`}>
+          <div>
+            <p className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#C5BCAD] mb-2">{c.filterLabel}</p>
+            <div className={`flex flex-wrap gap-3 ${isAr ? "justify-end" : ""}`}>
+              {CATEGORIES.map((cat) => {
+                const isActive = activeCategory === cat.key;
+                return (
+                  <button
+                    key={cat.key}
+                    onClick={() => handleCategoryChange(cat.key)}
+                    className="px-6 py-2.5 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer font-medium border rounded-sm hover:border-[#B8873B]/50 hover:text-[#B8873B]"
+                    style={{
+                      borderColor: isActive ? "#B8873B" : "rgba(255,255,255,0.2)",
+                      color: isActive ? "#12130F" : "#D4C7B5",
+                      backgroundColor: isActive ? "#B8873B" : "rgba(255,255,255,0.03)",
+                    }}
+                  >
+                    {isAr ? cat.ar : cat.en}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Results Counter */}
+          <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#C5BCAD] font-medium">
+            {isAr
+              ? `عرض ${Math.min(startIndex + 1, filtered.length)}–${Math.min(endIndex, filtered.length)} من أصل ${filtered.length} مشروع`
+              : `Showing ${Math.min(startIndex + 1, filtered.length)}–${Math.min(endIndex, filtered.length)} of ${filtered.length} projects`}
           </div>
         </div>
       </section>
 
       {/* ── PROJECTS GRID ─────────────────────────────────────────────────── */}
       <section className="py-16 px-6 sm:px-10 lg:px-20">
-        <div ref={cardsRef} className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((proj) => (
-            <div key={proj.id} className="project-card-wrap">
-              <ProjectCard project={proj} isAr={isAr} />
+        <div ref={cardsRef} className="max-w-7xl mx-auto">
+          {paginatedProjects.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedProjects.map((proj) => (
+                <div key={proj.id} className="project-card-wrap">
+                  <ProjectCard project={proj} isAr={isAr} />
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <div className="py-20 text-center text-[#8C8477]">
+              <p className="font-mono text-sm uppercase tracking-widest">
+                {isAr ? "لا توجد مشاريع في هذه المدينة حالياً" : "No properties found in this location"}
+              </p>
+            </div>
+          )}
+
+          {/* ── PAGINATION CONTROLS ────────────────────────────────────────── */}
+          {totalPages > 1 && (
+            <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#8C8477]">
+                {isAr
+                  ? `الصفحة ${currentPage} من ${totalPages}`
+                  : `Page ${currentPage} of ${totalPages}`}
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* Prev Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2.5 font-mono text-[10px] tracking-[0.18em] uppercase border transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-semibold rounded-sm"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.15)",
+                    color: currentPage === 1 ? "#8C8477" : "#E8DFCE",
+                    backgroundColor: "rgba(18,19,15,0.6)",
+                  }}
+                >
+                  {isAr ? "← السابق" : "← Prev"}
+                </button>
+
+                {/* Page Number Buttons */}
+                {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNum) => {
+                  const isActive = currentPage === pageNum;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className="w-10 h-10 font-mono text-[11px] tracking-wider transition-all duration-300 font-bold cursor-pointer rounded-sm border"
+                      style={{
+                        borderColor: isActive ? "#B8873B" : "rgba(255,255,255,0.12)",
+                        color: isActive ? "#12130F" : "#E8DFCE",
+                        backgroundColor: isActive ? "#B8873B" : "transparent",
+                      }}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+
+                {/* Next Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2.5 font-mono text-[10px] tracking-[0.18em] uppercase border transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-semibold rounded-sm"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.15)",
+                    color: currentPage === totalPages ? "#8C8477" : "#E8DFCE",
+                    backgroundColor: "rgba(18,19,15,0.6)",
+                  }}
+                >
+                  {isAr ? "التالي →" : "Next →"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -224,7 +332,7 @@ export default function ProjectsPage() {
               {c.ctaBtn}
             </Link>
             <a
-              href="https://wa.me/966500000000"
+              href={getWhatsAppLink(undefined, undefined, isAr)}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 font-mono text-[11px] tracking-[0.2em] uppercase border border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10 transition-all duration-300 font-semibold"

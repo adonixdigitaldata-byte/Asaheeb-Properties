@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { getWhatsAppLink } from "@/data/contactConfig";
 
-const INTEREST_OPTIONS_EN = ["Apartments", "Villas", "Commercial Land", "Buildings", "All Asset Types"];
-const INTEREST_OPTIONS_AR = ["شقق سكنية", "فلل", "أراضي تجارية", "مباني", "جميع الأصول"];
+const INTEREST_OPTIONS_EN = ["Apartments", "Villas", "Land", "Buildings", "All Asset Types"];
+const INTEREST_OPTIONS_AR = ["شقق سكنية", "فلل", "أراضي", "مباني", "جميع الأصول"];
 
 const BUDGET_OPTIONS_EN = [
   "Under SAR 1M",
@@ -36,9 +37,26 @@ export default function LeadFormSection() {
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "Homepage Lead Form",
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          interest: form.interest,
+          budget: form.budget,
+          message: form.message,
+        }),
+      });
+    } catch (err) {
+      console.error("Error posting lead form:", err);
+    }
   };
 
   const inputClass = (field: string) => `
@@ -145,7 +163,7 @@ export default function LeadFormSection() {
 
             {/* WhatsApp quick link */}
             <a
-              href="https://wa.me/966500000000"
+              href={getWhatsAppLink(undefined, undefined, isAr)}
               target="_blank"
               rel="noopener noreferrer"
               className="group mt-10 flex items-center gap-3 w-fit transition-all duration-300"

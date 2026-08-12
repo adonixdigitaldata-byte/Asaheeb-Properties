@@ -227,7 +227,7 @@ export default function MegaProjectsSection() {
 
             <div className={`flex items-end justify-between w-full`}>
               <div>
-                <p className="font-mono text-[9px] text-[#8C8477] tracking-[0.2em] uppercase mb-1">
+                <p className="font-mono text-[9px] text-[#C5BCAD] tracking-[0.2em] uppercase mb-1 font-medium">
                   {isAr ? featured.statLabelAr : featured.statLabelEn}
                 </p>
                 <p className="font-display text-3xl lg:text-4xl font-semibold" style={{ color: featured.accent }}>
@@ -285,7 +285,7 @@ export default function MegaProjectsSection() {
 
         {/* Bottom CTA strip */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[rgba(255,255,255,0.06)]">
-          <p className="font-sans text-sm text-[#8C8477]">
+          <p className="font-sans text-sm text-[#C5BCAD]">
             {isAr
               ? "استثمر في المشاريع التي تعيد رسم خريطة العالم."
               : "Invest in the projects that are redrawing the map of the world."}

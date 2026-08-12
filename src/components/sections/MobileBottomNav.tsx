@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { getWhatsAppLink } from "@/data/contactConfig";
 
 const NAV_ITEMS = [
   {
@@ -68,7 +69,7 @@ export default function MobileBottomNav() {
     <>
       {/* Floating WhatsApp CTA Button (Bottom Right) */}
       <a
-        href="https://wa.me/966500000000"
+        href={getWhatsAppLink(undefined, undefined, isAr)}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp Inquiry"

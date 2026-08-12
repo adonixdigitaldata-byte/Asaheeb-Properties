@@ -281,7 +281,7 @@ export default function ServicesPage() {
             </h1>
           ))}
 
-          <p className={`hero-line font-sans text-base sm:text-lg text-[#8C8477] leading-relaxed max-w-2xl mt-6 ${isAr ? "" : "mx-auto"}`}>
+          <p className={`hero-line font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-2xl mt-6 ${isAr ? "" : "mx-auto"}`}>
             {c.heroSub}
           </p>
 
@@ -294,7 +294,7 @@ export default function ServicesPage() {
             </a>
             <a
               href="/contact"
-              className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 border border-white/20 text-[#8C8477] hover:text-[#E8DFCE] hover:border-white/50 transition-all duration-300"
+              className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase px-7 py-3.5 border border-white/20 text-[#D4C7B5] hover:text-[#E8DFCE] hover:border-white/50 transition-all duration-300"
             >
               Request Mandate Briefing
             </a>
@@ -318,7 +318,7 @@ export default function ServicesPage() {
                 className={`font-mono text-[11px] tracking-[0.18em] uppercase px-6 py-3 border transition-all duration-300 rounded-sm ${
                   activeSegment === idx
                     ? "border-[#B8873B] bg-[#B8873B]/15 text-[#E8DFCE] font-semibold shadow-[0_0_20px_rgba(184,135,59,0.25)]"
-                    : "border-white/10 text-[#8C8477] hover:border-white/30 hover:text-[#E8DFCE]"
+                    : "border-white/10 text-[#D4C7B5] hover:border-white/30 hover:text-[#E8DFCE]"
                 }`}
               >
                 {seg.name}
@@ -331,13 +331,13 @@ export default function ServicesPage() {
             <div className={`grid grid-cols-1 md:grid-cols-12 gap-8 items-center ${isAr ? "text-right" : ""}`}>
               <div className="md:col-span-7">
                 <h3 className="font-display text-2xl text-[#E8DFCE] mb-3">{c.segments[activeSegment].name}</h3>
-                <p className="font-sans text-sm text-[#8C8477] leading-relaxed mb-4">{c.segments[activeSegment].desc}</p>
+                <p className="font-sans text-sm text-[#C5BCAD] leading-relaxed mb-4">{c.segments[activeSegment].desc}</p>
               </div>
               <div className="md:col-span-5 border-l md:border-l-0 md:border-r-0 border-[#B8873B]/20 pt-4 md:pt-0">
                 <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-3">Key Solutions</p>
                 <ul className="space-y-2">
                   {c.segments[activeSegment].featured.map((feat, i) => (
-                    <li key={i} className="flex items-center gap-2 font-sans text-xs text-[#E8DFCE]/90">
+                    <li key={i} className="flex items-center gap-2 font-sans text-xs text-[#E8DFCE]">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B]" />
                       {feat}
                     </li>
@@ -389,11 +389,11 @@ export default function ServicesPage() {
                       0{i + 1} · {svc.subtitle}
                     </span>
                     <h2 className="font-display text-2xl sm:text-3xl text-[#E8DFCE] mt-2 mb-4 tracking-tight">{svc.title}</h2>
-                    <p className="font-sans text-sm text-[#8C8477] leading-relaxed mb-6">{svc.body}</p>
+                    <p className="font-sans text-sm text-[#C5BCAD] leading-relaxed mb-6">{svc.body}</p>
 
                     <div className="space-y-2.5 pt-4 border-t border-white/10 mb-8">
                       {svc.points.map((pt, pIdx) => (
-                        <div key={pIdx} className={`flex items-center gap-3 font-sans text-xs sm:text-sm text-[#E8DFCE]/90 ${isAr ? "flex-row-reverse" : ""}`}>
+                        <div key={pIdx} className={`flex items-center gap-3 font-sans text-xs sm:text-sm text-[#E8DFCE] ${isAr ? "flex-row-reverse" : ""}`}>
                           <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: svc.accent }} />
                           <span>{pt}</span>
                         </div>
@@ -437,7 +437,7 @@ export default function ServicesPage() {
               >
                 <div className="font-mono text-3xl text-[#B8873B] font-bold mb-4 group-hover:scale-105 transition-transform">{p.step}</div>
                 <h3 className="font-display text-lg text-[#E8DFCE] mb-2">{p.title}</h3>
-                <p className="font-sans text-xs text-[#8C8477] leading-relaxed">{p.body}</p>
+                <p className="font-sans text-xs text-[#C5BCAD] leading-relaxed">{p.body}</p>
               </div>
             ))}
           </div>
@@ -462,7 +462,7 @@ export default function ServicesPage() {
                   </div>
                   <h3 className="font-display text-xl text-[#E8DFCE]">{w.title}</h3>
                 </div>
-                <p className={`font-sans text-sm text-[#8C8477] leading-relaxed ${isAr ? "text-right" : ""}`}>{w.body}</p>
+                <p className={`font-sans text-sm text-[#C5BCAD] leading-relaxed ${isAr ? "text-right" : ""}`}>{w.body}</p>
               </div>
             ))}
           </div>
@@ -473,7 +473,7 @@ export default function ServicesPage() {
       <section className="py-24 px-6 text-center border-t border-[#B8873B]/15" style={{ background: "linear-gradient(to top, rgba(184,135,59,0.08), transparent)" }}>
         <div className="max-w-xl mx-auto">
           <h2 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] mb-4 tracking-tight">{c.ctaTitle}</h2>
-          <p className="font-sans text-sm text-[#8C8477] mb-8 leading-relaxed">{c.ctaSub}</p>
+          <p className="font-sans text-sm text-[#C5BCAD] mb-8 leading-relaxed">{c.ctaSub}</p>
           <a
             href="/contact"
             className="inline-flex items-center gap-3 font-mono text-[11px] tracking-[0.22em] uppercase px-10 py-4.5 border border-[#B8873B] text-[#E8DFCE] hover:bg-[#B8873B] hover:text-[#12130F] transition-all duration-300 font-semibold shadow-[0_0_30px_rgba(184,135,59,0.2)]"

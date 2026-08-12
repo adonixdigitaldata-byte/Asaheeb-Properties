@@ -159,6 +159,7 @@ function PostCard({ post, isAr, readMore }: {
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
     card.style.transform = `perspective(800px) rotateX(${-y}deg) rotateY(${x}deg)`;
   };
+
   const handleMouseLeave = () => {
     if (cardRef.current) cardRef.current.style.transform = "perspective(800px) rotateX(0) rotateY(0)";
   };
@@ -191,20 +192,20 @@ function PostCard({ post, isAr, readMore }: {
               >
                 {isAr ? post.categoryAr : post.categoryEn}
               </span>
-              <span className="font-mono text-[9px] text-[#8C8477]">{isAr ? post.dateAr : post.date}</span>
-              <span className="font-mono text-[9px] text-[#8C8477]/50">• {isAr ? post.readTimeAr : post.readTime}</span>
+              <span className="font-mono text-[9px] text-[#C5BCAD]">{isAr ? post.dateAr : post.date}</span>
+              <span className="font-mono text-[9px] text-[#C5BCAD]/80">• {isAr ? post.readTimeAr : post.readTime}</span>
             </div>
 
             <h3 className="font-display text-xl text-[#E8DFCE] mb-3 leading-snug tracking-tight group-hover:text-[#B8873B] transition-colors duration-300">
               {isAr ? post.titleAr : post.titleEn}
             </h3>
 
-            <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-relaxed mb-6">
+            <p className="font-sans text-xs sm:text-sm text-[#C5BCAD] leading-relaxed mb-6">
               {isAr ? post.excerptAr : post.excerptEn}
             </p>
           </div>
 
-          <div className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 pt-3 border-t border-white/5 ${isAr ? "flex-row-reverse" : ""}`} style={{ color: post.accent }}>
+          <div className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 pt-3 border-t border-white/10 ${isAr ? "flex-row-reverse" : ""}`} style={{ color: post.accent }}>
             <span>{readMore}</span>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className={`transition-transform duration-300 group-hover:${isAr ? "-translate-x-1" : "translate-x-1"}`}>
               <path d={isAr ? "M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5" : "M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -222,6 +223,27 @@ export default function BlogPage() {
   const isAr = lang === "ar";
   const c = isAr ? CONTENT.ar : CONTENT.en;
   const [activeCategory, setActiveCategory] = useState("all");
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSent, setNewsletterSent] = useState(false);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    setNewsletterSent(true);
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "Blog Newsletter Subscription",
+          email: newsletterEmail,
+          message: "User subscribed to Market Intelligence Newsletter.",
+        }),
+      });
+    } catch (err) {
+      console.error("Newsletter submission error:", err);
+    }
+  };
 
   const heroRef = useRef<HTMLDivElement>(null);
   const featuredRef = useRef<HTMLDivElement>(null);
@@ -244,7 +266,7 @@ export default function BlogPage() {
       }
 
       if (featuredRef.current) {
-        gsap.set(featuredRef.current, { opacity: 0, y: 35 });
+        gsap.set(featuredRef.current, { opacity: 0, y: 30 });
         ScrollTrigger.create({
           trigger: featuredRef.current,
           start: "top 80%",
@@ -292,7 +314,7 @@ export default function BlogPage() {
             <span className="italic text-[#B8873B]">{c.heroTitle.split(" ").at(-1)}</span>
           </h1>
 
-          <p className="hero-el font-sans text-base sm:text-lg text-[#8C8477] leading-relaxed max-w-xl">{c.heroSub}</p>
+          <p className="hero-el font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-xl">{c.heroSub}</p>
         </div>
       </section>
 
@@ -316,15 +338,15 @@ export default function BlogPage() {
                   <span className="font-mono text-[9px] tracking-[0.25em] uppercase px-3 py-1 font-medium" style={{ color: "#B8873B", border: "1px solid rgba(184,135,59,0.3)", backgroundColor: "rgba(184,135,59,0.1)" }}>
                     {isAr ? featuredPost.categoryAr : featuredPost.categoryEn}
                   </span>
-                  <span className="font-mono text-[9px] text-[#8C8477]">{isAr ? featuredPost.dateAr : featuredPost.date}</span>
-                  <span className="font-mono text-[9px] text-[#8C8477]">• {isAr ? featuredPost.readTimeAr : featuredPost.readTime}</span>
+                  <span className="font-mono text-[9px] text-[#C5BCAD]">{isAr ? featuredPost.dateAr : featuredPost.date}</span>
+                  <span className="font-mono text-[9px] text-[#C5BCAD]">• {isAr ? featuredPost.readTimeAr : featuredPost.readTime}</span>
                 </div>
 
                 <h2 className="font-display text-2xl sm:text-4xl text-[#E8DFCE] mb-4 leading-snug max-w-3xl group-hover:text-[#B8873B] transition-colors duration-300">
                   {isAr ? featuredPost.titleAr : featuredPost.titleEn}
                 </h2>
 
-                <p className="font-sans text-sm sm:text-base text-[#8C8477] leading-relaxed max-w-2xl mb-8">
+                <p className="font-sans text-sm sm:text-base text-[#C5BCAD] leading-relaxed max-w-2xl mb-8">
                   {isAr ? featuredPost.excerptAr : featuredPost.excerptEn}
                 </p>
 
@@ -343,7 +365,7 @@ export default function BlogPage() {
       {/* ── FILTER TABS ───────────────────────────────────────────────────── */}
       <section className="px-6 sm:px-10 lg:px-20 py-6">
         <div className={`max-w-5xl mx-auto ${isAr ? "text-right" : ""}`}>
-          <p className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#8C8477] mb-4">{c.filterLabel}</p>
+          <p className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#C5BCAD] mb-4">{c.filterLabel}</p>
           <div className={`flex flex-wrap gap-2 ${isAr ? "justify-end" : ""}`}>
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.key;
@@ -354,7 +376,7 @@ export default function BlogPage() {
                   className="px-5 py-2 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer font-medium"
                   style={{
                     borderBottom: isActive ? "2px solid #B8873B" : "2px solid transparent",
-                    color: isActive ? "#B8873B" : "#8C8477",
+                    color: isActive ? "#B8873B" : "#D4C7B5",
                     backgroundColor: isActive ? "rgba(184,135,59,0.08)" : "transparent",
                   }}
                 >
@@ -382,21 +404,30 @@ export default function BlogPage() {
       >
         <div className={`max-w-2xl mx-auto ${isAr ? "text-right" : "text-center"}`}>
           <h2 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] mb-4">{c.newsletterTitle}</h2>
-          <p className="font-sans text-sm sm:text-base text-[#8C8477] mb-8 leading-relaxed">{c.newsletterSub}</p>
-          <form className={`flex gap-3 flex-col sm:flex-row ${isAr ? "sm:flex-row-reverse" : ""}`} onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="email"
-              placeholder={c.newsletterPlaceholder}
-              className="flex-1 px-4 py-3.5 font-sans text-sm bg-transparent border border-[#B8873B]/30 text-[#E8DFCE] placeholder-[#8C8477] focus:outline-none focus:border-[#B8873B] transition-colors duration-300"
-              dir={isAr ? "rtl" : "ltr"}
-            />
-            <button
-              type="submit"
-              className="px-8 py-3.5 font-mono text-[10px] tracking-[0.2em] uppercase border border-[#B8873B] text-[#12130F] bg-[#B8873B] hover:bg-transparent hover:text-[#B8873B] transition-all duration-300 flex-shrink-0 font-semibold"
-            >
-              {c.newsletterBtn}
-            </button>
-          </form>
+          <p className="font-sans text-sm sm:text-base text-[#C5BCAD] mb-8 leading-relaxed">{c.newsletterSub}</p>
+          {newsletterSent ? (
+            <div className="p-6 border border-[#B8873B]/40 bg-[#12130F] text-[#E8DFCE] font-mono text-xs tracking-wider uppercase">
+              ✓ {isAr ? "تم الاشتراك بنجاح في النشرة البريدية!" : "Successfully Subscribed to Market Intelligence!"}
+            </div>
+          ) : (
+            <form className={`flex gap-3 flex-col sm:flex-row ${isAr ? "sm:flex-row-reverse" : ""}`} onSubmit={handleNewsletterSubmit}>
+              <input
+                type="email"
+                required
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder={c.newsletterPlaceholder}
+                className="flex-1 px-4 py-3.5 font-sans text-sm bg-transparent border border-[#B8873B]/30 text-[#E8DFCE] placeholder-[#C5BCAD]/60 focus:outline-none focus:border-[#B8873B] transition-colors duration-300"
+                dir={isAr ? "rtl" : "ltr"}
+              />
+              <button
+                type="submit"
+                className="px-8 py-3.5 font-mono text-[10px] tracking-[0.2em] uppercase border border-[#B8873B] text-[#12130F] bg-[#B8873B] hover:bg-transparent hover:text-[#B8873B] transition-all duration-300 flex-shrink-0 font-semibold"
+              >
+                {c.newsletterBtn}
+              </button>
+            </form>
+          )}
         </div>
       </section>
 

@@ -75,8 +75,8 @@ export const translations = {
       },
       commercialLand: {
         index: "03",
-        label: "Commercial Land",
-        headline: "Own the\nGround Floor",
+        label: "Land",
+        headline: "Own the\nLand",
         body: "Undeveloped land in Saudi Arabia's expansion zones is one of the last great raw-opportunity plays. We pinpoint parcels near Vision 2030 mega-project corridors before prices reflect the hype.",
         bullets: [
           "Vision 2030 corridor land banking",
@@ -181,8 +181,8 @@ export const translations = {
       },
       commercialLand: {
         index: "03",
-        label: "الأراضي التجارية",
-        headline: "امتلك الفرصة\nمن الأساس",
+        label: "الأراضي",
+        headline: "امتلك الأراضي\nمن الأساس",
         body: "تعتبر الأراضي الخام في مناطق التوسع بالكامل في السعودية من أندر الفرص الاستثمارية. نحدد الأراضي قرب محاور مشاريع رؤية 2030 قبل ارتفاع الأسعار.",
         bullets: [
           "تخزين الأراضي في محاور رؤية 2030",

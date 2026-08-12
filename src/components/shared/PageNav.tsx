@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { getWhatsAppLink } from "@/data/contactConfig";
 
 const NAV_PAGES = [
   { en: "About Us",      ar: "من نحن",      href: "/about" },
@@ -30,39 +31,41 @@ export default function PageNav() {
           borderBottom: "1px solid rgba(184,135,59,0.15)",
         }}
       >
-        {/* Company Horizontal Logo — High Clarity & Balanced Padding */}
-        <Link href="/" className="flex items-center group flex-shrink-0">
-          <div className="relative h-12 sm:h-14 lg:h-16 w-56 sm:w-72 lg:w-80 overflow-hidden">
-            <Image
-              src="/images/asaheeb-horizontal-logo.png"
-              alt="Asaheeb Real Estate"
-              fill
-              unoptimized
-              priority
-              className="object-contain object-left group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-        </Link>
+        {/* Logo and Nav Links */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center flex-shrink-0">
+            <div className="relative h-12 sm:h-14 lg:h-16 w-48 sm:w-64 lg:w-72 overflow-hidden">
+              <Image
+                src="/images/asaheeb-horizontal-logo.png"
+                alt="Asaheeb Real Estate"
+                fill
+                unoptimized
+                priority
+                className="object-contain object-left rtl:object-right"
+              />
+            </div>
+          </Link>
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-0.5 py-1 px-1">
-          {NAV_PAGES.map((page) => {
-            const isActive = pathname === page.href;
-            return (
-              <Link
-                key={page.en}
-                href={page.href}
-                className="flex-shrink-0 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border"
-                style={{
-                  color: isActive ? "#B8873B" : "#8C8477",
-                  borderColor: isActive ? "rgba(184,135,59,0.35)" : "transparent",
-                  backgroundColor: isActive ? "rgba(184,135,59,0.08)" : "transparent",
-                }}
-              >
-                {isAr ? page.ar : page.en}
-              </Link>
-            );
-          })}
+          {/* Desktop nav links - shifted a bit to the right */}
+          <div className="hidden md:flex items-center gap-1 py-1 px-1 ml-6 lg:ml-16 rtl:ml-0 rtl:mr-6 lg:rtl:mr-12">
+            {NAV_PAGES.map((page) => {
+              const isActive = pathname === page.href;
+              return (
+                <Link
+                  key={page.en}
+                  href={page.href}
+                  className="flex-shrink-0 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
+                  style={{
+                    color: isActive ? "#B8873B" : "#D4C7B5",
+                    borderColor: isActive ? "rgba(184,135,59,0.35)" : "transparent",
+                    backgroundColor: isActive ? "rgba(184,135,59,0.08)" : "transparent",
+                  }}
+                >
+                  {isAr ? page.ar : page.en}
+                </Link>
+              );
+            })}
+          </div>
         </div>
 
         {/* Right actions: Language Switch, Invest Now, and Hamburger (Compulsory on Mobile & Desktop) */}
@@ -82,7 +85,7 @@ export default function PageNav() {
 
           {/* Desktop WhatsApp Action Button */}
           <a
-            href="https://wa.me/966500000000"
+            href={getWhatsAppLink(undefined, undefined, isAr)}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:flex items-center gap-1.5 font-mono text-[9px] sm:text-[11px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm border border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-[#12130F] transition-all duration-300 font-semibold"

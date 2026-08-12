@@ -71,7 +71,7 @@ export default function WhyNowSection() {
               )}
             </h2>
 
-            <p className="font-sans text-sm text-[#8C8477] leading-[1.9]">
+            <p className="font-sans text-sm text-[#C5BCAD] leading-[1.9]">
               {isAr
                 ? "العقار السعودي يُسعَّر اليوم وفق قيمته الحالية — لا وفق إمكاناته المستقبلية. النافذة لا تزال مفتوحة."
                 : "Saudi real estate is priced today for what it is — not for what it's about to become. The window is still open."}
@@ -103,7 +103,7 @@ export default function WhyNowSection() {
                   <h3 className="font-display text-lg text-[#E8DFCE] font-normal mb-1.5">
                     {isAr ? r.titleAr : r.titleEn}
                   </h3>
-                  <p className="font-sans text-sm text-[#8C8477] leading-[1.8]">
+                  <p className="font-sans text-sm text-[#C5BCAD] leading-[1.8]">
                     {isAr ? r.bodyAr : r.bodyEn}
                   </p>
                 </div>

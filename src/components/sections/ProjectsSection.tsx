@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
 import { PROJECTS_DATA, ProjectDetail } from "@/data/projectsData";
+import { getWhatsAppLink } from "@/data/contactConfig";
 
 function ProjectCard({ project, index }: { project: ProjectDetail; index: number }) {
   const { lang } = useLanguage();
@@ -91,9 +92,9 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           className={`p-5 ${isAr ? "text-right" : ""}`}
           style={{ backgroundColor: "rgba(11,14,18,0.95)" }}
         >
-          <p className={`font-mono text-[8px] tracking-[0.22em] uppercase text-[#8C8477] mb-1.5 flex items-center gap-1.5 ${isAr ? "flex-row-reverse" : ""}`}>
+          <p className={`font-mono text-[8px] tracking-[0.22em] uppercase text-[#C5BCAD] mb-1.5 flex items-center gap-1.5 ${isAr ? "flex-row-reverse" : ""}`}>
             <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1C4.067 1 2.5 2.567 2.5 4.5c0 2.72 3.5 6.5 3.5 6.5s3.5-3.78 3.5-6.5C9.5 2.567 7.933 1 6 1z" stroke="#8C8477" strokeWidth="1.2"/>
+              <path d="M6 1C4.067 1 2.5 2.567 2.5 4.5c0 2.72 3.5 6.5 3.5 6.5s3.5-3.78 3.5-6.5C9.5 2.567 7.933 1 6 1z" stroke="#B8873B" strokeWidth="1.2"/>
             </svg>
             {location}
           </p>
@@ -106,17 +107,17 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           </h3>
 
           {/* Price + CTA */}
-          <div className={`flex items-center justify-between pt-3 border-t border-white/5 ${isAr ? "flex-row-reverse" : ""}`}>
+          <div className={`flex items-center justify-between pt-3 border-t border-white/10 ${isAr ? "flex-row-reverse" : ""}`}>
             <div className={isAr ? "text-right" : ""}>
-              <p className="font-mono text-[8px] uppercase tracking-widest text-[#8C8477] mb-0.5">{isAr ? "يبدأ من" : "Starting"}</p>
+              <p className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "يبدأ من" : "Starting"}</p>
               <p className="font-display text-base font-semibold text-[#B8873B]">{price}</p>
             </div>
             <button
-              className="flex items-center gap-2 font-mono text-[9px] tracking-[0.18em] uppercase px-3.5 py-2 border transition-all duration-300"
+              className="flex items-center gap-2 font-mono text-[9px] tracking-[0.18em] uppercase px-3.5 py-2 border transition-all duration-300 font-semibold"
               style={{
-                borderColor: hovered ? "#B8873B" : "rgba(255,255,255,0.1)",
-                color: hovered ? "#B8873B" : "#8C8477",
-                backgroundColor: hovered ? "#B8873B10" : "transparent",
+                borderColor: hovered ? "#B8873B" : "rgba(255,255,255,0.22)",
+                color: hovered ? "#B8873B" : "#D4C7B5",
+                backgroundColor: hovered ? "#B8873B10" : "rgba(255,255,255,0.03)",
               }}
             >
               {isAr ? "التفاصيل" : "View Details"}
@@ -135,8 +136,8 @@ export default function ProjectsSection() {
   const featRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const featured = PROJECTS_DATA[0]; // ITLALA TOWERS is #1
-  const rest = PROJECTS_DATA.slice(1);
+  const featured = PROJECTS_DATA[0]; // 1 Featured (#1)
+  const rest = PROJECTS_DATA.slice(1, 4); // 3 items in grid -> Total = 4 properties
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -228,7 +229,7 @@ export default function ProjectsSection() {
                 <>Vetted Assets. <span className="italic text-[#B8873B]">Unmatched Value.</span></>
               )}
             </h2>
-            <p className="font-sans text-sm text-[#8C8477] max-w-md leading-relaxed">
+            <p className="font-sans text-sm text-[#C5BCAD] max-w-md leading-relaxed">
               {isAr
                 ? "مجموعة حصريّة من الفرص العقارية المنتقاة في جدة والرياض والمناطق الواعدة."
                 : "A curated collection of prime real estate opportunities across Jeddah, Riyadh, and Saudi Vision 2030 corridors."}
@@ -271,7 +272,7 @@ export default function ProjectsSection() {
                     <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#B8873B]">
                       {isAr ? `${featured.cityAr} ، ${featured.districtAr}` : `${featured.cityEn}, ${featured.districtEn}`}
                     </span>
-                    <span className="text-[#8C8477]">•</span>
+                    <span className="text-[#C5BCAD]">•</span>
                     <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#7FA8B3]">
                       {isAr ? featured.statusAr : featured.statusEn}
                     </span>
@@ -281,13 +282,13 @@ export default function ProjectsSection() {
                     {isAr ? featured.nameAr : featured.nameEn}
                   </h3>
 
-                  <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-relaxed mb-6 line-clamp-3">
+                  <p className="font-sans text-xs sm:text-sm text-[#C5BCAD] leading-relaxed mb-6 line-clamp-3">
                     {isAr ? featured.overviewAr : featured.overviewEn}
                   </p>
 
                   <div className={`pt-4 border-t border-white/10 flex items-center justify-between gap-4 ${isAr ? "flex-row-reverse" : ""}`}>
                     <div>
-                      <p className="font-mono text-[8px] uppercase tracking-widest text-[#8C8477] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</p>
+                      <p className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</p>
                       <p className="font-display text-xl sm:text-2xl font-bold text-[#B8873B]">
                         {isAr ? featured.priceRangeAr : featured.priceRangeEn}
                       </p>
@@ -322,7 +323,7 @@ export default function ProjectsSection() {
               {isAr ? "عرض جميع المشاريع" : "View All Projects →"}
             </Link>
             <a
-              href="https://wa.me/966500000000"
+              href={getWhatsAppLink(undefined, undefined, isAr)}
               target="_blank"
               rel="noopener noreferrer"
               className="font-mono text-[10px] tracking-[0.18em] uppercase px-6 py-3 flex items-center gap-2 transition-all duration-300 font-semibold"

@@ -133,7 +133,7 @@ function ValueCard({ icon, title, body, accent }: { icon: string; title: string;
       <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#B8873B]/10 to-transparent pointer-events-none transition-opacity duration-300 group-hover:opacity-100 opacity-30" />
       <div className="text-3xl mb-4 transition-transform duration-300 group-hover:scale-110" style={{ color: accent }}>{icon}</div>
       <h3 className="font-display text-xl text-[#E8DFCE] mb-3 tracking-tight group-hover:text-[#B8873B] transition-colors">{title}</h3>
-      <p className="font-sans text-sm text-[#8C8477] leading-relaxed">{body}</p>
+      <p className="font-sans text-sm text-[#C5BCAD] leading-relaxed">{body}</p>
     </div>
   );
 }
@@ -273,7 +273,7 @@ export default function AboutPage() {
             <span className="italic text-[#B8873B]">{c.heroTitle.split("\n")[1]}</span>
           </h1>
 
-          <p className={`hero-el font-sans text-base sm:text-lg text-[#8C8477] leading-relaxed max-w-2xl ${isAr ? "mr-auto" : "mx-auto"}`}>
+          <p className={`hero-el font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-2xl ${isAr ? "mr-auto" : "mx-auto"}`}>
             {c.heroSub}
           </p>
         </div>
@@ -286,8 +286,8 @@ export default function AboutPage() {
           <div className={`lg:col-span-6 ${isAr ? "lg:order-2 text-right" : ""}`}>
             <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#B8873B] mb-3">{c.storyTitle}</p>
             <h2 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] mb-6 tracking-tight leading-tight">{c.storyHeading}</h2>
-            <p className="font-sans text-base sm:text-lg text-[#E8DFCE]/90 leading-[1.8] mb-6">{c.storyText}</p>
-            <p className="font-sans text-sm sm:text-base text-[#8C8477] leading-[1.8] mb-8">{c.storyText2}</p>
+            <p className="font-sans text-base sm:text-lg text-[#E8DFCE] leading-[1.8] mb-6">{c.storyText}</p>
+            <p className="font-sans text-sm sm:text-base text-[#C5BCAD] leading-[1.8] mb-8">{c.storyText2}</p>
             
             <div className={`flex flex-wrap items-center gap-6 pt-4 border-t border-[#B8873B]/20 ${isAr ? "justify-start" : ""}`}>
               <div className="flex items-center gap-3">
@@ -319,7 +319,7 @@ export default function AboutPage() {
                 style={{ backgroundColor: "rgba(18,19,15,0.85)" }}
               >
                 <div className="font-display text-2xl sm:text-3xl text-[#B8873B] font-bold">{c.storyBadgeTitle}</div>
-                <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#8C8477] mt-1">{c.storyBadgeSub}</div>
+                <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#C5BCAD] font-medium mt-1">{c.storyBadgeSub}</div>
               </div>
             </div>
           </div>
@@ -348,7 +348,7 @@ export default function AboutPage() {
             <div className={`lg:col-span-6 ${isAr ? "lg:order-1 text-right" : ""}`}>
               <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#7FA8B3] mb-3">{c.visionTitle}</p>
               <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl text-[#E8DFCE] mb-6 leading-tight">{c.visionHeading}</h2>
-              <p className="font-sans text-sm sm:text-base text-[#8C8477] leading-relaxed mb-8">{c.visionText}</p>
+              <p className="font-sans text-sm sm:text-base text-[#C5BCAD] leading-relaxed mb-8">{c.visionText}</p>
 
               {/* Quote Block */}
               <div className="p-6 border-l-2 border-[#B8873B] bg-[#12130F]/60 backdrop-blur-md rounded-r-sm">
@@ -374,7 +374,7 @@ export default function AboutPage() {
                 style={{ backgroundColor: "rgba(18,19,15,0.6)" }}
               >
                 <div className="font-display text-2xl sm:text-4xl text-[#B8873B] font-semibold mb-2">{s.val}</div>
-                <div className="font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.22em] uppercase text-[#8C8477]">{s.label}</div>
+                <div className="font-mono text-[8.5px] sm:text-[9.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-medium">{s.label}</div>
               </div>
             ))}
           </div>
@@ -397,7 +397,7 @@ export default function AboutPage() {
                 <div className={`flex-1 pb-2 ${isAr ? "text-right" : ""}`}>
                   <span className="font-mono text-[10px] tracking-[0.25em] text-[#B8873B] font-semibold uppercase">{item.year}</span>
                   <h3 className="font-display text-xl text-[#E8DFCE] mt-1 mb-2 tracking-tight">{item.title}</h3>
-                  <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-relaxed">{item.body}</p>
+                  <p className="font-sans text-xs sm:text-sm text-[#C5BCAD] leading-relaxed">{item.body}</p>
                 </div>
               </div>
             ))}
@@ -421,7 +421,7 @@ export default function AboutPage() {
       <section className="py-24 px-6 text-center border-t border-[#B8873B]/15 relative overflow-hidden" style={{ background: "linear-gradient(to top, rgba(184,135,59,0.08), transparent)" }}>
         <div className="max-w-2xl mx-auto relative z-10">
           <h2 className="font-display text-3xl sm:text-5xl text-[#E8DFCE] mb-6 tracking-tight leading-tight">{c.ctaTitle}</h2>
-          <p className="font-sans text-sm sm:text-base text-[#8C8477] mb-10 leading-relaxed">{c.ctaSub}</p>
+          <p className="font-sans text-sm sm:text-base text-[#C5BCAD] mb-10 leading-relaxed">{c.ctaSub}</p>
           <a
             href="/contact"
             className="inline-flex items-center gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase px-9 py-4 border border-[#B8873B] text-[#E8DFCE] hover:bg-[#B8873B] hover:text-[#12130F] transition-all duration-300 font-semibold shadow-[0_0_25px_rgba(184,135,59,0.2)]"

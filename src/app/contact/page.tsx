@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
+import { PHONE_NUMBER_DISPLAY, WHATSAPP_NUMBER, CONTACT_EMAIL, getWhatsAppLink } from "@/data/contactConfig";
 import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
@@ -24,7 +25,7 @@ const CONTENT = {
       message: "Your Message",
       submit: "Send Message",
     },
-    interests: ["Apartments", "Villas", "Commercial Land", "Buildings", "General Inquiry"],
+    interests: ["Apartments", "Villas", "Land", "Buildings", "General Inquiry"],
     budgets: ["Under SAR 1M", "SAR 1M – 5M", "SAR 5M – 20M", "SAR 20M – 50M", "SAR 50M+"],
     infoTitle: "Contact Information",
     responseTime: "We typically respond within 2 hours during business hours.",
@@ -52,7 +53,7 @@ const CONTENT = {
       message: "رسالتك",
       submit: "إرسال الرسالة",
     },
-    interests: ["شقق", "فلل", "أراضٍ تجارية", "مبانٍ", "استفسار عام"],
+    interests: ["شقق", "فلل", "أراضٍ", "مبانٍ", "استفسار عام"],
     budgets: ["أقل من مليون ر.س", "مليون – 5 مليون ر.س", "5 – 20 مليون ر.س", "20 – 50 مليون ر.س", "+50 مليون ر.س"],
     infoTitle: "معلومات التواصل",
     responseTime: "نرد عادةً خلال ساعتين أثناء ساعات العمل.",
@@ -103,7 +104,7 @@ function FloatingInput({
           fontSize: isUp ? "10px" : "14px",
           letterSpacing: isUp ? "0.12em" : "0",
           textTransform: isUp ? "uppercase" as const : "none" as const,
-          color: focused ? "#B8873B" : isUp ? "#8C8477" : "#8C8477",
+          color: focused ? "#B8873B" : isUp ? "#C5BCAD" : "#C5BCAD",
           fontFamily: isUp ? "var(--font-mono)" : "var(--font-sans)",
         }}
       >
@@ -212,9 +213,26 @@ export default function ContactPage() {
     return () => ctx.revert();
   }, [isAr]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "Contact Page Advisory Form",
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          interest: form.interest,
+          budget: form.budget,
+          message: form.message,
+        }),
+      });
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+    }
   };
 
   return (
@@ -248,7 +266,7 @@ export default function ContactPage() {
             <span className="italic text-[#B8873B]">{c.heroTitle.split("\n")[1]}</span>
           </h1>
 
-          <p className="hero-el font-sans text-base sm:text-lg text-[#8C8477] leading-relaxed max-w-xl">{c.heroSub}</p>
+          <p className="hero-el font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-xl">{c.heroSub}</p>
         </div>
       </section>
 
@@ -342,7 +360,7 @@ export default function ContactPage() {
               </div>
               <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-relaxed mb-4">{c.whatsappSub}</p>
               <a
-                href="https://wa.me/966500000000"
+                href={getWhatsAppLink(undefined, undefined, isAr)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-2.5 transition-all duration-300 font-semibold ${isAr ? "flex-row-reverse" : ""}`}
@@ -363,11 +381,11 @@ export default function ContactPage() {
               </div>
               <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
                 <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">Email</p>
-                <a href="mailto:invest@asaheeb.com" className="font-sans text-sm text-[#E8DFCE] hover:text-[#B8873B] transition-colors">invest@asaheeb.com</a>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="font-sans text-sm text-[#E8DFCE] hover:text-[#B8873B] transition-colors">{CONTACT_EMAIL}</a>
               </div>
               <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
                 <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">Phone</p>
-                <a href="tel:+966500000000" className="font-sans text-sm text-[#E8DFCE] hover:text-[#B8873B] transition-colors">+966 50 000 0000</a>
+                <a href={`tel:${WHATSAPP_NUMBER}`} className="font-sans text-sm text-[#E8DFCE] hover:text-[#B8873B] transition-colors">{PHONE_NUMBER_DISPLAY}</a>
               </div>
               <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
                 <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">{c.hoursTitle}</p>

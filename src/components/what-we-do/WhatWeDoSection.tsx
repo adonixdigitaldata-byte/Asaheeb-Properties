@@ -119,7 +119,7 @@ function Chapter({
               {ch.index}
             </span>
             <div className="h-px w-10 opacity-50" style={{ backgroundColor: ch.accent }} />
-            <span className="font-mono text-xs tracking-[0.25em] uppercase text-[#8C8477]">
+            <span className="font-mono text-xs tracking-[0.25em] uppercase text-[#C5BCAD] font-semibold">
               {ch.label}
             </span>
           </div>
@@ -139,7 +139,7 @@ function Chapter({
           />
 
           {/* Body */}
-          <p className="chapter-body font-sans text-sm sm:text-[15px] text-[#8C8477] leading-[1.8] mb-6 lg:mb-8 max-w-[420px]">
+          <p className="chapter-body font-sans text-sm sm:text-[15px] text-[#C5BCAD] leading-[1.8] mb-6 lg:mb-8 max-w-[420px]">
             {ch.body}
           </p>
 
@@ -151,7 +151,7 @@ function Chapter({
                   className="mt-[7px] w-[5px] h-[5px] rounded-full flex-shrink-0"
                   style={{ backgroundColor: ch.accent }}
                 />
-                <span className="font-sans text-xs sm:text-sm text-[#E8DFCE]/75 leading-snug">
+                <span className="font-sans text-xs sm:text-sm text-[#E8DFCE] leading-snug">
                   {b}
                 </span>
               </li>

@@ -8,6 +8,7 @@ import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
 import { getProjectById } from "@/data/projectsData";
+import { getProjectWhatsAppLink } from "@/data/contactConfig";
 
 function ProjectDetailContent({ id }: { id: string }) {
   const { lang } = useLanguage();
@@ -55,9 +56,26 @@ function ProjectDetailContent({ id }: { id: string }) {
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "Project Detail Inquiry Form",
+          projectName: `${project.nameEn} (${project.nameAr})`,
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          budget: form.budget,
+          message: form.message,
+        }),
+      });
+    } catch (err) {
+      console.error("Error submitting project lead:", err);
+    }
   };
 
   const inputClass = (name: string) =>
@@ -647,7 +665,7 @@ function ProjectDetailContent({ id }: { id: string }) {
 
               <div className="pt-4 text-center border-t border-white/10">
                 <a
-                  href="https://wa.me/966500000000"
+                  href={getProjectWhatsAppLink(project.nameEn, project.nameAr, isAr)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-[#25D366] hover:underline"

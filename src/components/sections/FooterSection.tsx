@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { PHONE_NUMBER_DISPLAY, WHATSAPP_NUMBER, CONTACT_EMAIL, getWhatsAppLink } from "@/data/contactConfig";
 
 const NAV_LINKS = [
   { en: "What We Do", ar: "ماذا نفعل", href: "#section-what-we-do" },
@@ -73,7 +74,7 @@ export default function FooterSection() {
                 {isAr ? "أصاهيب العقارية" : "Asaheeb Properties"}
               </span>
             </div>
-            <p className="font-sans text-sm text-[#8C8477] leading-[1.8] max-w-xs">
+            <p className="font-sans text-sm text-[#C5BCAD] leading-[1.8] max-w-xs">
               {isAr
                 ? "شركة وساطة عقارية متخصصة في فرص الاستثمار الراقية عبر المملكة العربية السعودية."
                 : "A premium real estate investment brokerage specialising in curated opportunities across Saudi Arabia."}
@@ -85,7 +86,7 @@ export default function FooterSection() {
                   key={s.name}
                   href={s.href}
                   aria-label={s.name}
-                  className="w-8 h-8 border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[#8C8477] transition-all duration-300 hover:border-[#B8873B]/50 hover:text-[#B8873B]"
+                  className="w-8 h-8 border border-[rgba(255,255,255,0.15)] flex items-center justify-center text-[#D4C7B5] transition-all duration-300 hover:border-[#B8873B]/50 hover:text-[#B8873B]"
                 >
                   {s.icon}
                 </a>
@@ -95,7 +96,7 @@ export default function FooterSection() {
 
           {/* Navigation */}
           <div className={isAr ? "text-right" : ""}>
-            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-6">
+            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#B8873B] mb-6 font-semibold">
               {isAr ? "التنقل" : "Navigation"}
             </p>
             <ul className="space-y-3">
@@ -103,7 +104,7 @@ export default function FooterSection() {
                 <li key={link.en}>
                   <a
                     href={link.href}
-                    className="font-sans text-sm text-[#8C8477] transition-colors duration-300 hover:text-[#B8873B]"
+                    className="font-sans text-sm text-[#D4C7B5] transition-colors duration-300 hover:text-[#B8873B]"
                   >
                     {isAr ? link.ar : link.en}
                   </a>
@@ -114,36 +115,36 @@ export default function FooterSection() {
 
           {/* Contact & Legal */}
           <div className={isAr ? "text-right" : ""}>
-            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-6">
+            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#B8873B] mb-6 font-semibold">
               {isAr ? "التواصل" : "Contact"}
             </p>
             <div className="space-y-3 mb-8">
               <a
-                href="mailto:invest@asaheeb.com"
-                className="block font-sans text-sm text-[#8C8477] hover:text-[#B8873B] transition-colors duration-300"
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="block font-sans text-sm text-[#D4C7B5] hover:text-[#B8873B] transition-colors duration-300"
               >
-                invest@asaheeb.com
+                {CONTACT_EMAIL}
               </a>
               <a
-                href="tel:+966500000000"
-                className="block font-sans text-sm text-[#8C8477] hover:text-[#B8873B] transition-colors duration-300"
+                href={`tel:${WHATSAPP_NUMBER}`}
+                className="block font-sans text-sm text-[#D4C7B5] hover:text-[#B8873B] transition-colors duration-300"
               >
-                +966 50 000 0000
+                {PHONE_NUMBER_DISPLAY}
               </a>
               <a
-                href="https://wa.me/966500000000"
+                href={getWhatsAppLink(undefined, undefined, isAr)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block font-sans text-sm text-[#25D366] hover:opacity-80 transition-opacity duration-300"
+                className="block font-sans text-sm text-[#25D366] hover:opacity-80 transition-opacity duration-300 font-medium"
               >
                 {isAr ? "واتساب — رد فوري" : "WhatsApp — Instant Reply"}
               </a>
             </div>
 
-            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-3">
+            <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#C5BCAD] mb-3">
               {isAr ? "المقر الرئيسي" : "Headquarters"}
             </p>
-            <p className="font-sans text-sm text-[#8C8477]">
+            <p className="font-sans text-sm text-[#D4C7B5]">
               {isAr ? "جدة، المملكة العربية السعودية" : "Jeddah, Saudi Arabia"}
             </p>
           </div>
@@ -151,14 +152,14 @@ export default function FooterSection() {
 
         {/* Legal bar */}
         <div className={`py-6 flex flex-col sm:flex-row items-center justify-between gap-4 ${isAr ? "sm:flex-row-reverse" : ""}`}>
-          <p className="font-mono text-[9px] tracking-[0.18em] text-[#8C8477]/60">
+          <p className="font-mono text-[9px] tracking-[0.18em] text-[#C5BCAD]">
             © 2025 Asaheeb Properties. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
           <div className={`flex gap-5 ${isAr ? "flex-row-reverse" : ""}`}>
-            <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#8C8477]/50 hover:text-[#8C8477] transition-colors duration-300">
+            <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
               {isAr ? "سياسة الخصوصية" : "Privacy Policy"}
             </a>
-            <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#8C8477]/50 hover:text-[#8C8477] transition-colors duration-300">
+            <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
               {isAr ? "الشروط والأحكام" : "Terms of Use"}
             </a>
           </div>
@@ -166,7 +167,7 @@ export default function FooterSection() {
 
         {/* Legal disclaimer */}
         <div className="pb-8">
-          <p className={`font-sans text-[10px] text-[#8C8477]/30 leading-[1.7] ${isAr ? "text-right" : ""}`} dir={isAr ? "rtl" : "ltr"}>
+          <p className={`font-sans text-[10px] text-[#C5BCAD]/60 leading-[1.7] ${isAr ? "text-right" : ""}`} dir={isAr ? "rtl" : "ltr"}>
             {isAr
               ? "تحذير قانوني: المعلومات الواردة في هذا الموقع لأغراض إعلامية فقط ولا تشكل نصيحة استثمارية أو تمويلية أو قانونية. كل الاستثمارات تنطوي على مخاطر وقد تؤدي إلى خسارة رأس المال. الأداء السابق لا يضمن العوائد المستقبلية."
               : "Legal disclaimer: Information on this site is for informational purposes only and does not constitute investment, financial, or legal advice. All investments carry risk and may result in loss of capital. Past performance does not guarantee future results."}

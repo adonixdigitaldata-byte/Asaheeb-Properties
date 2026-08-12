@@ -115,7 +115,7 @@ export default function StatsSection() {
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-[-0.02em] leading-[1.1]">
             {isAr ? <>الأرقام لا <span className="italic text-[#7FA8B3]">تكذب.</span></> : <>The numbers <span className="italic text-[#7FA8B3]">don&apos;t lie.</span></>}
           </h2>
-          <p className="font-sans text-sm text-[#8C8477] mt-3 max-w-md mx-auto">
+          <p className="font-sans text-sm text-[#C5BCAD] mt-3 max-w-md mx-auto">
             {isAr
               ? "هذه ليست توقعات — هذه التزامات صدرت من الحكومة السعودية."
               : "These aren't forecasts — they're commitments made by the Saudi government."}
@@ -136,7 +136,7 @@ export default function StatsSection() {
               />
               <div className={isAr ? "text-right" : "text-left"}>
                 <CountUp target={stat.value} suffix={stat.suffix} prefix={stat.prefix} decimals={stat.decimals} accent={stat.accent} trigger={triggered} />
-                <p className="font-sans text-sm text-[#8C8477] mt-2 leading-[1.6]">
+                <p className="font-sans text-sm text-[#C5BCAD] mt-2 leading-[1.6]">
                   {isAr ? stat.labelAr : stat.labelEn}
                 </p>
               </div>
@@ -146,7 +146,7 @@ export default function StatsSection() {
 
         {/* CTA under stats */}
         <div className={`mt-10 flex flex-col sm:flex-row items-center gap-4 ${isAr ? "justify-end" : "justify-center"}`}>
-          <p className="font-sans text-sm text-[#8C8477] text-center">
+          <p className="font-sans text-sm text-[#C5BCAD] text-center">
             {isAr ? "لا تنتظر — الفرصة لها نافذة زمنية محدودة." : "Don't wait — the window has a timeline."}
           </p>
           <a

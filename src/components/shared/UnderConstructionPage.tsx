@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { getWhatsAppLink } from "@/data/contactConfig";
 import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
@@ -62,7 +63,7 @@ export default function UnderConstructionPage({ pageNameEn, pageNameAr }: Props)
             </Link>
 
             <a
-              href="https://wa.me/966500000000"
+              href={getWhatsAppLink(undefined, undefined, isAr)}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 font-mono text-[11px] tracking-[0.2em] uppercase border border-white/20 text-[#E8DFCE] hover:border-[#25D366] hover:text-[#25D366] transition-all duration-300 font-semibold"

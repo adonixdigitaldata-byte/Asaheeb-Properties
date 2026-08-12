@@ -176,7 +176,7 @@ export default function PillarsSection() {
 
               {/* Body */}
               <p
-                className={`font-sans text-sm text-[#8C8477] leading-[1.8] ${isAr ? "text-right" : ""}`}
+                className={`font-sans text-sm text-[#C5BCAD] leading-[1.8] ${isAr ? "text-right" : ""}`}
               >
                 {isAr ? pillar.bodyAr : pillar.bodyEn}
               </p>
