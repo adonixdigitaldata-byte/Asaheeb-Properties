@@ -168,7 +168,7 @@ function ProjectDetailContent({ id }: { id: string }) {
                   {isAr ? "استفسر عن هذا المشروع" : "Inquire For This Unit"}
                 </a>
                 <a
-                  href="https://wa.me/966500000000"
+                  href={getProjectWhatsAppLink(project.nameEn, project.nameAr, isAr)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full block text-center py-3.5 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-semibold border border-[#25D366]/40 text-[#25D366] bg-[#25D366]/10 hover:bg-[#25D366]/20 transition-all duration-300"

@@ -146,8 +146,6 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       }
     ],
     
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    
     amenities: [
       {
         badge: "🏊",
@@ -284,8 +282,6 @@ export const PROJECTS_DATA: ProjectDetail[] = [
         captionAr: "البهو الفندقي الرئيسي وصالة الاستقبال"
       }
     ],
-    
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     
     amenities: [
       {
@@ -1302,8 +1298,6 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       }
     ],
     
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    
     amenities: [
       {
         badge: "🏨",
@@ -1420,8 +1414,6 @@ export const PROJECTS_DATA: ProjectDetail[] = [
         captionAr: "الموقع الاستراتيجي في مخطط شمس العروس"
       }
     ],
-    
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     
     amenities: [
       {
@@ -1544,8 +1536,6 @@ export const PROJECTS_DATA: ProjectDetail[] = [
         captionAr: "الواجهة المعمارية العامة ومواقف السيارات"
       }
     ],
-    
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     
     amenities: [
       {

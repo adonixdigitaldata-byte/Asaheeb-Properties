@@ -153,7 +153,7 @@ export default function FooterSection() {
         {/* Legal bar */}
         <div className={`py-6 flex flex-col sm:flex-row items-center justify-between gap-4 ${isAr ? "sm:flex-row-reverse" : ""}`}>
           <p className="font-mono text-[9px] tracking-[0.18em] text-[#C5BCAD]">
-            © 2025 Asaheeb Properties. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
+            © 2026 Asaheeb Properties. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
           <div className={`flex gap-5 ${isAr ? "flex-row-reverse" : ""}`}>
             <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
