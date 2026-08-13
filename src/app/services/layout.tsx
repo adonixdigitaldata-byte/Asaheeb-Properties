@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     "خدمات الاستثمار العقاري السعودية",
   ],
   openGraph: {
-    title: "Our Services — Asaheeb Real Estate",
-    description: "Asset sourcing, institutional due diligence, legal support, and portfolio strategy.",
-    url: "https://asaheebrealestate.com/services",
+    title: "Real Estate Advisory & Investment Services — Asaheeb",
+    description: "Curated deal sourcing, 40-point due diligence, title check, and portfolio management.",
+    url: "https://www.asaheebrealestate.com/services",
     siteName: "Asaheeb Real Estate",
   },
   alternates: {
-    canonical: "https://asaheebrealestate.com/services",
+    canonical: "https://www.asaheebrealestate.com/services",
   },
 };
 

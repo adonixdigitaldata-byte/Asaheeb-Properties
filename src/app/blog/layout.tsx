@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     "مدونة العقارات السعودية",
   ],
   openGraph: {
-    title: "Blog & Market Intelligence — Asaheeb Real Estate",
-    description: "Market intelligence, legal guides, and Vision 2030 updates.",
-    url: "https://asaheebrealestate.com/blog",
+    title: "Saudi Real Estate Market Intelligence & Vision 2030 Blog — Asaheeb",
+    description: "Expert market briefings, yield analysis, regulatory updates, and property investment guides.",
+    url: "https://www.asaheebrealestate.com/blog",
     siteName: "Asaheeb Real Estate",
   },
   alternates: {
-    canonical: "https://asaheebrealestate.com/blog",
+    canonical: "https://www.asaheebrealestate.com/blog",
   },
 };
 

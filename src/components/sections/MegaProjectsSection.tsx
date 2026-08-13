@@ -169,9 +169,9 @@ export default function MegaProjectsSection() {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-[-0.02em] leading-[1.1]">
               {isAr ? (
-                <>هذه ليست <span className="italic text-[#B8873B]">إعلانات.</span><br />إنها قيد الإنشاء.</>
+                <>هذه ليست <span className="italic text-[#B8873B]">إعلانات.</span><br />إنها حلم الملايين.</>
               ) : (
-                <>These aren&apos;t <span className="italic text-[#B8873B]">announcements.</span><br />They&apos;re under construction.</>
+                <>These aren&apos;t <span className="italic text-[#B8873B]">announcements.</span><br />These are the dream of millions.</>
               )}
             </h2>
             <a
@@ -180,7 +180,7 @@ export default function MegaProjectsSection() {
             >
               {isAr ? "استثمر الآن" : "Invest Now"}
               <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
           </div>

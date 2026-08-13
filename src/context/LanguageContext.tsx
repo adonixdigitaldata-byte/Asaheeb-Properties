@@ -36,7 +36,7 @@ export const translations = {
     metric2Label: "Corridor Focus",
     metric3Val: "100%",
     metric3Label: "Title Guarantee",
-    metric4Val: "Riyadh · Jeddah",
+    metric4Val: "Madinah · Jeddah",
     metric4Label: "Prime Hubs",
 
     // 3D Video Showcase Badge
@@ -142,7 +142,7 @@ export const translations = {
     metric2Label: "تركيز المحاور",
     metric3Val: "100%",
     metric3Label: "ضمان الملكية",
-    metric4Val: "الرياض · جدة",
+    metric4Val: "المدينة المنورة · جدة",
     metric4Label: "مراكز رئيسية",
 
     // 3D Video Showcase Badge

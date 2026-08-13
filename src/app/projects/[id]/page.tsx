@@ -9,14 +9,16 @@ import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
 import { getProjectById } from "@/data/projectsData";
 import { getProjectWhatsAppLink } from "@/data/contactConfig";
+import ShareModal from "@/components/shared/ShareModal";
 
 function ProjectDetailContent({ id }: { id: string }) {
   const { lang } = useLanguage();
   const isAr = lang === "ar";
   const project = getProjectById(id);
 
-  // Lightbox State
+  // Lightbox & Share State
   const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const images = project.images || [];
   const extraCount = images.length > 3 ? images.length - 3 : 0;
@@ -93,13 +95,25 @@ function ProjectDetailContent({ id }: { id: string }) {
       <section className="relative pt-24 sm:pt-36 pb-12 px-4 sm:px-10 lg:px-20 border-b border-white/10">
         <div className="max-w-6xl mx-auto">
           
-          {/* Breadcrumb */}
-          <div className={`flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-[#8C8477] mb-6 flex-wrap ${isAr ? "flex-row-reverse text-right" : ""}`}>
-            <Link href="/" className="hover:text-[#B8873B] transition-colors">{isAr ? "الرئيسية" : "Home"}</Link>
-            <span>/</span>
-            <Link href="/projects" className="hover:text-[#B8873B] transition-colors">{isAr ? "المشاريع" : "Projects"}</Link>
-            <span>/</span>
-            <span className="text-[#E8DFCE]">{isAr ? project.nameAr : project.nameEn}</span>
+          {/* Breadcrumb & Share Button */}
+          <div className={`flex items-center justify-between gap-4 mb-6 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+            <div className={`flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-[#8C8477] flex-wrap ${isAr ? "flex-row-reverse text-right" : ""}`}>
+              <Link href="/" className="hover:text-[#B8873B] transition-colors">{isAr ? "الرئيسية" : "Home"}</Link>
+              <span>/</span>
+              <Link href="/projects" className="hover:text-[#B8873B] transition-colors">{isAr ? "المشاريع" : "Projects"}</Link>
+              <span>/</span>
+              <span className="text-[#E8DFCE]">{isAr ? project.nameAr : project.nameEn}</span>
+            </div>
+
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase text-[#B8873B] border border-[#B8873B]/40 bg-[#B8873B]/10 px-3.5 py-1.5 hover:bg-[#B8873B] hover:text-[#12130F] transition-all duration-300 rounded-sm cursor-pointer"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>{isAr ? "مشاركة العقار" : "Share Property"}</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
@@ -175,6 +189,15 @@ function ProjectDetailContent({ id }: { id: string }) {
                 >
                   💬 {isAr ? "محادثة مباشرة عبر واتساب" : "Instant WhatsApp Chat"}
                 </a>
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="w-full flex items-center justify-center gap-2 py-3.5 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-semibold border border-white/20 text-[#E8DFCE] hover:border-[#B8873B] hover:text-[#B8873B] transition-all duration-300 rounded-sm cursor-pointer"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span>{isAr ? "مشاركة هذا العقار" : "Share Property"}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -678,6 +701,16 @@ function ProjectDetailContent({ id }: { id: string }) {
           )}
         </div>
       </section>
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        title={isAr ? project.nameAr : project.nameEn}
+        text={isAr ? `فرصة استثمار عقاري في ${project.nameAr} - ${project.cityAr}` : `Real estate investment opportunity at ${project.nameEn} - ${project.cityEn}`}
+        url={typeof window !== "undefined" ? window.location.href : `https://www.asaheebrealestate.com/projects/${project.id}`}
+        isAr={isAr}
+      />
 
       <PageFooter />
       <MobileBottomNav />

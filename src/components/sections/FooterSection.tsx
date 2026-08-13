@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { PHONE_NUMBER_DISPLAY, WHATSAPP_NUMBER, CONTACT_EMAIL, getWhatsAppLink } from "@/data/contactConfig";
 
@@ -156,12 +157,12 @@ export default function FooterSection() {
             © 2026 Asaheeb Properties. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
           <div className={`flex gap-5 ${isAr ? "flex-row-reverse" : ""}`}>
-            <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
+            <Link href="/privacy" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
               {isAr ? "سياسة الخصوصية" : "Privacy Policy"}
-            </a>
-            <a href="#" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
+            </Link>
+            <Link href="/terms" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
               {isAr ? "الشروط والأحكام" : "Terms of Use"}
-            </a>
+            </Link>
           </div>
         </div>
 

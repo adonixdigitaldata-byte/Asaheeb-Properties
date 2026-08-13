@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     "فلل الرياض جدة والمدينة المنورة",
   ],
   openGraph: {
-    title: "Featured Projects — Asaheeb Real Estate",
-    description: "Curated apartments, villas, commercial land, and towers across Saudi Arabia.",
-    url: "https://asaheebrealestate.com/projects",
+    title: "Real Estate Investment Projects — Asaheeb Saudi Arabia",
+    description: "Explore curated residential and commercial real estate projects in Riyadh, Jeddah & Madinah.",
+    url: "https://www.asaheebrealestate.com/projects",
     siteName: "Asaheeb Real Estate",
   },
   alternates: {
-    canonical: "https://asaheebrealestate.com/projects",
+    canonical: "https://www.asaheebrealestate.com/projects",
   },
 };
 

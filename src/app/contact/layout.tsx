@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     "تواصل مع أصاهيب العقارية",
   ],
   openGraph: {
-    title: "Contact Us — Asaheeb Real Estate",
-    description: "Speak to a Saudi real estate advisor today. Instant WhatsApp support.",
-    url: "https://asaheebrealestate.com/contact",
+    title: "Contact Asaheeb Real Estate — Jeddah & Riyadh Advisory Offices",
+    description: "Connect with Asaheeb's real estate investment specialists in Saudi Arabia.",
+    url: "https://www.asaheebrealestate.com/contact",
     siteName: "Asaheeb Real Estate",
   },
   alternates: {
-    canonical: "https://asaheebrealestate.com/contact",
+    canonical: "https://www.asaheebrealestate.com/contact",
   },
 };
 
