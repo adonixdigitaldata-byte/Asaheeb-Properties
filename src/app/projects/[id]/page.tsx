@@ -531,16 +531,33 @@ function ProjectDetailContent({ id }: { id: string }) {
             </div>
 
             {/* Interactive Map Embed */}
-            <div className="lg:col-span-7 border border-[#B8873B]/30 min-h-[320px] sm:min-h-[380px] relative overflow-hidden rounded-sm">
+            <div className="lg:col-span-7 border border-[#B8873B]/30 min-h-[320px] sm:min-h-[380px] relative overflow-hidden rounded-sm flex flex-col">
               {project.mapEmbedUrl ? (
-                <iframe
-                  src={project.mapEmbedUrl}
-                  width="100%"
-                  height="100%"
-                  className="w-full h-full min-h-[320px] sm:min-h-[380px] border-0"
-                  loading="lazy"
-                  allowFullScreen
-                />
+                <>
+                  <iframe
+                    src={project.mapEmbedUrl}
+                    width="100%"
+                    height="100%"
+                    className="w-full flex-1 min-h-[280px] sm:min-h-[340px] border-0"
+                    loading="lazy"
+                    allowFullScreen
+                  />
+                  {(project.googleMapsUrl || project.mapEmbedUrl) && (
+                    <div className={`bg-[#0F1117] px-4 py-2.5 border-t border-[#B8873B]/20 flex items-center justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-[#8C8477]">
+                        {isAr ? "الموقع الجغرافي" : "GPS Location"}
+                      </span>
+                      <a
+                        href={project.googleMapsUrl || project.mapEmbedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 font-mono text-[9.5px] tracking-wider uppercase text-[#B8873B] hover:text-[#E8DFCE] transition-colors"
+                      >
+                        <span>{isAr ? "عرض في خرائط Google ↗" : "View in Google Maps ↗"}</span>
+                      </a>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="w-full h-full min-h-[320px] flex items-center justify-center bg-[#12130F] text-[#8C8477] font-mono text-xs">
                   Interactive Map Container
@@ -552,39 +569,43 @@ function ProjectDetailContent({ id }: { id: string }) {
       </section>
 
       {/* ── SECTION 6: BROCHURE DOWNLOAD ────────────────────────────────── */}
-      <section className="py-16 px-4 sm:px-10 lg:px-20 border-b border-white/10">
-        <div className="max-w-4xl mx-auto">
-          <div
-            className={`p-6 sm:p-12 border border-[#B8873B]/40 text-center rounded-sm ${isAr ? "text-right sm:text-center" : ""}`}
-            style={{ background: "linear-gradient(135deg, rgba(184,135,59,0.12) 0%, rgba(18,19,15,1) 100%)" }}
-          >
-            <div className="w-14 h-14 rounded-full border border-[#B8873B] bg-[#B8873B]/10 flex items-center justify-center text-2xl mx-auto mb-4 text-[#B8873B]">
-              📄
-            </div>
-
-            <h3 className="font-display text-2xl sm:text-4xl text-[#E8DFCE] mb-3">
-              {isAr ? "تحميل الكتيب التفيصلي للمشروع" : "Download Full Project Brochure"}
-            </h3>
-
-            <p className="font-sans text-xs sm:text-sm text-[#8C8477] max-w-xl mx-auto mb-8 leading-relaxed">
-              {isAr
-                ? "احصل على الكتيب الشامل الذي يتضمن مخططات الطوابق والتصاميم الهندسية وجدول المواصفات."
-                : "Get access to complete floor plans, architectural layouts, and full technical specifications."}
-            </p>
-
-            <a
-              href={project.brochureUrl || "#"}
-              download
-              className="inline-flex items-center gap-3 px-8 py-4 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase border border-[#B8873B] bg-[#B8873B] text-[#12130F] font-bold hover:bg-transparent hover:text-[#B8873B] transition-all duration-300"
+      {project.brochureUrl && (
+        <section className="py-16 px-4 sm:px-10 lg:px-20 border-b border-white/10">
+          <div className="max-w-4xl mx-auto">
+            <div
+              className={`p-6 sm:p-12 border border-[#B8873B]/40 text-center rounded-sm ${isAr ? "text-right sm:text-center" : ""}`}
+              style={{ background: "linear-gradient(135deg, rgba(184,135,59,0.12) 0%, rgba(18,19,15,1) 100%)" }}
             >
-              <span>{isAr ? "تحميل الملف (PDF)" : "Download PDF Brochure"}</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 2V11M8 11L4.5 7.5M8 11L11.5 7.5M2 14H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
+              <div className="w-14 h-14 rounded-full border border-[#B8873B] bg-[#B8873B]/10 flex items-center justify-center text-2xl mx-auto mb-4 text-[#B8873B]">
+                📄
+              </div>
+
+              <h3 className="font-display text-2xl sm:text-4xl text-[#E8DFCE] mb-3">
+                {isAr ? "تحميل الكتيب التفيصلي للمشروع" : "Download Full Project Brochure"}
+              </h3>
+
+              <p className="font-sans text-xs sm:text-sm text-[#8C8477] max-w-xl mx-auto mb-8 leading-relaxed">
+                {isAr
+                  ? "احصل على الكتيب الشامل الذي يتضمن مخططات الطوابق والتصاميم الهندسية وجدول المواصفات."
+                  : "Get access to complete floor plans, architectural layouts, and full technical specifications."}
+              </p>
+
+              <a
+                href={project.brochureUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="inline-flex items-center gap-3 px-8 py-4 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase border border-[#B8873B] bg-[#B8873B] text-[#12130F] font-bold hover:bg-transparent hover:text-[#B8873B] transition-all duration-300"
+              >
+                <span>{isAr ? "تحميل الكتيب (PDF)" : "Download PDF Brochure"}</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 2V11M8 11L4.5 7.5M8 11L11.5 7.5M2 14H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── SECTION 7: INQUIRY & CALLBACK FORM ───────────────────────────── */}
       <section id="section-inquiry" className="py-16 sm:py-20 px-4 sm:px-10 lg:px-20 bg-[#0A0C0F]">

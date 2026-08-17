@@ -59,6 +59,7 @@ export interface ProjectDetail {
   
   // Location & Map
   mapEmbedUrl?: string; // Interactive Google Maps iframe URL
+  googleMapsUrl?: string; // Direct Google Maps link
   landmarks: Landmark[];
   
   // Brochure
@@ -68,7 +69,157 @@ export interface ProjectDetail {
 }
 
 export const PROJECTS_DATA: ProjectDetail[] = [
-  // ── 1. ITLALA TOWERS ────────────────────────────────────────────────────────
+  // ── 1. SUHAIL COMPOUND ───────────────────────────────────────────────────
+  {
+    id: "suhail-compound",
+    nameEn: "Suhail Compound",
+    nameAr: "مجمع سهيل السكني",
+    developerEn: "Suhail Developments",
+    developerAr: "شركة سهيل للتطوير العقاري",
+    cityEn: "Madinah",
+    cityAr: "المدينة المنورة",
+    districtEn: "Southeast Madinah",
+    districtAr: "جنوب شرق المدينة المنورة",
+    
+    startingPriceEn: "from SAR 249K",
+    startingPriceAr: "ابتداءً من ٢٤٩ ألف ر.س",
+    priceRangeEn: "SAR 249K – 390K",
+    priceRangeAr: "٢٤٩ ألف – ٣٩٠ ألف ر.س",
+    
+    sizeEn: "2 - 3 Bedroom Modern Units",
+    sizeAr: "شقق سكنية ٢ - ٣ غرف نوم",
+    typeEn: "Gated Residential Compound",
+    typeAr: "مجمع سكني مغلق ومتكامل",
+    statusEn: "Off-Plan",
+    statusAr: "على المخطط",
+    expectedDeliveryEn: "Q1 2027",
+    expectedDeliveryAr: "الربع الأول ٢٠٢٧",
+    unitsCountEn: "2 Layouts (2-3 Beds)",
+    unitsCountAr: "نموذجان سكنيان (٢-٣ غرف)",
+    floorsEn: "Gated Community",
+    floorsAr: "مجمع سكني خاص",
+    
+    overviewEn: "Strategically situated in the southeast of Madinah with fast connectivity to major routes like the Riyadh-Qassim Fast Route, Prince Mugrin bin Abdulaziz Road, and the Third Ring Road, this premium gated compound offers an exceptional residential experience designed to deliver luxury, comfort, and ultimate privacy. The development is ideally located just five minutes from essential public services, seven minutes from King Abdullah Road (Second Ring Road), ten minutes from the Haramain High-Speed Railway Station, and twelve minutes from both Al-Masjid an-Nabawi and the historic Quba Mosque.",
+    overviewAr: "يتميز هذا المشروع السكني بموقع استراتيجي استثنائي في جنوب شرق المدينة المنورة بالقرب من طريق الرياض-القصيم السريع، طريق الأمير مقرن بن عبدالعزيز، والطريق الدائري الثالث، مما يمنح السكان توازناً مثالياً بين هدوء المسكن وسهولة الوصول لأهم المحاور الحيوية. يقع المجمع على بعد ٥ دقائق فقط من الخدمات العامة، و٧ دقائق من طريق الملك عبدالله (الدائري الثاني)، و١٠ دقائق من محطة قطار الحرمين السريع، و١٢ دقيقة فقط من الحرم النبوي الشريف ومسجد قباء.",
+    
+    highlightsEn: [
+      "12 minutes to Al-Masjid an-Nabawi & Quba Mosque",
+      "10 minutes to Haramain High-Speed Railway Station",
+      "Private water tank (upper & lower) and independent electric meter",
+      "Smart home entry automation & digital keyless access",
+      "20-year structural warranty & 15-year plumbing and electrical warranty",
+      "10-year comprehensive Tawuniya cooperative insurance coverage"
+    ],
+    highlightsAr: [
+      "١٢ دقيقة فقط من المسجد النبوي الشريف ومسجد قباء",
+      "١٠ دقائق من محطة قطار الحرمين السريع",
+      "خزان مياه مستقل (علوي وسفلي) وعداد كهرباء خاص بكل وحدة",
+      "أنظمة دخول ذكي وسمارت هوم متكاملة",
+      "ضمان ٢٠ عاماً على الهيكل الإنشائي و١٥ عاماً على السباكة والكهرباء",
+      "وثيقة تأمين شاملة لمدة ١٠ سنوات من شركة التعاونية ضد العيوب الخفية"
+    ],
+    
+    images: [
+      {
+        url: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786507306/Suhail_1_mjbezd.webp",
+        captionEn: "Suhail Compound Main Promenade & Evening Facade",
+        captionAr: "الواجهة الرئيسية والممشى المسائي لمجمع سهيل"
+      },
+      {
+        url: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786507309/Suhaill2_xt5osk.png",
+        captionEn: "Interior Residential Layouts & Living Spaces",
+        captionAr: "التصميم الداخلي والمساحات السكنية وصالة المعيشة"
+      },
+      {
+        url: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786507310/Suhaill3_ghzzny.png",
+        captionEn: "Gated Community Architecture, Courtyard & Rooftop Terrace",
+        captionAr: "بوابة المجمع السكني، الفناء الداخلي وجلسات السطح الترفيهية"
+      }
+    ],
+    
+    amenities: [
+      {
+        badge: "🅿️",
+        titleEn: "COVERED PARKING",
+        titleAr: "مواقف مغطاة",
+        descEn: "Dedicated covered parking slots assigned for each residential unit.",
+        descAr: "مواقف سيارات خاصة ومغطاة مخصصة لكل وحدة سكنية."
+      },
+      {
+        badge: "🛡️",
+        titleEn: "24/7 SECURITY",
+        titleAr: "أمان وحراسة 24/7",
+        descEn: "Round-the-clock integrated security and CCTV surveillance monitoring.",
+        descAr: "أنظمة أمان وحراسة متواصلة وكاميرات مراقبة على مدار الساعة."
+      },
+      {
+        badge: "📱",
+        titleEn: "SMART HOME",
+        titleAr: "أنظمة المنزل الذكي",
+        descEn: "Advanced digital keyless access and automated smart home controls.",
+        descAr: "أنظمة تحكم ودخول ذكي إلكترونية حديثة لكافة الوحدات."
+      },
+      {
+        badge: "🌳",
+        titleEn: "PRIVATE GARDEN",
+        titleAr: "حديقة خاصة ولاندسكيب",
+        descEn: "Thoughtfully designed internal landscape gardens and green spaces.",
+        descAr: "حديقة داخلية ومساحات خضراء مصممة بعناية فائقة."
+      },
+      {
+        badge: "🏢",
+        titleEn: "SHARED ROOFTOP",
+        titleAr: "أسطح ترفيهية مشتركة",
+        descEn: "Shared leisure rooftop sitting areas with open panoramic views.",
+        descAr: "أسطح ترفيهية وجلسات مشتركة بإطلالات رحبة ومفتوحة."
+      },
+      {
+        badge: "🏙️",
+        titleEn: "LANDMARK VIEW",
+        titleAr: "إطلالات على المعالم",
+        descEn: "Scenic open views overlooking vibrant Madinah city landmarks.",
+        descAr: "إطلالات بانورامية مفتوحة على أهم معالم المدينة المنورة."
+      },
+      {
+        badge: "💧",
+        titleEn: "INDEPENDENT TANKS",
+        titleAr: "خزانات مياه مستقلة",
+        descEn: "Dedicated upper and lower private water tanks for complete independence.",
+        descAr: "خزان مياه مستقل (علوي وسفلي) لكل شقة لضمان الاستقلالية التامة."
+      },
+      {
+        badge: "⚡",
+        titleEn: "PRIVATE POWER METER",
+        titleAr: "عداد كهرباء مستقل",
+        descEn: "Dedicated smart electricity meter assigned to each apartment.",
+        descAr: "عداد كهرباء مستقل وخاص بكل وحدة سكنية."
+      },
+      {
+        badge: "📜",
+        titleEn: "STRUCTURAL GUARANTEES",
+        titleAr: "ضمانات إنشائية وتأمين",
+        descEn: "20-year structural framework warranty, 15-year MEP, and 10-year Tawuniya insurance.",
+        descAr: "ضمان ٢٠ عاماً على الهيكل الإنشائي و١٥ عاماً على التمديدات وتأمين التعاونية."
+      },
+      {
+        badge: "🛋️",
+        titleEn: "INTERNAL SITTING AREAS",
+        titleAr: "جلسات واستراحات داخلية",
+        descEn: "Elegantly furnished community seating lounges and family waiting spaces.",
+        descAr: "مساحات جلوس واستراحات عائلية داخلية مصممة بأناقة وراحة."
+      }
+    ],
+    
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3400.6689365607936!2d39.6983056!3d24.436027799999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjTCsDI2JzA5LjciTiAzOcKwNDEnNTMuOSJF!5e1!3m2!1sen!2sin!4v1782909993578!5m2!1sen!2sin",
+    landmarks: [
+      { nameEn: "King Abdullah Road (2nd Ring)", nameAr: "طريق الملك عبدالله (الدائري الثاني)", distEn: "7 Mins", distAr: "٧ دقائق" },
+      { nameEn: "Haramain High-Speed Railway Station", nameAr: "محطة قطار الحرمين السريع", distEn: "10 Mins", distAr: "١٠ دقائق" },
+      { nameEn: "Al-Masjid an-Nabawi", nameAr: "المسجد النبوي الشريف", distEn: "12 Mins", distAr: "١٢ دقيقة" },
+      { nameEn: "Historic Quba Mosque", nameAr: "مسجد قباء التاريخي", distEn: "12 Mins", distAr: "١٢ دقيقة" }
+    ]
+  },
+
+  // ── 2. ITLALA TOWERS ────────────────────────────────────────────────────────
   {
     id: "itlala-towers",
     nameEn: "ITLALA TOWERS",
@@ -80,10 +231,10 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     districtEn: "Darb Al-Haramain District",
     districtAr: "مخطط درب الحرمين",
     
-    startingPriceEn: "from SAR 600K",
-    startingPriceAr: "ابتداءً من ٦٠٠ ألف ر.س",
-    priceRangeEn: "SAR 600K – 838K",
-    priceRangeAr: "٦٠٠ ألف – ٨٣٨ ألف ر.س",
+    startingPriceEn: "from SAR 370K",
+    startingPriceAr: "ابتداءً من ٣٧٠ ألف ر.س",
+    priceRangeEn: "SAR 370K – 1.6M",
+    priceRangeAr: "٣٧٠ ألف – ١.٦ مليون ر.س",
     
     sizeEn: "2,261.94 m² (Land Area: 32,045 m²)",
     sizeAr: "٢,٢٦١.٩٤ م² (مساحة الأرض: ٣٢,٠٤٥ م²)",
@@ -191,16 +342,21 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       }
     ],
     
-    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3711.458920439!2d39.2251!3d21.5033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c3d01fb1137e59%3A0xe059579737b11844!2sDarb%20Alharamain%2C%20Jeddah%20Saudi%20Arabia!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa",
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3711.4589!2d39.229660!3d21.504090!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjHCsDMwJzE0LjciTiAzOcKwMTMnNDYuOCJF!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa",
+    googleMapsUrl: "https://maps.app.goo.gl/8HzyNPWVVdBpYyab6",
     landmarks: [
       { nameEn: "Haramain High-Speed Railway Station", nameAr: "محطة قطار الحرمين السريع", distEn: "3 Mins", distAr: "٣ دقائق" },
       { nameEn: "King Abdulaziz University", nameAr: "جامعة الملك عبد العزيز", distEn: "5 Mins", distAr: "٥ دقائق" },
       { nameEn: "Andalus Mall & Salam Mall", nameAr: "الأندلس مول والسلام مول", distEn: "4 Mins", distAr: "٤ دقائق" },
       { nameEn: "King Fahd Medical Research Center", nameAr: "مركز الملك فهد للبحوث الطبية", distEn: "6 Mins", distAr: "٦ دقائق" }
-    ]
+    ],
+
+    brochureUrl: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786952658/Itlala_Brochure_kf2ar1.pdf",
+    brochureSizeEn: "PDF Brochure",
+    brochureSizeAr: "ملف الكتيب PDF"
   },
 
-  // ── 2. JIDIA TOWERS ────────────────────────────────────────────────────────
+  // ── 3. JIDIA TOWERS ────────────────────────────────────────────────────────
   {
     id: "jidia-towers",
     nameEn: "JIDIA TOWERS",
@@ -356,167 +512,14 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       }
     ],
     
-    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3711.458920439!2d39.2251!3d21.5033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c3d01fb1137e59%3A0xe059579737b11844!2sDarb%20Alharamain%2C%20Jeddah%20Saudi%20Arabia!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa",
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3711.4589!2d39.229660!3d21.504090!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjHCsDMwJzE0LjciTiAzOcKwMTMnNDYuOCJF!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa",
+    googleMapsUrl: "https://maps.app.goo.gl/8HzyNPWVVdBpYyab6",
     landmarks: [
       { nameEn: "Haramain High-Speed Railway Station", nameAr: "محطة قطار الحرمين السريع", distEn: "3 Mins", distAr: "٣ دقائق" },
       { nameEn: "King Abdulaziz University", nameAr: "جامعة الملك عبد العزيز", distEn: "5 Mins", distAr: "٥ دقائق" },
       { nameEn: "Andalus Mall & Salam Mall", nameAr: "الأندلس مول والسلام مول", distEn: "4 Mins", distAr: "٤ دقائق" },
       { nameEn: "King Fahd Medical Research Center", nameAr: "مركز الملك فهد للبحوث الطبية", distEn: "6 Mins", distAr: "٦ دقائق" }
     ]
-  },
-
-  // ── 3. SUHAIL COMPOUND ───────────────────────────────────────────────────
-  {
-    id: "suhail-compound",
-    nameEn: "Suhail Compound",
-    nameAr: "مجمع سهيل السكني",
-    developerEn: "Suhail Developments",
-    developerAr: "شركة سهيل للتطوير العقاري",
-    cityEn: "Madinah",
-    cityAr: "المدينة المنورة",
-    districtEn: "Southeast Madinah",
-    districtAr: "جنوب شرق المدينة المنورة",
-    
-    startingPriceEn: "from SAR 249K",
-    startingPriceAr: "ابتداءً من ٢٤٩ ألف ر.س",
-    priceRangeEn: "SAR 249K – 390K",
-    priceRangeAr: "٢٤٩ ألف – ٣٩٠ ألف ر.س",
-    
-    sizeEn: "2 - 3 Bedroom Modern Units",
-    sizeAr: "شقق سكنية ٢ - ٣ غرف نوم",
-    typeEn: "Gated Residential Compound",
-    typeAr: "مجمع سكني مغلق ومتكامل",
-    statusEn: "Off-Plan",
-    statusAr: "على المخطط",
-    expectedDeliveryEn: "Q1 2027",
-    expectedDeliveryAr: "الربع الأول ٢٠٢٧",
-    unitsCountEn: "2 Layouts (2-3 Beds)",
-    unitsCountAr: "نموذجان سكنيان (٢-٣ غرف)",
-    floorsEn: "Gated Community",
-    floorsAr: "مجمع سكني خاص",
-    
-    overviewEn: "Strategically situated in the southeast of Madinah with fast connectivity to major routes like the Riyadh-Qassim Fast Route, Prince Mugrin bin Abdulaziz Road, and the Third Ring Road, this premium gated compound offers an exceptional residential experience designed to deliver luxury, comfort, and ultimate privacy. The development is ideally located just five minutes from essential public services, seven minutes from King Abdullah Road (Second Ring Road), ten minutes from the Haramain High-Speed Railway Station, and twelve minutes from both Al-Masjid an-Nabawi and the historic Quba Mosque.",
-    overviewAr: "يتميز هذا المشروع السكني بموقع استراتيجي استثنائي في جنوب شرق المدينة المنورة بالقرب من طريق الرياض-القصيم السريع، طريق الأمير مقرن بن عبدالعزيز، والطريق الدائري الثالث، مما يمنح السكان توازناً مثالياً بين هدوء المسكن وسهولة الوصول لأهم المحاور الحيوية. يقع المجمع على بعد ٥ دقائق فقط من الخدمات العامة، و٧ دقائق من طريق الملك عبدالله (الدائري الثاني)، و١٠ دقائق من محطة قطار الحرمين السريع، و١٢ دقيقة فقط من الحرم النبوي الشريف ومسجد قباء.",
-    
-    highlightsEn: [
-      "12 minutes to Al-Masjid an-Nabawi & Quba Mosque",
-      "10 minutes to Haramain High-Speed Railway Station",
-      "Private water tank (upper & lower) and independent electric meter",
-      "Smart home entry automation & digital keyless access",
-      "20-year structural warranty & 15-year plumbing and electrical warranty",
-      "10-year comprehensive Tawuniya cooperative insurance coverage"
-    ],
-    highlightsAr: [
-      "١٢ دقيقة فقط من المسجد النبوي الشريف ومسجد قباء",
-      "١٠ دقائق من محطة قطار الحرمين السريع",
-      "خزان مياه مستقل (علوي وسفلي) وعداد كهرباء خاص بكل وحدة",
-      "أنظمة دخول ذكي وسمارت هوم متكاملة",
-      "ضمان ٢٠ عاماً على الهيكل الإنشائي و١٥ عاماً على السباكة والكهرباء",
-      "وثيقة تأمين شاملة لمدة ١٠ سنوات من شركة التعاونية ضد العيوب الخفية"
-    ],
-    
-    images: [
-      {
-        url: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786507306/Suhail_1_mjbezd.webp",
-        captionEn: "Suhail Compound Main Promenade & Evening Facade",
-        captionAr: "الواجهة الرئيسية والممشى المسائي لمجمع سهيل"
-      },
-      {
-        url: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786507309/Suhaill2_xt5osk.png",
-        captionEn: "Interior Residential Layouts & Living Spaces",
-        captionAr: "التصميم الداخلي والمساحات السكنية وصالة المعيشة"
-      },
-      {
-        url: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1786507310/Suhaill3_ghzzny.png",
-        captionEn: "Gated Community Architecture, Courtyard & Rooftop Terrace",
-        captionAr: "بوابة المجمع السكني، الفناء الداخلي وجلسات السطح الترفيهية"
-      }
-    ],
-    
-    amenities: [
-      {
-        badge: "🅿️",
-        titleEn: "COVERED PARKING",
-        titleAr: "مواقف مغطاة",
-        descEn: "Dedicated covered parking slots assigned for each residential unit.",
-        descAr: "مواقف سيارات خاصة ومغطاة مخصصة لكل وحدة سكنية."
-      },
-      {
-        badge: "🛡️",
-        titleEn: "24/7 SECURITY",
-        titleAr: "أمان وحراسة 24/7",
-        descEn: "Round-the-clock integrated security and CCTV surveillance monitoring.",
-        descAr: "أنظمة أمان وحراسة متواصلة وكاميرات مراقبة على مدار الساعة."
-      },
-      {
-        badge: "📱",
-        titleEn: "SMART HOME",
-        titleAr: "أنظمة المنزل الذكي",
-        descEn: "Advanced digital keyless access and automated smart home controls.",
-        descAr: "أنظمة تحكم ودخول ذكي إلكترونية حديثة لكافة الوحدات."
-      },
-      {
-        badge: "🌳",
-        titleEn: "PRIVATE GARDEN",
-        titleAr: "حديقة خاصة ولاندسكيب",
-        descEn: "Thoughtfully designed internal landscape gardens and green spaces.",
-        descAr: "حديقة داخلية ومساحات خضراء مصممة بعناية فائقة."
-      },
-      {
-        badge: "🏢",
-        titleEn: "SHARED ROOFTOP",
-        titleAr: "أسطح ترفيهية مشتركة",
-        descEn: "Shared leisure rooftop sitting areas with open panoramic views.",
-        descAr: "أسطح ترفيهية وجلسات مشتركة بإطلالات رحبة ومفتوحة."
-      },
-      {
-        badge: "🏙️",
-        titleEn: "LANDMARK VIEW",
-        titleAr: "إطلالات على المعالم",
-        descEn: "Scenic open views overlooking vibrant Madinah city landmarks.",
-        descAr: "إطلالات بانورامية مفتوحة على أهم معالم المدينة المنورة."
-      },
-      {
-        badge: "💧",
-        titleEn: "INDEPENDENT TANKS",
-        titleAr: "خزانات مياه مستقلة",
-        descEn: "Dedicated upper and lower private water tanks for complete independence.",
-        descAr: "خزان مياه مستقل (علوي وسفلي) لكل شقة لضمان الاستقلالية التامة."
-      },
-      {
-        badge: "⚡",
-        titleEn: "PRIVATE POWER METER",
-        titleAr: "عداد كهرباء مستقل",
-        descEn: "Dedicated smart electricity meter assigned to each apartment.",
-        descAr: "عداد كهرباء مستقل وخاص بكل وحدة سكنية."
-      },
-      {
-        badge: "📜",
-        titleEn: "STRUCTURAL GUARANTEES",
-        titleAr: "ضمانات إنشائية وتأمين",
-        descEn: "20-year structural framework warranty, 15-year MEP, and 10-year Tawuniya insurance.",
-        descAr: "ضمان ٢٠ عاماً على الهيكل الإنشائي و١٥ عاماً على التمديدات وتأمين التعاونية."
-      },
-      {
-        badge: "🛋️",
-        titleEn: "INTERNAL SITTING AREAS",
-        titleAr: "جلسات واستراحات داخلية",
-        descEn: "Elegantly furnished community seating lounges and family waiting spaces.",
-        descAr: "مساحات جلوس واستراحات عائلية داخلية مصممة بأناقة وراحة."
-      }
-    ],
-    
-    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3400.6689365607936!2d39.6983056!3d24.436027799999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjTCsDI2JzA5LjciTiAzOcKwNDEnNTMuOSJF!5e1!3m2!1sen!2sin!4v1782909993578!5m2!1sen!2sin",
-    landmarks: [
-      { nameEn: "King Abdullah Road (2nd Ring)", nameAr: "طريق الملك عبدالله (الدائري الثاني)", distEn: "7 Mins", distAr: "٧ دقائق" },
-      { nameEn: "Haramain High-Speed Railway Station", nameAr: "محطة قطار الحرمين السريع", distEn: "10 Mins", distAr: "١٠ دقائق" },
-      { nameEn: "Al-Masjid an-Nabawi", nameAr: "المسجد النبوي الشريف", distEn: "12 Mins", distAr: "١٢ دقيقة" },
-      { nameEn: "Historic Quba Mosque", nameAr: "مسجد قباء التاريخي", distEn: "12 Mins", distAr: "١٢ دقيقة" }
-    ],
-    
-    brochureUrl: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1782909932/kinioevhhm4dndp9y1mb.pdf",
-    brochureSizeEn: "12.4 MB PDF",
-    brochureSizeAr: "١٢.٤ ميجابايت PDF"
   },
 
   // ── 4. SHURFAH ───────────────────────────────────────────────────────────
@@ -711,11 +714,7 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       { nameEn: "King Abdulaziz University", nameAr: "جامعة الملك عبدالعزيز", distEn: "4 Mins", distAr: "٤ دقائق" },
       { nameEn: "Haramain High-Speed Train Station", nameAr: "محطة قطار الحرمين السريع", distEn: "4 Mins", distAr: "٤ دقائق" },
       { nameEn: "Dr. Sulaiman Al-Habib Hospital", nameAr: "مستشفى د. سليمان الحبيب", distEn: "6 Mins", distAr: "٦ دقائق" }
-    ],
-    
-    brochureUrl: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1781687243/waxv6n8w6bzu1f5kw0kg.pdf",
-    brochureSizeEn: "16.8 MB PDF",
-    brochureSizeAr: "١٦.٨ ميجابايت PDF"
+    ]
   },
 
   // ── 5. AL EZZ PROJECT (101) ───────────────────────────────────────────────
@@ -898,11 +897,7 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       { nameEn: "Al Andalus Mall", nameAr: "الأندلس مول", distEn: "4 Mins", distAr: "٤ دقائق" },
       { nameEn: "King Abdulaziz University", nameAr: "جامعة الملك عبدالعزيز", distEn: "4 Mins", distAr: "٤ دقائق" },
       { nameEn: "Haramain High-Speed Train Station", nameAr: "محطة قطار الحرمين السريع", distEn: "4 Mins", distAr: "٤ دقائق" }
-    ],
-    
-    brochureUrl: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1781691462/nhxveu4gyjbbzl766uvv.pdf",
-    brochureSizeEn: "14.2 MB PDF",
-    brochureSizeAr: "١٤.٢ ميجابايت PDF"
+    ]
   },
 
   // ── 6. WAHJ AL OLAYA ─────────────────────────────────────────────────────
@@ -1050,11 +1045,7 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       { nameEn: "King Abdulaziz International Airport", nameAr: "مطار الملك عبدالعزيز الدولي", distEn: "10 Mins", distAr: "١٠ دقائق" },
       { nameEn: "King Abdullah Sports City (Al Jawhara)", nameAr: "مدينة الملك عبدالله الرياضية (الجوهرة)", distEn: "8 Mins", distAr: "٨ دقائق" },
       { nameEn: "Jeddah Superdome", nameAr: "مجمع جدة سوبر دوم", distEn: "7 Mins", distAr: "٧ دقائق" }
-    ],
-    
-    brochureUrl: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1784539737/lqsqwixbq83ecxzrpgw6.pdf",
-    brochureSizeEn: "18.5 MB PDF",
-    brochureSizeAr: "١٨.٥ ميجابايت PDF"
+    ]
   },
 
   // ── 7. AL REHAB PROJECT ─────────────────────────────────────────────────
@@ -1218,11 +1209,7 @@ export const PROJECTS_DATA: ProjectDetail[] = [
       { nameEn: "King Fahd Road Highway", nameAr: "طريق الملك فهد السريع", distEn: "7 Mins", distAr: "٧ دقائق" },
       { nameEn: "King Khalid International Airport", nameAr: "مطار الملك خالد الدولي", distEn: "15 Mins", distAr: "١٥ دقيقة" },
       { nameEn: "Riyadh Front & Business Gate", nameAr: "واجهة الرياض وبوابة الأعمال", distEn: "12 Mins", distAr: "١٢ دقيقة" }
-    ],
-    
-    brochureUrl: "https://res.cloudinary.com/dmfv1fyhp/image/upload/v1781176090/iw1p2dyb4yt0yvcdp5oq.pdf",
-    brochureSizeEn: "11.6 MB PDF",
-    brochureSizeAr: "١١.٦ ميجابايت PDF"
+    ]
   },
 
   // ── 8. SAKAN VIEW ─────────────────────────────────────────────────────────
