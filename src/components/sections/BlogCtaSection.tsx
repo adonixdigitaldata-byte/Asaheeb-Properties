@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
-import { POSTS } from "@/data/blogData";
+import { PostMetadata } from "@/types/database";
+import { getPublishedPostMetadata } from "@/lib/api";
 
 export default function BlogCtaSection() {
   const { lang } = useLanguage();
@@ -14,8 +15,16 @@ export default function BlogCtaSection() {
   const headRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
+  const [postsList, setPostsList] = useState<PostMetadata[]>([]);
+
+  useEffect(() => {
+    getPublishedPostMetadata().then((data) => {
+      setPostsList(data || []);
+    });
+  }, []);
+
   // Take the latest 3 posts to showcase
-  const featuredPosts = POSTS.slice(0, 3);
+  const featuredPosts = postsList.slice(0, 3);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);

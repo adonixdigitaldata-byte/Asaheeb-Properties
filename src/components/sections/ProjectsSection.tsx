@@ -6,7 +6,9 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
-import { PROJECTS_DATA, ProjectDetail } from "@/data/projectsData";
+import { getPublishedProjectDetails } from "@/lib/api";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import { ProjectDetail } from "@/types/database";
 import { getWhatsAppLink } from "@/data/contactConfig";
 
 function ProjectCard({ project, index }: { project: ProjectDetail; index: number }) {
@@ -20,6 +22,8 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
   const price = isAr ? project.startingPriceAr : project.startingPriceEn;
   const status = isAr ? project.statusAr : project.statusEn;
   const type = isAr ? project.typeAr : project.typeEn;
+  const rawImageUrl = project.images?.[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop";
+  const imageUrl = getOptimizedImageUrl(rawImageUrl, 800);
 
   return (
     <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
@@ -37,7 +41,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
         {/* Image */}
         <div className="relative overflow-hidden" style={{ height: "220px" }}>
           <Image
-            src={project.images[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop"}
+            src={imageUrl}
             alt={name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -136,8 +140,21 @@ export default function ProjectsSection() {
   const featRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const featured = PROJECTS_DATA[0]; // 1 Featured (#1)
-  const rest = PROJECTS_DATA.slice(1, 4); // 3 items in grid -> Total = 4 properties
+  const [projectsList, setProjectsList] = useState<ProjectDetail[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getPublishedProjectDetails()
+      .then((data) => {
+        setProjectsList(data || []);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const featured = projectsList[0];
+  const rest = projectsList.slice(1, 4);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -237,81 +254,85 @@ export default function ProjectsSection() {
           </div>
         </div>
 
-        {/* ── FEATURED #1 PROJECT CARD (ITLALA TOWERS) ────────────────────────── */}
-        <div ref={featRef} className="mb-8">
-          <Link href={`/projects/${featured.id}`} className="block group">
-            <div
-              className="relative overflow-hidden border border-[#B8873B]/30 hover:border-[#B8873B]/70 transition-all duration-500 rounded-sm"
-              style={{
-                background: "linear-gradient(135deg, rgba(184,135,59,0.08) 0%, rgba(18,19,15,0.95) 70%)",
-                boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
-              }}
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
-                {/* Image */}
-                <div className="lg:col-span-7 relative h-72 sm:h-96 lg:h-[420px] overflow-hidden">
-                  <Image
-                    src={featured.images[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop"}
-                    alt={isAr ? featured.nameAr : featured.nameEn}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 60vw"
-                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                    priority
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#12130F] via-transparent to-transparent opacity-90 lg:opacity-60" />
+        {/* ── FEATURED #1 PROJECT CARD ────────────────────────── */}
+        {featured && (
+          <div ref={featRef} className="mb-8">
+            <Link href={`/projects/${featured.id}`} className="block group">
+              <div
+                className="relative overflow-hidden border border-[#B8873B]/30 hover:border-[#B8873B]/70 transition-all duration-500 rounded-sm"
+                style={{
+                  background: "linear-gradient(135deg, rgba(184,135,59,0.08) 0%, rgba(18,19,15,0.95) 70%)",
+                  boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
+                }}
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
+                  {/* Image */}
+                  <div className="lg:col-span-7 relative h-72 sm:h-96 lg:h-[420px] overflow-hidden">
+                    <Image
+                      src={getOptimizedImageUrl(featured.images?.[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop", 1200)}
+                      alt={isAr ? featured.nameAr : featured.nameEn}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                      className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                      priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#12130F] via-transparent to-transparent opacity-90 lg:opacity-60" />
 
-                  {/* Badge */}
-                  <div className="absolute top-5 left-5 px-3.5 py-1 font-mono text-[9px] tracking-[0.25em] uppercase font-bold text-[#12130F] bg-[#B8873B]">
-                    {isAr ? "المشروع المميز" : "FLAGSHIP PROJECT"}
-                  </div>
-                </div>
-
-                {/* Info */}
-                <div className={`lg:col-span-5 p-8 lg:p-10 ${isAr ? "text-right" : ""}`}>
-                  <div className={`flex items-center gap-2.5 mb-3 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
-                    <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#B8873B]">
-                      {isAr ? `${featured.cityAr} ، ${featured.districtAr}` : `${featured.cityEn}, ${featured.districtEn}`}
-                    </span>
-                    <span className="text-[#C5BCAD]">•</span>
-                    <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#7FA8B3]">
-                      {isAr ? featured.statusAr : featured.statusEn}
-                    </span>
+                    {/* Badge */}
+                    <div className="absolute top-5 left-5 px-3.5 py-1 font-mono text-[9px] tracking-[0.25em] uppercase font-bold text-[#12130F] bg-[#B8873B]">
+                      {isAr ? "المشروع المميز" : "FLAGSHIP PROJECT"}
+                    </div>
                   </div>
 
-                  <h3 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] font-normal mb-4 group-hover:text-[#B8873B] transition-colors duration-300">
-                    {isAr ? featured.nameAr : featured.nameEn}
-                  </h3>
-
-                  <p className="font-sans text-xs sm:text-sm text-[#C5BCAD] leading-relaxed mb-6 line-clamp-3">
-                    {isAr ? featured.overviewAr : featured.overviewEn}
-                  </p>
-
-                  <div className={`pt-4 border-t border-white/10 flex items-center justify-between gap-4 ${isAr ? "flex-row-reverse" : ""}`}>
-                    <div>
-                      <p className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</p>
-                      <p className="font-display text-xl sm:text-2xl font-bold text-[#B8873B]">
-                        {isAr ? featured.priceRangeAr : featured.priceRangeEn}
-                      </p>
+                  {/* Info */}
+                  <div className={`lg:col-span-5 p-8 lg:p-10 ${isAr ? "text-right" : ""}`}>
+                    <div className={`flex items-center gap-2.5 mb-3 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#B8873B]">
+                        {isAr ? `${featured.cityAr} ، ${featured.districtAr}` : `${featured.cityEn}, ${featured.districtEn}`}
+                      </span>
+                      <span className="text-[#C5BCAD]">•</span>
+                      <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#7FA8B3]">
+                        {isAr ? featured.statusAr : featured.statusEn}
+                      </span>
                     </div>
 
-                    <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border border-[#B8873B] text-[#B8873B] group-hover:bg-[#B8873B] group-hover:text-[#12130F] transition-all duration-300 font-semibold">
-                      {isAr ? "عرض تفاصيل المشروع" : "Explore Project →"}
+                    <h3 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] font-normal mb-4 group-hover:text-[#B8873B] transition-colors duration-300">
+                      {isAr ? featured.nameAr : featured.nameEn}
+                    </h3>
+
+                    <p className="font-sans text-xs sm:text-sm text-[#C5BCAD] leading-relaxed mb-6 line-clamp-3">
+                      {isAr ? featured.overviewAr : featured.overviewEn}
+                    </p>
+
+                    <div className={`pt-4 border-t border-white/10 flex items-center justify-between gap-4 ${isAr ? "flex-row-reverse" : ""}`}>
+                      <div>
+                        <p className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</p>
+                        <p className="font-display text-xl sm:text-2xl font-bold text-[#B8873B]">
+                          {isAr ? featured.priceRangeAr : featured.priceRangeEn}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-3 border border-[#B8873B] text-[#B8873B] group-hover:bg-[#B8873B] group-hover:text-[#12130F] transition-all duration-300 font-semibold">
+                        {isAr ? "عرض تفاصيل المشروع" : "Explore Project →"}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </Link>
-        </div>
+            </Link>
+          </div>
+        )}
 
         {/* ── REST OF THE PROJECTS GRID ───────────────────────────────────── */}
-        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-          {rest.map((proj, i) => (
-            <div key={proj.id} className="project-grid-card">
-              <ProjectCard project={proj} index={i} />
-            </div>
-          ))}
-        </div>
+        {rest.length > 0 && (
+          <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+            {rest.map((proj, i) => (
+              <div key={proj.id} className="project-grid-card">
+                <ProjectCard project={proj} index={i} />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-end gap-5 pt-8 border-t border-[rgba(255,255,255,0.06)]">

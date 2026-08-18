@@ -41,6 +41,7 @@ export default function PageNav() {
                 fill
                 unoptimized
                 priority
+                loading="eager"
                 className="object-contain object-left rtl:object-right"
               />
             </div>

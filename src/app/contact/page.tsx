@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
 import { PHONE_NUMBER_DISPLAY, WHATSAPP_NUMBER, CONTACT_EMAIL, getWhatsAppLink } from "@/data/contactConfig";
+import { submitWebsiteLead } from "@/lib/api";
 import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
@@ -171,7 +172,6 @@ export default function ContactPage() {
   const { lang } = useLanguage();
   const isAr = lang === "ar";
   const c = isAr ? CONTENT.ar : CONTENT.en;
-  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", interest: "", budget: "", message: "" });
 
   const heroRef = useRef<HTMLDivElement>(null);
@@ -213,25 +213,32 @@ export default function ContactPage() {
     return () => ctx.revert();
   }, [isAr]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setErrorMsg(null);
     try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "Contact Page Advisory Form",
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          interest: form.interest,
-          budget: form.budget,
-          message: form.message,
-        }),
+      await submitWebsiteLead({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        interest: form.interest || "General Advisory Inquiry",
+        budget: form.budget,
+        message: form.message,
+        source: "WEBSITE_FORM",
+        form_type: "Contact Page Advisory Form",
       });
+      setSubmitted(true);
     } catch (err) {
       console.error("Error submitting contact form:", err);
+      setErrorMsg(isAr ? "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى أو مراسلتنا عبر واتساب." : "An error occurred while submitting. Please try again or message us directly via WhatsApp.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -319,15 +326,34 @@ export default function ContactPage() {
                     style={{ backgroundColor: "rgba(18,19,15,0.6)" }}
                   />
                 </div>
+                {errorMsg && (
+                  <div className="field-wrap p-4 border border-red-500/40 bg-red-500/10 text-red-300 font-sans text-xs text-center rounded-xs">
+                    {errorMsg}
+                  </div>
+                )}
+
                 <div className="field-wrap">
                   <button
                     type="submit"
-                    className="w-full py-4 font-mono text-[10.5px] tracking-[0.25em] uppercase border border-[#B8873B] text-[#12130F] bg-[#B8873B] hover:bg-transparent hover:text-[#B8873B] transition-all duration-300 flex items-center justify-center gap-3 font-semibold shadow-[0_0_25px_rgba(184,135,59,0.2)]"
+                    disabled={isSubmitting}
+                    className="w-full py-4 font-mono text-[10.5px] tracking-[0.25em] uppercase border border-[#B8873B] text-[#12130F] bg-[#B8873B] hover:bg-transparent hover:text-[#B8873B] transition-all duration-300 flex items-center justify-center gap-3 font-semibold shadow-[0_0_25px_rgba(184,135,59,0.2)] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
                   >
-                    {c.fields.submit}
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
-                      <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4 text-[#12130F]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        <span>{isAr ? "جاري الإرسال..." : "Submitting..."}</span>
+                      </>
+                    ) : (
+                      <>
+                        {c.fields.submit}
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
+                          <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

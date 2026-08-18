@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { getWhatsAppLink } from "@/data/contactConfig";
+import { submitWebsiteLead } from "@/lib/api";
 
 const INTEREST_OPTIONS_EN = ["Apartments", "Villas", "Land", "Buildings", "All Asset Types"];
 const INTEREST_OPTIONS_AR = ["شقق سكنية", "فلل", "أراضي", "مباني", "جميع الأصول"];
@@ -34,28 +35,33 @@ export default function LeadFormSection() {
     budget: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [focused, setFocused] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setErrorMsg(null);
     try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "Homepage Lead Form",
-          name: form.name,
-          phone: form.phone,
-          email: form.email,
-          interest: form.interest,
-          budget: form.budget,
-          message: form.message,
-        }),
+      await submitWebsiteLead({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        interest: form.interest || "General Property Inquiry",
+        budget: form.budget,
+        message: form.message,
+        source: "WEBSITE_FORM",
+        form_type: "Homepage Lead Form",
       });
-    } catch (err) {
+      setSubmitted(true);
+    } catch (err: any) {
       console.error("Error posting lead form:", err);
+      setErrorMsg(isAr ? "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى أو التواصل معنا عبر واتساب." : "An error occurred while submitting. Please try again or reach out via WhatsApp.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -377,26 +383,46 @@ export default function LeadFormSection() {
                     />
                   </div>
 
+                  {/* Error Alert if any */}
+                  {errorMsg && (
+                    <div className="sm:col-span-2 p-4 border border-red-500/40 bg-red-500/10 text-red-300 font-sans text-xs text-center rounded-xs">
+                      {errorMsg}
+                    </div>
+                  )}
+
                   {/* Submit */}
                   <div className="sm:col-span-2">
                     <button
                       type="submit"
-                      className="w-full py-4 font-mono text-sm tracking-[0.28em] uppercase font-bold transition-all duration-400 group relative overflow-hidden"
+                      disabled={isSubmitting}
+                      className="w-full py-4 font-mono text-sm tracking-[0.28em] uppercase font-bold transition-all duration-400 group relative overflow-hidden flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: "#B8873B",
                         color: "#12130F",
                         boxShadow: "0 0 40px rgba(184,135,59,0.35)",
                       }}
                       onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#c99a49";
-                        (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 60px rgba(184,135,59,0.6)";
+                        if (!isSubmitting) {
+                          (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#c99a49";
+                          (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 60px rgba(184,135,59,0.6)";
+                        }
                       }}
                       onMouseLeave={(e) => {
                         (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#B8873B";
                         (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 40px rgba(184,135,59,0.35)";
                       }}
                     >
-                      {isAr ? "احصل على خطتي الاستثمارية" : "Get My Investment Plan"}
+                      {isSubmitting ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4 text-[#12130F]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                          </svg>
+                          <span>{isAr ? "جاري الإرسال..." : "Submitting..."}</span>
+                        </>
+                      ) : (
+                        <span>{isAr ? "احصل على خطتي الاستثمارية" : "Get My Investment Plan"}</span>
+                      )}
                     </button>
 
                     <p className="font-mono text-[9px] text-[#8C8477] tracking-[0.18em] text-center mt-4">

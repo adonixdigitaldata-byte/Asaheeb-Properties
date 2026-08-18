@@ -197,11 +197,43 @@ export default function PageFooter() {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className={`py-6 flex flex-col sm:flex-row items-center justify-between gap-4 ${isAr ? "sm:flex-row-reverse" : ""}`}>
+        {/* Copyright & Agency Credit */}
+        <div className={`py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left ${isAr ? "md:flex-row-reverse md:text-right" : ""}`}>
           <p className="font-mono text-[9px] tracking-[0.18em] text-[#C5BCAD]">
             © 2026 Asaheeb Real Estate. {isAr ? "جميع الحقوق محفوظة." : "All rights reserved."}
           </p>
+
+          {/* Adonix Agency Credit Badge */}
+          <a
+            href="https://portfolio.adonixdigital.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Adonix Digital - Web Design & Development Agency"
+            className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#B8873B]/30 bg-[#B8873B]/5 hover:bg-[#B8873B]/15 hover:border-[#B8873B]/70 transition-all duration-300 shadow-[0_0_15px_rgba(184,135,59,0.05)] hover:shadow-[0_0_20px_rgba(184,135,59,0.25)]"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B] group-hover:scale-125 transition-transform" />
+            <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#C5BCAD] group-hover:text-[#E8DFCE] transition-colors">
+              {isAr ? "تصميم وتطوير بواسطة" : "Designed & Developed by"}{" "}
+              <span className="font-bold text-[#B8873B] group-hover:text-white transition-colors underline decoration-[#B8873B]/40 underline-offset-2">
+                ADONIX
+              </span>
+            </span>
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-[#B8873B] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"
+            >
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg>
+          </a>
+
           <div className={`flex gap-5 ${isAr ? "flex-row-reverse" : ""}`}>
             <Link href="/privacy" className="font-mono text-[9px] tracking-[0.15em] text-[#C5BCAD] hover:text-[#B8873B] transition-colors duration-300">
               {isAr ? "سياسة الخصوصية" : "Privacy Policy"}

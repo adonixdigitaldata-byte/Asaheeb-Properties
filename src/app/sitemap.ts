@@ -1,8 +1,7 @@
 import { MetadataRoute } from "next";
-import { PROJECTS_DATA } from "@/data/projectsData";
-import { POSTS } from "@/data/blogData";
+import { getPublishedProjects, getPublishedBlogs } from "@/lib/api";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.asaheebrealestate.com";
 
   // Static routes
@@ -18,21 +17,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" ? "daily" : "weekly",
+    changeFrequency: (route === "" ? "daily" : "weekly") as MetadataRoute.Sitemap[0]["changeFrequency"],
     priority: route === "" ? 1.0 : route === "/projects" || route === "/blog" ? 0.9 : 0.8,
   }));
 
-  // Dynamic project routes
-  const projectRoutes: MetadataRoute.Sitemap = PROJECTS_DATA.map((proj) => ({
-    url: `${baseUrl}/projects/${proj.id}`,
+  // Fetch dynamic projects from DB
+  const dbProjects = await getPublishedProjects();
+  const projectRoutes: MetadataRoute.Sitemap = dbProjects.map((p) => ({
+    url: `${baseUrl}/projects/${p.id}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
     priority: 0.85,
   }));
 
-  // Dynamic blog routes
-  const blogRoutes: MetadataRoute.Sitemap = POSTS.map((post) => ({
-    url: `${baseUrl}/blog/${post.id}`,
+  // Fetch dynamic blogs from DB
+  const dbBlogs = await getPublishedBlogs();
+  const blogRoutes: MetadataRoute.Sitemap = dbBlogs.map((b) => ({
+    url: `${baseUrl}/blog/${b.id}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.75,
