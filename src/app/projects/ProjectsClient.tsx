@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
@@ -12,11 +12,41 @@ import { ProjectDetail } from "@/types/database";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { getWhatsAppLink } from "@/data/contactConfig";
 
-const CATEGORIES = [
-  { key: "all",  en: "All Cities",      ar: "جميع المدن" },
-  { key: "Jeddah", en: "Jeddah",         ar: "جدة" },
-  { key: "Riyadh", en: "Riyadh",         ar: "الرياض" },
-  { key: "Madinah", en: "Madinah",       ar: "المدينة المنورة" },
+// Known Saudi city translations dictionary for clean bilingual fallbacks
+const KNOWN_CITIES: Record<string, { en: string; ar: string }> = {
+  riyadh: { en: "Riyadh", ar: "الرياض" },
+  jeddah: { en: "Jeddah", ar: "جدة" },
+  madinah: { en: "Madinah", ar: "المدينة المنورة" },
+  "madinah al-munawwarah": { en: "Madinah", ar: "المدينة المنورة" },
+  makkah: { en: "Makkah", ar: "مكة المكرمة" },
+  dammam: { en: "Dammam", ar: "الدمام" },
+  khobar: { en: "Al Khobar", ar: "الخبر" },
+  "al khobar": { en: "Al Khobar", ar: "الخبر" },
+  "al-khobar": { en: "Al Khobar", ar: "الخبر" },
+  dhahran: { en: "Dhahran", ar: "الظهران" },
+  tabuk: { en: "Tabuk", ar: "تبوك" },
+  taif: { en: "Taif", ar: "الطائف" },
+  abha: { en: "Abha", ar: "أبها" },
+  "khamis mushait": { en: "Khamis Mushait", ar: "خميس مشيط" },
+  jubail: { en: "Jubail", ar: "الجبيل" },
+  "al ahsa": { en: "Al Ahsa", ar: "الأحساء" },
+  "al-ahsa": { en: "Al Ahsa", ar: "الأحساء" },
+  yanbu: { en: "Yanbu", ar: "ينبع" },
+  jazan: { en: "Jazan", ar: "جازان" },
+  najran: { en: "Najran", ar: "نجران" },
+  hail: { en: "Hail", ar: "حائل" },
+  alula: { en: "AlUla", ar: "العلا" },
+  buraidah: { en: "Buraidah", ar: "بريدة" },
+  qassim: { en: "Al Qassim", ar: "القصيم" },
+  neom: { en: "NEOM", ar: "نيوم" },
+};
+
+const DEFAULT_CATEGORIES = [
+  { key: "all", en: "All Cities", ar: "جميع المدن" },
+  { key: "Jeddah", en: "Jeddah", ar: "جدة" },
+  { key: "Riyadh", en: "Riyadh", ar: "الرياض" },
+  { key: "Madinah", en: "Madinah", ar: "المدينة المنورة" },
+  { key: "Dammam", en: "Dammam", ar: "الدمام" },
 ];
 
 const STATUS_OPTIONS = [
@@ -161,6 +191,49 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const c = isAr ? CONTENT.ar : CONTENT.en;
   const [projectsList] = useState<ProjectDetail[]>(initialProjects);
   
+  // Dynamically derive all available cities from actual properties in the portfolio
+  const availableCategories = useMemo(() => {
+    if (!projectsList || projectsList.length === 0) {
+      return DEFAULT_CATEGORIES;
+    }
+
+    const cityMap = new Map<string, { key: string; en: string; ar: string }>();
+
+    projectsList.forEach((p) => {
+      const rawCityEn = (p.cityEn || "").trim();
+      const rawCityAr = (p.cityAr || "").trim();
+      if (!rawCityEn && !rawCityAr) return;
+
+      const normKey = (rawCityEn || rawCityAr).toLowerCase();
+      const known = KNOWN_CITIES[normKey];
+
+      if (!cityMap.has(normKey)) {
+        cityMap.set(normKey, {
+          key: rawCityEn || known?.en || rawCityAr,
+          en: rawCityEn || known?.en || rawCityAr,
+          ar: rawCityAr || known?.ar || rawCityEn,
+        });
+      } else {
+        const item = cityMap.get(normKey)!;
+        if (rawCityAr && (!item.ar || item.ar === item.en)) {
+          item.ar = rawCityAr;
+        }
+        if (rawCityEn && (!item.en || item.en === item.ar)) {
+          item.en = rawCityEn;
+        }
+      }
+    });
+
+    const dynamicCities = Array.from(cityMap.values());
+    // Alphabetical sort by English name for sleek, organized aesthetic
+    dynamicCities.sort((a, b) => a.en.localeCompare(b.en));
+
+    return [
+      { key: "all", en: "All Cities", ar: "جميع المدن" },
+      ...dynamicCities,
+    ];
+  }, [projectsList]);
+
   // Filter States (Committed on Page)
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
@@ -231,10 +304,12 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         if (!matchSearch) return false;
       }
 
-      // 2. City
+      // 2. City (Case-insensitive & bilingual match)
       if (cat !== "all") {
-        const cityLower = p.cityEn.toLowerCase();
-        if (cityLower !== cat.toLowerCase()) return false;
+        const pCityEn = (p.cityEn || "").toLowerCase().trim();
+        const pCityAr = (p.cityAr || "").toLowerCase().trim();
+        const catLower = cat.toLowerCase().trim();
+        if (pCityEn !== catLower && pCityAr !== catLower) return false;
       }
 
       // 3. Status
@@ -458,7 +533,9 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
               <div className={`flex items-center gap-2 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
                 {activeCategory !== "all" && (
                   <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 bg-[#171914] border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs">
-                    <span>{CATEGORIES.find((c) => c.key === activeCategory)?.[isAr ? "ar" : "en"]}</span>
+                    <span>
+                      {availableCategories.find((c) => c.key.toLowerCase() === activeCategory.toLowerCase())?.[isAr ? "ar" : "en"] || activeCategory}
+                    </span>
                     <button onClick={() => handleCategoryChange("all")} className="text-[#8C8477] hover:text-[#B8873B] cursor-pointer">✕</button>
                   </span>
                 )}
@@ -521,13 +598,16 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                   {c.filterCityLabel}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  {CATEGORIES.map((cat) => {
-                    const isSelected = draftCategory === cat.key;
+                  {availableCategories.map((cat) => {
+                    const isSelected = draftCategory.toLowerCase() === cat.key.toLowerCase();
+                    const isAll = cat.key === "all";
                     return (
                       <button
                         key={cat.key}
                         onClick={() => setDraftCategory(cat.key)}
                         className={`p-3 border text-center font-mono text-[10px] tracking-wider uppercase transition-all duration-200 cursor-pointer rounded-xs ${
+                          isAll && availableCategories.length % 2 === 0 ? "col-span-2" : ""
+                        } ${
                           isSelected
                             ? "border-[#B8873B] bg-[#B8873B] text-[#12130F] font-bold shadow-[0_0_15px_rgba(184,135,59,0.25)]"
                             : "border-white/10 bg-[#171914] text-[#8C8477] hover:border-white/25 hover:text-[#C5BCAD]"
