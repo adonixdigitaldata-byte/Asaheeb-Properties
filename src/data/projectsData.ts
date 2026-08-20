@@ -53,6 +53,10 @@ export interface ProjectDetail {
   // Media
   images: { url: string; captionEn?: string; captionAr?: string }[];
   videoUrl?: string; // YouTube embed or direct MP4 URL
+  videoItems?: Array<{ url: string; titleEn?: string; titleAr?: string }>;
+  paymentTermsEn?: string;
+  paymentTermsAr?: string;
+  floorPlans?: Array<{ url: string; captionEn?: string; captionAr?: string }>;
   
   // Amenities (No SVG required, clean styled badges)
   amenities: Amenity[];
@@ -64,6 +68,8 @@ export interface ProjectDetail {
   
   // Brochure
   brochureUrl?: string;
+  brochureUrlEn?: string;
+  brochureUrlAr?: string;
   brochureSizeEn?: string;
   brochureSizeAr?: string;
 }

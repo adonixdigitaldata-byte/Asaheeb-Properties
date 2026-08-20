@@ -51,6 +51,12 @@ export interface Project {
   highlights_ar?: string[];
   images?: ProjectImage[];
   video_url?: string;
+  video_items?: Array<{ url: string; titleEn?: string; titleAr?: string }>;
+  payment_terms_en?: string;
+  payment_terms_ar?: string;
+  floor_plans?: Array<{ url: string; captionEn?: string; captionAr?: string }>;
+  brochure_url_en?: string;
+  brochure_url_ar?: string;
   map_embed_url?: string;
   google_maps_url?: string;
   landmarks?: Landmark[];
@@ -119,6 +125,7 @@ export interface WebsiteInquiryPayload {
   source?: "WEBSITE_FORM" | "PROPERTY_INQUIRY" | "WHATSAPP";
   form_type?: string;
   notes?: string;
+  skipEmail?: boolean;
 }
 
 export type LeadSubmissionPayload = WebsiteInquiryPayload;
@@ -155,6 +162,12 @@ export interface ProjectDetail {
   highlightsAr: string[];
   images: ProjectImage[];
   videoUrl?: string;
+  videoItems?: Array<{ url: string; titleEn?: string; titleAr?: string }>;
+  paymentTermsEn?: string;
+  paymentTermsAr?: string;
+  floorPlans?: Array<{ url: string; captionEn?: string; captionAr?: string }>;
+  brochureUrlEn?: string;
+  brochureUrlAr?: string;
   mapEmbedUrl?: string;
   googleMapsUrl?: string;
   landmarks: Landmark[];

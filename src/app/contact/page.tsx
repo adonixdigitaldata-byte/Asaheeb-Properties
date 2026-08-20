@@ -4,7 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
-import { PHONE_NUMBER_DISPLAY, WHATSAPP_NUMBER, CONTACT_EMAIL, getWhatsAppLink } from "@/data/contactConfig";
+import {
+  PHONE_NUMBER_DISPLAY,
+  WHATSAPP_NUMBER,
+  CONTACT_EMAIL,
+  COMPANY_ADDRESS_EN,
+  COMPANY_ADDRESS_AR,
+  GOOGLE_MAPS_LINK,
+  GOOGLE_MAPS_EMBED_URL,
+  BUSINESS_HOURS_EN,
+  BUSINESS_HOURS_AR,
+  getWhatsAppLink,
+} from "@/data/contactConfig";
 import { submitWebsiteLead } from "@/lib/api";
 import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
@@ -33,10 +44,14 @@ const CONTENT = {
     whatsappTitle: "WhatsApp — Instant Support",
     whatsappSub: "Message us directly. Our team replies in Arabic and English.",
     whatsappBtn: "Open WhatsApp",
-    officeTitle: "Office Location",
-    officeAddr: "Jeddah, Saudi Arabia",
+    officeTitle: "Headquarters Office",
+    officeAddr: COMPANY_ADDRESS_EN,
+    getDirections: "Open in Google Maps",
     hoursTitle: "Business Hours",
-    hours: "Sun – Thu: 9:00 AM – 6:00 PM (AST)",
+    hours: BUSINESS_HOURS_EN,
+    mapSectionBadge: "Location & Headquarters",
+    mapSectionTitle: "Visit Our Advisory Lounge",
+    mapSectionSub: "Centrally positioned in Matbouli Plaza, Al-Ruwais, Jeddah to welcome clients, partners, and institutional investors.",
     successTitle: "Message Received!",
     successSub: "We'll be in touch within 2 hours. You can also reach us on WhatsApp for faster response.",
   },
@@ -61,10 +76,14 @@ const CONTENT = {
     whatsappTitle: "واتساب — رد فوري",
     whatsappSub: "راسلنا مباشرة. فريقنا يرد بالعربية والإنجليزية.",
     whatsappBtn: "فتح واتساب",
-    officeTitle: "موقع المكتب",
-    officeAddr: "جدة، المملكة العربية السعودية",
-    hoursTitle: "ساعات العمل",
-    hours: "الأحد – الخميس: 9:00 صباحاً – 6:00 مساءً",
+    officeTitle: "المقر الرئيسي",
+    officeAddr: COMPANY_ADDRESS_AR,
+    getDirections: "الاتجاهات على خرائط جوجل",
+    hoursTitle: "أوقات العمل الرسمية",
+    hours: BUSINESS_HOURS_AR,
+    mapSectionBadge: "الموقع والمقر الرئيسي",
+    mapSectionTitle: "تفضل بزيارة صالة الاستشارات الخاصة",
+    mapSectionSub: "موقع استراتيجي في متبولي بلازا، حي الرويس، جدة لاستقبال العملاء والمستثمرين والشركاء.",
     successTitle: "تم استلام رسالتك!",
     successSub: "سنتواصل معك خلال ساعتين. يمكنك أيضاً التواصل عبر واتساب للرد الأسرع.",
   },
@@ -247,7 +266,7 @@ export default function ContactPage() {
       <PageNav />
 
       {/* ── HERO SECTION ──────────────────────────────────────────────────── */}
-      <section className="relative min-h-[45vh] flex items-center overflow-hidden pt-28 sm:pt-36 pb-12 px-6 sm:px-10 lg:px-20">
+      <section className="relative min-h-[40vh] flex items-center overflow-hidden pt-28 sm:pt-36 pb-10 px-6 sm:px-10 lg:px-20">
         <div
           className="absolute pointer-events-none"
           style={{
@@ -259,37 +278,42 @@ export default function ContactPage() {
         />
 
         <div ref={heroRef} className={`relative z-10 max-w-5xl ${isAr ? "mr-auto text-right" : ""}`}>
-          <div className="hero-el inline-flex items-center gap-2 px-4 py-2 mb-6 border rounded-full"
+          <div className="hero-el inline-flex items-center gap-2 px-4 py-2 mb-5 border rounded-full"
             style={{ borderColor: "rgba(184,135,59,0.4)", backgroundColor: "rgba(18,19,15,0.85)" }}>
             <span className="w-2 h-2 rounded-full bg-[#B8873B] animate-ping" />
             <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.28em] uppercase text-[#B8873B] font-semibold">{c.badge}</span>
           </div>
 
           <h1
-            className="hero-el font-display text-4xl sm:text-6xl lg:text-7xl text-[#E8DFCE] font-normal leading-[1.08] tracking-[-0.025em] mb-6"
+            className="hero-el font-display text-4xl sm:text-6xl lg:text-7xl text-[#E8DFCE] font-normal leading-[1.08] tracking-[-0.025em] mb-4"
             style={{ whiteSpace: "pre-line" }}
           >
             {c.heroTitle.split("\n")[0]}{"\n"}
             <span className="italic text-[#B8873B]">{c.heroTitle.split("\n")[1]}</span>
           </h1>
 
-          <p className="hero-el font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-xl">{c.heroSub}</p>
+          <p className="hero-el font-sans text-base sm:text-lg text-[#C5BCAD] leading-relaxed max-w-2xl">{c.heroSub}</p>
         </div>
       </section>
 
       {/* ── CONTACT LAYOUT ────────────────────────────────────────────────── */}
-      <section className="py-16 px-6 sm:px-10 lg:px-20">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+      <section className="py-12 px-6 sm:px-10 lg:px-20 border-t border-white/10">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
 
-          {/* FORM COLUMN */}
-          <div className={isAr ? "lg:order-2" : ""}>
-            <p className={`font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#B8873B] mb-8 ${isAr ? "text-right" : ""}`}>
-              {c.formTitle}
-            </p>
+          {/* FORM COLUMN (7 cols) */}
+          <div className={`lg:col-span-7 ${isAr ? "lg:order-2" : ""}`}>
+            <div className={`mb-6 ${isAr ? "text-right" : ""}`}>
+              <span className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#B8873B] block mb-1">
+                {isAr ? "نموذج التواصل المباشر" : "Direct Inquiry"}
+              </span>
+              <h2 className="font-display text-2xl sm:text-3xl text-[#E8DFCE]">
+                {c.formTitle}
+              </h2>
+            </div>
 
             {submitted ? (
               <div
-                className="p-8 sm:p-12 border border-[#B8873B]/30 text-center"
+                className="p-8 sm:p-12 border border-[#B8873B]/30 text-center rounded-sm"
                 style={{ background: "linear-gradient(135deg, rgba(184,135,59,0.08) 0%, rgba(18,19,15,0.95) 100%)" }}
               >
                 <div className="w-16 h-16 rounded-full border-2 border-[#B8873B] flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(184,135,59,0.4)]">
@@ -301,7 +325,7 @@ export default function ContactPage() {
                 <p className="font-sans text-sm text-[#8C8477] leading-relaxed">{c.successSub}</p>
               </div>
             ) : (
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 bg-[#141510] p-6 sm:p-8 border border-white/10 rounded-sm shadow-xl">
                 <div className="field-wrap">
                   <FloatingInput label={c.fields.name} value={form.name} onChange={(v) => setForm({ ...form, name: v })} isAr={isAr} required />
                 </div>
@@ -319,7 +343,7 @@ export default function ContactPage() {
                   <textarea
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    rows={5}
+                    rows={4}
                     dir={isAr ? "rtl" : "ltr"}
                     placeholder={c.fields.message}
                     className="w-full px-4 py-4 font-sans text-sm text-[#E8DFCE] bg-transparent border border-[rgba(184,135,59,0.2)] focus:border-[#B8873B] outline-none transition-colors duration-300 placeholder-[#8C8477] resize-none"
@@ -332,11 +356,11 @@ export default function ContactPage() {
                   </div>
                 )}
 
-                <div className="field-wrap">
+                <div className="field-wrap pt-2">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 font-mono text-[10.5px] tracking-[0.25em] uppercase border border-[#B8873B] text-[#12130F] bg-[#B8873B] hover:bg-transparent hover:text-[#B8873B] transition-all duration-300 flex items-center justify-center gap-3 font-semibold shadow-[0_0_25px_rgba(184,135,59,0.2)] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+                    className="w-full py-4 font-mono text-[10.5px] tracking-[0.25em] uppercase border border-[#B8873B] text-[#12130F] bg-[#B8873B] hover:bg-[#c99a49] transition-all duration-300 flex items-center justify-center gap-3 font-semibold shadow-[0_0_25px_rgba(184,135,59,0.2)] disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer rounded-xs"
                   >
                     {isSubmitting ? (
                       <>
@@ -348,7 +372,7 @@ export default function ContactPage() {
                       </>
                     ) : (
                       <>
-                        {c.fields.submit}
+                        <span>{c.fields.submit}</span>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
                           <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -360,74 +384,156 @@ export default function ContactPage() {
             )}
           </div>
 
-          {/* INFO COLUMN */}
-          <div ref={infoRef} className={isAr ? "lg:order-1" : ""}>
-            <p className={`font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#B8873B] mb-8 ${isAr ? "text-right" : ""}`}>
-              {c.infoTitle}
-            </p>
+          {/* INFO COLUMN (5 cols) */}
+          <div ref={infoRef} className={`lg:col-span-5 space-y-6 ${isAr ? "lg:order-1" : ""}`}>
+            <div className={`mb-6 ${isAr ? "text-right" : ""}`}>
+              <span className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#B8873B] block mb-1">
+                {isAr ? "قنوات التواصل المباشرة" : "Direct Advisory Channels"}
+              </span>
+              <h2 className="font-display text-2xl sm:text-3xl text-[#E8DFCE]">
+                {c.infoTitle}
+              </h2>
+            </div>
 
-            {/* WhatsApp CTA */}
+            {/* WhatsApp Card */}
             <div
-              className={`p-6 mb-8 border border-[#25D366]/30 hover:border-[#25D366]/60 transition-all duration-300 ${isAr ? "text-right" : ""}`}
+              className={`p-6 border border-[#25D366]/30 hover:border-[#25D366]/60 transition-all duration-300 rounded-sm ${isAr ? "text-right" : ""}`}
               style={{ background: "linear-gradient(135deg, rgba(37,211,102,0.06) 0%, rgba(18,19,15,0.9) 100%)" }}
             >
-              <div className={`flex items-center gap-3 mb-3 ${isAr ? "flex-row-reverse" : ""}`}>
+              <div className={`flex items-center gap-3 mb-2.5 ${isAr ? "flex-row-reverse" : ""}`}>
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(37,211,102,0.3)]"
+                  className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(37,211,102,0.3)]"
                   style={{ backgroundColor: "#25D366" }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                   </svg>
                 </div>
-                <div>
-                  <div className="font-display text-lg text-[#E8DFCE]">{c.whatsappTitle}</div>
-                </div>
+                <div className="font-display text-base text-[#E8DFCE] font-semibold">{c.whatsappTitle}</div>
               </div>
-              <p className="font-sans text-xs sm:text-sm text-[#8C8477] leading-relaxed mb-4">{c.whatsappSub}</p>
+              <p className="font-sans text-xs text-[#8C8477] leading-relaxed mb-4">{c.whatsappSub}</p>
               <a
                 href={getWhatsAppLink(undefined, undefined, isAr)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase px-5 py-2.5 transition-all duration-300 font-semibold ${isAr ? "flex-row-reverse" : ""}`}
+                className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase px-4 py-2 transition-all duration-300 font-semibold rounded-xs shadow-md ${isAr ? "flex-row-reverse" : ""}`}
                 style={{ backgroundColor: "#25D366", color: "#fff" }}
               >
                 <span>{c.whatsappBtn}</span>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className={isAr ? "rotate-180" : ""}>
                   <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
             </div>
 
-            {/* Contact details */}
-            <div className="space-y-5">
-              <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
-                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">{c.officeTitle}</p>
-                <p className="font-sans text-sm text-[#E8DFCE]">{c.officeAddr}</p>
+            {/* Headquarters, Hours, Phone & Email Deck */}
+            <div className="p-6 bg-[#141510] border border-white/10 rounded-sm space-y-5">
+              
+              {/* Office Address */}
+              <div className={`border-l-2 border-[#B8873B] ${isAr ? "border-l-0 border-r-2 pr-3.5 text-right" : "pl-3.5"}`}>
+                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1 font-semibold">{c.officeTitle}</p>
+                <p className="font-sans text-xs sm:text-sm text-[#E8DFCE] leading-relaxed mb-1.5">{c.officeAddr}</p>
+                <a
+                  href={GOOGLE_MAPS_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-wider uppercase text-[#B8873B] hover:underline font-semibold"
+                >
+                  <span>📍 {c.getDirections}</span>
+                  <span>↗</span>
+                </a>
               </div>
-              <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
-                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">Email</p>
-                <a href={`mailto:${CONTACT_EMAIL}`} className="font-sans text-sm text-[#E8DFCE] hover:text-[#B8873B] transition-colors">{CONTACT_EMAIL}</a>
+
+              {/* Business Hours Breakdown */}
+              <div className={`border-l-2 border-[#B8873B] ${isAr ? "border-l-0 border-r-2 pr-3.5 text-right" : "pl-3.5"}`}>
+                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-2 font-semibold">{c.hoursTitle}</p>
+                <div className="space-y-1">
+                  {c.hours.map((h, i) => (
+                    <div key={i} className={`flex items-center justify-between text-xs font-sans max-w-xs ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="text-[#C5BCAD] font-medium">{h.days}:</span>
+                      <span className={`font-mono text-[11px] ${h.hours === "Closed" || h.hours === "مغلق" ? "text-[#8C8477]" : "text-[#E8DFCE]"}`}>
+                        {h.hours}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
-                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">Phone</p>
-                <a href={`tel:${WHATSAPP_NUMBER}`} className="font-sans text-sm text-[#E8DFCE] hover:text-[#B8873B] transition-colors">{PHONE_NUMBER_DISPLAY}</a>
+
+              {/* Phone & Email Rows */}
+              <div className="pt-2 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <p className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#8C8477] mb-0.5">{isAr ? "رقم الهاتف" : "Direct Phone"}</p>
+                  <a href={`tel:${WHATSAPP_NUMBER}`} className="font-sans text-xs text-[#E8DFCE] hover:text-[#B8873B] transition-colors font-medium">{PHONE_NUMBER_DISPLAY}</a>
+                </div>
+                <div>
+                  <p className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#8C8477] mb-0.5">{isAr ? "البريد الإلكتروني" : "Email"}</p>
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="font-sans text-xs text-[#E8DFCE] hover:text-[#B8873B] transition-colors font-medium truncate block">{CONTACT_EMAIL}</a>
+                </div>
               </div>
-              <div className={`border-l-2 border-[#B8873B]/40 ${isAr ? "border-l-0 border-r-2 pr-4 text-right" : "pl-4"}`}>
-                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] mb-1">{c.hoursTitle}</p>
-                <p className="font-sans text-sm text-[#E8DFCE]">{c.hours}</p>
-              </div>
+
             </div>
 
-            {/* Response time note */}
-            <div className={`mt-8 p-4 border border-[#B8873B]/15 ${isAr ? "text-right" : ""}`} style={{ backgroundColor: "rgba(18,19,15,0.4)" }}>
-              <div className={`flex items-center gap-2 mb-1 ${isAr ? "flex-row-reverse" : ""}`}>
-                <span className="w-2 h-2 rounded-full bg-[#25D366] animate-ping" />
-                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#25D366] font-semibold">Live Advisory</span>
-              </div>
-              <p className="font-sans text-xs text-[#8C8477]">{c.responseTime}</p>
-            </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── INTERACTIVE HEADQUARTERS SATELLITE MAP SECTION ───────────────── */}
+      <section className="py-16 px-6 sm:px-10 lg:px-20 border-t border-white/10 bg-[#0F1117]/70">
+        <div className="max-w-6xl mx-auto">
+          
+          {/* Map Header */}
+          <div className={`mb-8 ${isAr ? "text-right" : ""}`}>
+            <span className="font-mono text-[9.5px] tracking-[0.3em] uppercase text-[#B8873B] block mb-1.5">
+              {c.mapSectionBadge}
+            </span>
+            <h2 className="font-display text-2xl sm:text-4xl text-[#E8DFCE] mb-2.5">
+              {c.mapSectionTitle}
+            </h2>
+            <p className="font-sans text-xs sm:text-sm text-[#8C8477] max-w-2xl">
+              {c.mapSectionSub}
+            </p>
+          </div>
+
+          {/* Luxury Cinema Satellite Map Frame */}
+          <div className="border border-white/10 rounded-sm overflow-hidden bg-[#12130F] shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+            
+            {/* Top Frame Bar */}
+            <div className={`px-5 py-3.5 bg-[#171813] border-b border-white/10 flex items-center justify-between gap-4 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+              <div className={`flex items-center gap-2.5 ${isAr ? "flex-row-reverse text-right" : ""}`}>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#B8873B] animate-pulse" />
+                <span className="font-display text-sm text-[#E8DFCE] font-semibold">
+                  {isAr ? "متبولي بلازا — الدور السادس، مكتب ٦٠٢" : "Matbouli Plaza — 6th Floor, Office 602"}
+                </span>
+                <span className="font-mono text-[10px] text-[#8C8477] hidden sm:inline-block">
+                  ({isAr ? "عرض القمر الصناعي عالي الدقة" : "High-Definition Satellite View"})
+                </span>
+              </div>
+
+              <a
+                href={GOOGLE_MAPS_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-mono text-[10px] tracking-wider uppercase text-[#12130F] bg-[#B8873B] px-3.5 py-1.5 rounded-xs hover:bg-[#c99a49] transition-all duration-300 font-bold"
+              >
+                <span>📍 {c.getDirections}</span>
+                <span>↗</span>
+              </a>
+            </div>
+
+            {/* Google Maps Embed iframe (Satellite View) */}
+            <div className="relative w-full h-[380px] sm:h-[480px] bg-black">
+              <iframe
+                src={GOOGLE_MAPS_EMBED_URL}
+                title="Asaheeb Real Estate Headquarters Satellite View - Matbouli Plaza, Jeddah"
+                className="w-full h-full border-0"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+          </div>
+
         </div>
       </section>
 

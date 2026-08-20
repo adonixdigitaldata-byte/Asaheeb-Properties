@@ -25,6 +25,10 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
   const rawImageUrl = project.images?.[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop";
   const imageUrl = getOptimizedImageUrl(rawImageUrl, 800);
 
+  const paymentTerms = isAr
+    ? (project.paymentTermsAr || (project as any).payment_terms_ar)
+    : (project.paymentTermsEn || (project as any).payment_terms_en);
+
   return (
     <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
       <div
@@ -89,6 +93,15 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
               {status}
             </div>
           </div>
+
+          {/* Bottom Overlay Badges: Payment Terms */}
+          {paymentTerms && (
+            <div className={`absolute bottom-2.5 ${isAr ? "right-2.5" : "left-2.5"} z-10 pointer-events-none`}>
+              <span className="inline-flex items-center gap-1 font-mono text-[8.5px] tracking-wider uppercase px-2.5 py-1 bg-black/75 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
+                💳 {paymentTerms}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Body */}
@@ -294,6 +307,14 @@ export default function ProjectsSection() {
                       <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#7FA8B3]">
                         {isAr ? featured.statusAr : featured.statusEn}
                       </span>
+                      {(featured.paymentTermsEn || (featured as any).payment_terms_en) && (
+                        <>
+                          <span className="text-[#C5BCAD]">•</span>
+                          <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#E8DFCE] px-2.5 py-0.5 border border-[#B8873B]/40 bg-[#B8873B]/10">
+                            💳 {isAr ? (featured.paymentTermsAr || (featured as any).payment_terms_ar) : (featured.paymentTermsEn || (featured as any).payment_terms_en)}
+                          </span>
+                        </>
+                      )}
                     </div>
 
                     <h3 className="font-display text-3xl sm:text-4xl text-[#E8DFCE] font-normal mb-4 group-hover:text-[#B8873B] transition-colors duration-300">

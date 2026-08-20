@@ -60,6 +60,9 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     descAr: am.descAr || am.descEn || "",
   }));
 
+  const floorPlans = Array.isArray(p.floor_plans) ? p.floor_plans : [];
+  const videoItems = Array.isArray(p.video_items) ? p.video_items : [];
+
   return {
     id: p.id,
     nameEn,
@@ -92,6 +95,12 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     highlightsAr,
     images: Array.isArray(p.images) ? p.images : [],
     videoUrl: p.video_url,
+    videoItems,
+    paymentTermsEn: p.payment_terms_en,
+    paymentTermsAr: p.payment_terms_ar,
+    floorPlans,
+    brochureUrlEn: p.brochure_url_en,
+    brochureUrlAr: p.brochure_url_ar,
     mapEmbedUrl: p.map_embed_url,
     googleMapsUrl: p.google_maps_url,
     landmarks,
@@ -100,6 +109,73 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     brochureSizeEn: p.brochure_size_en || p.brochure_size_ar,
     brochureSizeAr: p.brochure_size_ar || p.brochure_size_en,
   };
+}
+
+/**
+ * Helper to ensure video URLs are embeddable (e.g. YouTube watch URLs converted to embed URLs)
+ */
+export function formatVideoEmbedUrl(url: string): string {
+  if (!url) return "";
+  let cleanUrl = url.trim();
+
+  // YouTube standard watch URL: https://www.youtube.com/watch?v=VIDEO_ID or youtu.be/VIDEO_ID
+  if (cleanUrl.includes("youtube.com/watch?v=")) {
+    const videoId = cleanUrl.split("v=")[1]?.split("&")[0];
+    if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+  } else if (cleanUrl.includes("youtu.be/")) {
+    const videoId = cleanUrl.split("youtu.be/")[1]?.split("?")[0];
+    if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+  } else if (cleanUrl.includes("vimeo.com/") && !cleanUrl.includes("player.vimeo.com")) {
+    const videoId = cleanUrl.split("vimeo.com/")[1]?.split("?")[0];
+    if (videoId) return `https://player.vimeo.com/video/${videoId}`;
+  }
+
+  return cleanUrl;
+}
+
+/**
+ * Context-aware helper to get project video list.
+ * Supports new video_items array and falls back to legacy video_url field.
+ */
+export function getProjectVideos(project: any): Array<{ url: string; titleEn?: string; titleAr?: string }> {
+  let list: Array<{ url: string; titleEn?: string; titleAr?: string }> = [];
+
+  if (Array.isArray(project?.videoItems) && project.videoItems.length > 0) {
+    list = project.videoItems;
+  } else if (Array.isArray(project?.video_items) && project.video_items.length > 0) {
+    list = project.video_items;
+  } else {
+    const singleUrl = project?.videoUrl || project?.video_url;
+    if (singleUrl) {
+      list = [{ url: singleUrl, titleEn: "Showcase Video", titleAr: "فيديو المشروع" }];
+    }
+  }
+
+  return list
+    .filter((item) => Boolean(item?.url))
+    .map((item) => ({
+      ...item,
+      url: formatVideoEmbedUrl(item.url),
+    }));
+}
+
+/**
+ * Resolves the correct brochure link based on the user's active website language:
+ * - If user is on Arabic website: checks brochure_url_ar -> fallback to brochure_url_en -> fallback to brochure_url
+ * - If user is on English website: checks brochure_url_en -> fallback to brochure_url -> fallback to brochure_url_ar
+ */
+export function getProjectBrochureUrl(project: any, locale: "ar" | "en" = "en"): string | null {
+  if (!project) return null;
+
+  const urlAr = project.brochureUrlAr || project.brochure_url_ar;
+  const urlEn = project.brochureUrlEn || project.brochure_url_en;
+  const urlLegacy = project.brochureUrl || project.brochure_url;
+
+  if (locale === "ar") {
+    return urlAr || urlEn || urlLegacy || null;
+  }
+
+  return urlEn || urlLegacy || urlAr || null;
 }
 
 /**
@@ -381,7 +457,7 @@ export async function getBlogDetailBySlug(slug: string): Promise<BlogDetail | nu
 
 // ─── LEAD & INQUIRY SUBMISSION ───────────────────────────────────────────────
 
-export type { WebsiteInquiryPayload };
+export type { WebsiteInquiryPayload, LeadSubmissionPayload };
 
 /**
  * Submit website lead or property inquiry to Supabase leads table with standard columns and dynamic form_data.
@@ -427,24 +503,30 @@ export async function submitWebsiteLead(payload: WebsiteInquiryPayload) {
     throw error;
   }
 
-  // Trigger internal email route for instant notification
-  try {
-    await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        formType: payload.form_type || payload.source || "Website Lead",
-        projectName: payload.interest || payload.property_id || "",
-        name: payload.name,
-        phone: payload.phone,
-        email: payload.email,
-        interest: payload.interest,
-        budget: payload.budget,
-        message: payload.message || payload.notes,
-      }),
-    });
-  } catch (emailErr) {
-    console.error("Email notification dispatch error:", emailErr);
+  // Trigger internal email route for inquiry leads (skipped for brochure downloads)
+  if (!payload.skipEmail) {
+    try {
+      const baseUrl = typeof window !== "undefined"
+        ? window.location.origin
+        : (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
+
+      await fetch(`${baseUrl}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: payload.form_type || payload.source || "Website Lead",
+          projectName: payload.interest || payload.property_id || "",
+          name: payload.name,
+          phone: payload.phone,
+          email: payload.email,
+          interest: payload.interest,
+          budget: payload.budget,
+          message: payload.message || payload.notes,
+        }),
+      });
+    } catch (emailErr) {
+      console.error("Email notification dispatch error:", emailErr);
+    }
   }
 
   return { success: true };

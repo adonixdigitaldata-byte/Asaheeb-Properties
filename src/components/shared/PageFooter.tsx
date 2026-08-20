@@ -155,9 +155,16 @@ export default function PageFooter() {
             <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#C5BCAD] mb-1">
               {isAr ? "المقر الرئيسي" : "Headquarters"}
             </p>
-            <p className="font-sans text-xs sm:text-sm text-[#D4C7B5]">
-              {isAr ? "جدة، المملكة العربية السعودية" : "Jeddah, Saudi Arabia"}
-            </p>
+            <a
+              href="https://maps.app.goo.gl/azGoR8U9jpaXa3Qh8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block font-sans text-xs text-[#D4C7B5] hover:text-[#B8873B] transition-colors leading-relaxed"
+            >
+              {isAr
+                ? "مكتب ٦٠٢، متبولي بلازا، الرويس، جدة ٢٣٢١٣ ↗"
+                : "Office 602, Matbouli Plaza, Al-Ruwais, Jeddah 23213 ↗"}
+            </a>
           </div>
         </div>
 
