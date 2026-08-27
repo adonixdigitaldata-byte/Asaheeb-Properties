@@ -12,6 +12,8 @@ import { submitWebsiteLead, getProjectVideos, getProjectBrochureUrl } from "@/li
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { getProjectWhatsAppLink } from "@/data/contactConfig";
 import ShareModal from "@/components/shared/ShareModal";
+import PhoneInputWithCountry from "@/components/ui/PhoneInputWithCountry";
+import { validatePhoneNumber } from "@/data/countriesData";
 
 export function ProjectDetailView({ project }: { project: ProjectDetail | null }) {
   const { lang } = useLanguage();
@@ -112,12 +114,24 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!project || isSubmitting) return;
+
+    // Validate phone number against regional rules and reject fake numbers
+    const phoneCheck = validatePhoneNumber(form.phone);
+    if (!phoneCheck.isValid) {
+      setErrorMsg(
+        isAr
+          ? phoneCheck.errorMessageAr || "يرجى إدخال رقم هاتف صحيح للدولة المحددة"
+          : phoneCheck.errorMessageEn || "Please enter a valid phone number for the selected country"
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg(null);
     try {
       await submitWebsiteLead({
         name: form.name,
-        phone: form.phone,
+        phone: phoneCheck.formattedInternational || form.phone,
         email: form.email,
         property_id: project.id,
         interest: `${project.nameEn} (${project.nameAr})`,
@@ -138,6 +152,18 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
   const handleBrochureDownloadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!project || isBrochureSubmitting) return;
+
+    // Validate phone number for brochure download
+    const phoneCheck = validatePhoneNumber(brochureForm.phone);
+    if (!phoneCheck.isValid) {
+      setBrochureErrorMsg(
+        isAr
+          ? phoneCheck.errorMessageAr || "يرجى إدخال رقم هاتف صحيح للدولة المحددة"
+          : phoneCheck.errorMessageEn || "Please enter a valid phone number for the selected country"
+      );
+      return;
+    }
+
     setIsBrochureSubmitting(true);
     setBrochureErrorMsg(null);
 
@@ -160,7 +186,7 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: brochureForm.fullName.trim(),
-          phone: brochureForm.phone.trim(),
+          phone: phoneCheck.formattedInternational || brochureForm.phone.trim(),
           email: brochureForm.email?.trim() || null,
           city: project.cityEn,
           interest: `Brochure Download: ${project.nameEn}`,
@@ -279,8 +305,12 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
                   {isAr ? project.statusAr : project.statusEn}
                 </span>
                 {paymentTerms && (
-                  <span className="font-mono text-[9.5px] tracking-[0.18em] uppercase text-[#E8DFCE] px-3 py-1 border border-[#B8873B]/50 bg-black/60 font-semibold">
-                    💳 {paymentTerms}
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] tracking-[0.18em] uppercase text-[#E8DFCE] px-3 py-1 border border-[#B8873B]/50 bg-black/60 font-semibold">
+                    <svg className="w-3.5 h-3.5 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="2" y="5" width="20" height="14" rx="2" />
+                      <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                    <span>{paymentTerms}</span>
                   </span>
                 )}
                 {project.expectedDeliveryEn && (
@@ -934,19 +964,17 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>{isAr ? "رقم الهاتف / واتساب *" : "Phone / WhatsApp *"}</label>
-                  <input
-                    type="tel"
-                    required
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-20">
+                <div className="relative z-20">
+                  <PhoneInputWithCountry
                     value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    onFocus={() => setFocused("phone")}
-                    onBlur={() => setFocused(null)}
-                    placeholder="+966 5X XXX XXXX"
-                    className={inputClass("phone")}
-                    dir="ltr"
+                    onChange={(val) => {
+                      setForm((prev) => ({ ...prev, phone: val }));
+                      if (errorMsg) setErrorMsg(null);
+                    }}
+                    isAr={isAr}
+                    required
+                    label={isAr ? "رقم الهاتف / واتساب" : "Phone / WhatsApp"}
                   />
                 </div>
 
@@ -1091,16 +1119,16 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
                   />
                 </div>
 
-                <div>
-                  <label className={labelClass}>{isAr ? "رقم الهاتف / واتساب *" : "Phone / WhatsApp *"}</label>
-                  <input
-                    type="tel"
-                    required
+                <div className="relative z-20">
+                  <PhoneInputWithCountry
                     value={brochureForm.phone}
-                    onChange={(e) => setBrochureForm({ ...brochureForm, phone: e.target.value })}
-                    placeholder="+966 5X XXX XXXX"
-                    className={inputClass("bPhone")}
-                    dir="ltr"
+                    onChange={(val) => {
+                      setBrochureForm((prev) => ({ ...prev, phone: val }));
+                      if (brochureErrorMsg) setBrochureErrorMsg(null);
+                    }}
+                    isAr={isAr}
+                    required
+                    label={isAr ? "رقم الهاتف / واتساب" : "Phone / WhatsApp"}
                   />
                 </div>
 

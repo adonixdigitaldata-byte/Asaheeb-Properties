@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { submitWebsiteLead } from "@/lib/api";
+import { validatePhoneNumber } from "@/data/countriesData";
 
 export async function POST(req: Request) {
   try {
@@ -23,9 +24,17 @@ export async function POST(req: Request) {
       );
     }
 
+    const phoneValidation = validatePhoneNumber(phone);
+    if (!phoneValidation.isValid) {
+      return NextResponse.json(
+        { success: false, error: phoneValidation.errorMessageEn || "Invalid phone number provided" },
+        { status: 400 }
+      );
+    }
+
     const result = await submitWebsiteLead({
-      name,
-      phone,
+      name: name.trim(),
+      phone: phoneValidation.formattedInternational || phone.trim(),
       email,
       city,
       property_id,

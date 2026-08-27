@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { getWhatsAppLink } from "@/data/contactConfig";
 import { submitWebsiteLead } from "@/lib/api";
+import PhoneInputWithCountry from "@/components/ui/PhoneInputWithCountry";
+import { validatePhoneNumber } from "@/data/countriesData";
 
 const INTEREST_OPTIONS_EN = ["Apartments", "Villas", "Land", "Buildings", "All Asset Types"];
 const INTEREST_OPTIONS_AR = ["شقق سكنية", "فلل", "أراضي", "مباني", "جميع الأصول"];
@@ -35,6 +37,7 @@ export default function LeadFormSection() {
     budget: "",
     message: "",
   });
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -43,12 +46,24 @@ export default function LeadFormSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+
+    // Validate phone number against regional rules and reject fake numbers
+    const phoneCheck = validatePhoneNumber(form.phone);
+    if (!phoneCheck.isValid) {
+      setErrorMsg(
+        isAr
+          ? phoneCheck.errorMessageAr || "يرجى إدخال رقم هاتف صحيح للدولة المحددة"
+          : phoneCheck.errorMessageEn || "Please enter a valid phone number for the selected country"
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg(null);
     try {
       await submitWebsiteLead({
         name: form.name,
-        phone: form.phone,
+        phone: phoneCheck.formattedInternational || form.phone,
         email: form.email,
         interest: form.interest || "General Property Inquiry",
         budget: form.budget,
@@ -262,18 +277,17 @@ export default function LeadFormSection() {
                   </div>
 
                   {/* Phone */}
-                  <div className="sm:col-span-1">
-                    <label className={labelClass}>{isAr ? "الهاتف / واتساب" : "Phone / WhatsApp"} *</label>
-                    <input
-                      type="tel"
-                      required
+                  <div className="sm:col-span-1 relative z-20">
+                    <PhoneInputWithCountry
                       value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                      onFocus={() => setFocused("phone")}
-                      onBlur={() => setFocused(null)}
-                      placeholder={isAr ? "+٩٦٦ ٥٠٠ ٠٠٠ ٠٠٠" : "+966 500 000 000"}
-                      className={inputClass("phone")}
-                      dir="ltr"
+                      onChange={(val, isValid) => {
+                        setForm((prev) => ({ ...prev, phone: val }));
+                        setIsPhoneValid(isValid);
+                        if (errorMsg) setErrorMsg(null);
+                      }}
+                      isAr={isAr}
+                      required
+                      label={isAr ? "الهاتف / واتساب" : "Phone / WhatsApp"}
                     />
                   </div>
 

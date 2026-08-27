@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { gsap } from "gsap";
 import { useLanguage } from "@/context/LanguageContext";
 import PageNav from "@/components/shared/PageNav";
@@ -11,6 +12,66 @@ import MobileBottomNav from "@/components/sections/MobileBottomNav";
 import { ProjectDetail } from "@/types/database";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { getWhatsAppLink } from "@/data/contactConfig";
+import { STANDARD_PROPERTY_TYPES, normalizePropertyType, matchesPropertyType } from "@/data/propertyTypes";
+
+// Architectural SVG Icon for property categories
+function PropertyCategoryIcon({ type, className = "w-3.5 h-3.5" }: { type?: string; className?: string }) {
+  switch (type) {
+    case "apartments":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <rect x="4" y="2" width="16" height="20" rx="1" />
+          <path d="M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2M9 18h6" />
+        </svg>
+      );
+    case "villas":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M3 10.5L12 3l9 7.5" />
+          <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
+          <path d="M10 21v-6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6" />
+        </svg>
+      );
+    case "commercial":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M3 21h18M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+          <path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3" />
+        </svg>
+      );
+    case "residential":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <rect x="2" y="6" width="9" height="15" rx="1" />
+          <rect x="13" y="2" width="9" height="19" rx="1" />
+          <path d="M5 10h3M5 14h3M16 6h3M16 10h3M16 14h3" />
+        </svg>
+      );
+    case "land":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      );
+    case "all":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
+      );
+    default:
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+      );
+  }
+}
 
 // Known Saudi city translations dictionary for clean bilingual fallbacks
 const KNOWN_CITIES: Record<string, { en: string; ar: string }> = {
@@ -68,7 +129,8 @@ const CONTENT = {
     badge: "Curated Investment Portfolio",
     heroTitle: "Curated Properties.\nExceptional Value.",
     heroSub: "Explore the exact investment opportunities sourced and vetted by Asaheeb Real Estate — aligned with Saudi Arabia's Vision 2030.",
-    searchPlaceholder: "Search by project name, district, city, developer...",
+    searchPlaceholder: "Search by project name, district, city, developer, property type...",
+    filterTypeLabel: "Property Type",
     filterCityLabel: "Location",
     filterStatusLabel: "Development Status",
     filterPaymentLabel: "Payment Terms",
@@ -83,7 +145,8 @@ const CONTENT = {
     badge: "محفظة استثمارية منتقاة",
     heroTitle: "عقارات منتقاة.\nقيم استثنائية.",
     heroSub: "تصفح الفرص الاستثمارية التي تم فحصها واعتمادها من قبل أصاهيب العقارية — المتوافقة مع رؤية السعودية 2030.",
-    searchPlaceholder: "ابحث بالاسم، الحي، المدينة، المطور...",
+    searchPlaceholder: "ابحث بالاسم، الحي، المدينة، المطور، نوع العقار...",
+    filterTypeLabel: "نوع وفئة العقار",
     filterCityLabel: "المدينة والموقع",
     filterStatusLabel: "حالة المشروع",
     filterPaymentLabel: "خطة السداد",
@@ -105,6 +168,13 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
   const paymentTerms = isAr
     ? (project.paymentTermsAr || (project as any).payment_terms_ar)
     : (project.paymentTermsEn || (project as any).payment_terms_en);
+
+  const rawPropertyType = project.typeEn || (project as any).type_en || project.typeAr || (project as any).type_ar || "";
+  const normalizedType = normalizePropertyType(rawPropertyType);
+  const standardTypeObj = STANDARD_PROPERTY_TYPES.find((t) => t.key === normalizedType);
+  const propertyTypeDisplay = isAr
+    ? (project.typeAr || (project as any).type_ar || standardTypeObj?.labelAr || rawPropertyType)
+    : (project.typeEn || (project as any).type_en || standardTypeObj?.labelEn || rawPropertyType);
 
   return (
     <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
@@ -138,17 +208,28 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
               {isAr ? project.statusAr : project.statusEn}
             </div>
 
-            {/* City Badge */}
-            <div className="px-3 py-1 font-mono text-[9px] tracking-[0.2em] uppercase text-white bg-black/60 backdrop-blur-sm border border-white/20 shrink-0">
-              {isAr ? project.cityAr : project.cityEn}
+            {/* City & Property Type Badges */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              {propertyTypeDisplay && (
+                <div className="px-2.5 py-1 font-mono text-[8.5px] tracking-[0.18em] uppercase text-[#E8DFCE] bg-[#12130F]/90 backdrop-blur-sm border border-[#B8873B]/40 shrink-0">
+                  {propertyTypeDisplay}
+                </div>
+              )}
+              <div className="px-2.5 py-1 font-mono text-[8.5px] tracking-[0.18em] uppercase text-white bg-black/60 backdrop-blur-sm border border-white/20 shrink-0">
+                {isAr ? project.cityAr : project.cityEn}
+              </div>
             </div>
           </div>
 
           {/* Payment Terms Badge (Bottom overlay) */}
           {paymentTerms && (
             <div className={`absolute bottom-3 ${isAr ? "right-3" : "left-3"} z-10 pointer-events-none`}>
-              <span className="inline-flex items-center gap-1 font-mono text-[9px] tracking-wider uppercase px-2.5 py-1 bg-black/80 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
-                💳 {paymentTerms}
+              <span className="inline-flex items-center gap-1.5 font-mono text-[9px] tracking-wider uppercase px-2.5 py-1 bg-black/80 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
+                <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                <span>{paymentTerms}</span>
               </span>
             </div>
           )}
@@ -189,8 +270,11 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const { lang } = useLanguage();
   const isAr = lang === "ar";
   const c = isAr ? CONTENT.ar : CONTENT.en;
+  const searchParams = useSearchParams();
+  const typeParam = searchParams ? searchParams.get("type") : null;
+
   const [projectsList] = useState<ProjectDetail[]>(initialProjects);
-  
+
   // Dynamically derive all available cities from actual properties in the portfolio
   const availableCategories = useMemo(() => {
     if (!projectsList || projectsList.length === 0) {
@@ -225,7 +309,6 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     });
 
     const dynamicCities = Array.from(cityMap.values());
-    // Alphabetical sort by English name for sleek, organized aesthetic
     dynamicCities.sort((a, b) => a.en.localeCompare(b.en));
 
     return [
@@ -234,8 +317,45 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     ];
   }, [projectsList]);
 
+  // Dynamically derive all available property types (standard + custom)
+  const availablePropertyTypes = useMemo(() => {
+    const standardKeys = new Set(STANDARD_PROPERTY_TYPES.map((t) => t.key.toLowerCase()));
+    const customTypesMap = new Map<string, { key: string; en: string; ar: string; iconType: string }>();
+
+    projectsList.forEach((p) => {
+      const rawTypeEn = (p.typeEn || (p as any).type_en || "").trim();
+      const rawTypeAr = (p.typeAr || (p as any).type_ar || "").trim();
+      if (!rawTypeEn && !rawTypeAr) return;
+
+      const normalized = normalizePropertyType(rawTypeEn || rawTypeAr);
+      if (!standardKeys.has(normalized.toLowerCase()) && !customTypesMap.has(normalized.toLowerCase())) {
+        customTypesMap.set(normalized.toLowerCase(), {
+          key: rawTypeEn || normalized,
+          en: rawTypeEn || normalized,
+          ar: rawTypeAr || normalized,
+          iconType: "custom",
+        });
+      }
+    });
+
+    return [
+      { key: "all", en: "All Property Types", ar: "جميع أنواع العقارات", iconType: "all" },
+      ...STANDARD_PROPERTY_TYPES.map((t) => ({ key: t.key, en: t.labelEn, ar: t.labelAr, iconType: t.iconType })),
+      ...Array.from(customTypesMap.values()),
+    ];
+  }, [projectsList]);
+
+  // Initial property type from URL query if available
+  const initialType = useMemo(() => {
+    if (typeParam) {
+      return normalizePropertyType(typeParam);
+    }
+    return "all";
+  }, [typeParam]);
+
   // Filter States (Committed on Page)
   const [searchQuery, setSearchQuery] = useState("");
+  const [activePropertyType, setActivePropertyType] = useState(initialType);
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeStatus, setActiveStatus] = useState("all");
   const [activePayment, setActivePayment] = useState("all");
@@ -243,6 +363,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   // Draft States inside Modal (Staged until user clicks Apply)
+  const [draftPropertyType, setDraftPropertyType] = useState(initialType);
   const [draftCategory, setDraftCategory] = useState("all");
   const [draftStatus, setDraftStatus] = useState("all");
   const [draftPayment, setDraftPayment] = useState("all");
@@ -251,11 +372,27 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const filterSectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  const activeFiltersCount = (activeCategory !== "all" ? 1 : 0) + (activeStatus !== "all" ? 1 : 0) + (activePayment !== "all" ? 1 : 0);
+  // Sync URL query params if user navigates via browser or header dropdown
+  useEffect(() => {
+    if (typeParam) {
+      const normalized = normalizePropertyType(typeParam);
+      setActivePropertyType(normalized);
+      setDraftPropertyType(normalized);
+      setCurrentPage(1);
+    }
+  }, [typeParam]);
+
+  const activeFiltersCount =
+    (activePropertyType !== "all" ? 1 : 0) +
+    (activeCategory !== "all" ? 1 : 0) +
+    (activeStatus !== "all" ? 1 : 0) +
+    (activePayment !== "all" ? 1 : 0);
+
   const isFiltered = searchQuery.trim() !== "" || activeFiltersCount > 0;
 
   // Open modal and initialize drafts from current active filters
   const openFilterModal = () => {
+    setDraftPropertyType(activePropertyType);
     setDraftCategory(activeCategory);
     setDraftStatus(activeStatus);
     setDraftPayment(activePayment);
@@ -264,6 +401,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
 
   // Commit drafts to active page filters and close modal
   const applyDraftFilters = () => {
+    setActivePropertyType(draftPropertyType);
     setActiveCategory(draftCategory);
     setActiveStatus(draftStatus);
     setActivePayment(draftPayment);
@@ -274,9 +412,11 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   // Reset all active and draft filters
   const resetAllFilters = () => {
     setSearchQuery("");
+    setActivePropertyType("all");
     setActiveCategory("all");
     setActiveStatus("all");
     setActivePayment("all");
+    setDraftPropertyType("all");
     setDraftCategory("all");
     setDraftStatus("all");
     setDraftPayment("all");
@@ -284,7 +424,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   };
 
   // Helper filter logic reusable for both page and draft count
-  const calculateFiltered = (cat: string, status: string, payment: string, query: string) => {
+  const calculateFiltered = (pType: string, cat: string, status: string, payment: string, query: string) => {
     return projectsList.filter((p) => {
       // 1. Search Query
       if (query.trim() !== "") {
@@ -296,6 +436,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
           p.districtAr.toLowerCase().includes(q) ||
           p.cityEn.toLowerCase().includes(q) ||
           p.cityAr.toLowerCase().includes(q) ||
+          (p.typeEn && p.typeEn.toLowerCase().includes(q)) ||
+          (p.typeAr && p.typeAr.toLowerCase().includes(q)) ||
           (p.developerEn && p.developerEn.toLowerCase().includes(q)) ||
           (p.developerAr && p.developerAr.toLowerCase().includes(q)) ||
           p.overviewEn.toLowerCase().includes(q) ||
@@ -304,7 +446,12 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         if (!matchSearch) return false;
       }
 
-      // 2. City (Case-insensitive & bilingual match)
+      // 2. Property Type
+      if (pType !== "all") {
+        if (!matchesPropertyType(p, pType)) return false;
+      }
+
+      // 3. City (Case-insensitive & bilingual match)
       if (cat !== "all") {
         const pCityEn = (p.cityEn || "").toLowerCase().trim();
         const pCityAr = (p.cityAr || "").toLowerCase().trim();
@@ -312,7 +459,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         if (pCityEn !== catLower && pCityAr !== catLower) return false;
       }
 
-      // 3. Status
+      // 4. Status
       if (status !== "all") {
         const sEn = (p.statusEn || "").toLowerCase();
         const sAr = (p.statusAr || "").toLowerCase();
@@ -329,7 +476,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         }
       }
 
-      // 4. Payment terms
+      // 5. Payment terms
       if (payment !== "all") {
         const rawPaymentEn = (p.paymentTermsEn || (p as any).payment_terms_en || "").toLowerCase();
         const rawPaymentAr = (p.paymentTermsAr || (p as any).payment_terms_ar || "").toLowerCase();
@@ -350,8 +497,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     });
   };
 
-  const filtered = calculateFiltered(activeCategory, activeStatus, activePayment, searchQuery);
-  const draftFilteredCount = calculateFiltered(draftCategory, draftStatus, draftPayment, searchQuery).length;
+  const filtered = calculateFiltered(activePropertyType, activeCategory, activeStatus, activePayment, searchQuery);
+  const draftFilteredCount = calculateFiltered(draftPropertyType, draftCategory, draftStatus, draftPayment, searchQuery).length;
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -359,6 +506,12 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const paginatedProjects = filtered.slice(startIndex, endIndex);
 
   // Quick remove from chips bar on main page
+  const handlePropertyTypeChange = (key: string) => {
+    setActivePropertyType(key);
+    setDraftPropertyType(key);
+    setCurrentPage(1);
+  };
+
   const handleCategoryChange = (key: string) => {
     setActiveCategory(key);
     setDraftCategory(key);
@@ -413,7 +566,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         );
       }
     }
-  }, [searchQuery, activeCategory, activeStatus, activePayment, currentPage]);
+  }, [searchQuery, activePropertyType, activeCategory, activeStatus, activePayment, currentPage]);
 
   return (
     <main className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0" dir={isAr ? "rtl" : "ltr"}>
@@ -448,18 +601,18 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
       <section ref={filterSectionRef} className="px-4 sm:px-10 lg:px-20 py-8 border-y border-white/10 bg-[#0F1117]/60">
         <div className="max-w-7xl mx-auto space-y-4">
           
-          {/* Main Search Bar + Filter Trigger Row */}
-          <div className={`flex items-center gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
+          <div className="flex items-center gap-3">
             
-            {/* Search Input */}
+            {/* Search input with live text typing */}
             <div className="relative flex-1">
-              <div className={`absolute top-1/2 -translate-y-1/2 ${isAr ? "right-4" : "left-4"} text-[#B8873B] pointer-events-none`}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </div>
-
+              <svg
+                className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C8477] pointer-events-none ${isAr ? "right-4" : "left-4"}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
               <input
                 type="text"
                 value={searchQuery}
@@ -468,35 +621,28 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                   setCurrentPage(1);
                 }}
                 placeholder={c.searchPlaceholder}
-                className={`w-full bg-[#141611] border border-white/15 focus:border-[#B8873B] focus:shadow-[0_0_20px_rgba(184,135,59,0.2)] transition-all duration-300 py-3.5 text-xs sm:text-sm font-sans text-[#E8DFCE] placeholder-[#8C8477] focus:outline-none rounded-xs ${
-                  isAr ? "pr-11 pl-9 text-right" : "pl-11 pr-9 text-left"
+                dir={isAr ? "rtl" : "ltr"}
+                className={`w-full py-4 text-xs sm:text-sm text-[#E8DFCE] bg-[#12130F] border border-white/10 rounded-sm focus:border-[#B8873B] outline-none transition-all duration-300 placeholder-[#8C8477] ${
+                  isAr ? "pr-11 pl-4" : "pl-11 pr-4"
                 }`}
               />
-
               {searchQuery && (
                 <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setCurrentPage(1);
-                  }}
-                  className={`absolute top-1/2 -translate-y-1/2 ${isAr ? "left-3.5" : "right-3.5"} text-[#8C8477] hover:text-[#E8DFCE] font-mono text-xs cursor-pointer`}
-                  title="Clear"
+                  onClick={() => setSearchQuery("")}
+                  className={`absolute top-1/2 -translate-y-1/2 text-[#8C8477] hover:text-[#E8DFCE] text-xs font-mono px-2 py-1 cursor-pointer ${
+                    isAr ? "left-3" : "right-3"
+                  }`}
                 >
                   ✕
                 </button>
               )}
             </div>
 
-            {/* Filter Modal Trigger Button */}
+            {/* Filters Trigger Button (Opens Refine Modal) */}
             <button
               onClick={openFilterModal}
-              className={`flex items-center gap-2.5 px-4 sm:px-6 py-3.5 border transition-all duration-300 rounded-xs cursor-pointer font-mono text-[11px] sm:text-xs tracking-wider uppercase font-semibold shrink-0 ${
-                activeFiltersCount > 0
-                  ? "border-[#B8873B] bg-[#B8873B] text-[#12130F] shadow-[0_0_20px_rgba(184,135,59,0.3)]"
-                  : "border-white/15 bg-[#141611] text-[#E8DFCE] hover:border-[#B8873B] hover:text-[#B8873B]"
-              }`}
+              className="h-[52px] sm:h-[56px] px-5 sm:px-7 border border-white/15 hover:border-[#B8873B] text-[#E8DFCE] hover:text-[#B8873B] bg-[#12130F] transition-all duration-300 font-mono text-[11px] sm:text-xs tracking-[0.2em] uppercase font-semibold flex items-center gap-2.5 shrink-0 rounded-sm cursor-pointer shadow-lg"
             >
-              {/* Clean Sliders SVG Icon (No Emojis) */}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                 <line x1="4" y1="21" x2="4" y2="14" />
                 <line x1="4" y1="10" x2="4" y2="3" />
@@ -510,8 +656,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
               </svg>
               <span>{isAr ? "تصفية" : "Filters"}</span>
               {activeFiltersCount > 0 && (
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  activeFiltersCount > 0 ? "bg-[#12130F] text-[#B8873B]" : "bg-[#B8873B] text-[#12130F]"
+                <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                  activeFiltersCount > 0 ? "bg-[#B8873B] text-[#12130F]" : "bg-white/10 text-[#E8DFCE]"
                 }`}>
                   {activeFiltersCount}
                 </span>
@@ -531,6 +677,18 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
             {/* Active Chips */}
             {isFiltered && (
               <div className={`flex items-center gap-2 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+                {activePropertyType !== "all" && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 bg-[#171914] border border-[#B8873B]/50 text-[#E8DFCE] rounded-xs shadow-sm">
+                    <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                      <line x1="7" y1="7" x2="7.01" y2="7" />
+                    </svg>
+                    <span>
+                      {availablePropertyTypes.find((t) => t.key.toLowerCase() === activePropertyType.toLowerCase())?.[isAr ? "ar" : "en"] || activePropertyType}
+                    </span>
+                    <button onClick={() => handlePropertyTypeChange("all")} className="text-[#8C8477] hover:text-[#B8873B] cursor-pointer">✕</button>
+                  </span>
+                )}
                 {activeCategory !== "all" && (
                   <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 bg-[#171914] border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs">
                     <span>
@@ -566,10 +724,11 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
 
       {/* ── LUXURY FILTER MODAL (Draft & Commit Architecture) ───────────────── */}
       {showFilterModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
           <div
             className="relative w-full max-w-xl bg-[#12130F] border border-[#B8873B]/40 rounded-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             dir={isAr ? "rtl" : "ltr"}
+            style={{ backgroundColor: "#141510" }}
           >
             {/* Modal Header */}
             <div className={`p-5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-[#171813] ${isAr ? "flex-row-reverse" : ""}`}>
@@ -589,11 +748,40 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
               </button>
             </div>
 
-            {/* Modal Body: Filter Categories (Toggles Draft State) */}
+            {/* Modal Body: Filter Categories */}
             <div className="p-6 overflow-y-auto space-y-6 flex-1 divide-y divide-white/10">
               
-              {/* Category 1: Location */}
+              {/* Category 1: Property Type */}
               <div className={`space-y-3 ${isAr ? "text-right" : ""}`}>
+                <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
+                  {c.filterTypeLabel}
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {availablePropertyTypes.map((pt) => {
+                    const isSelected = draftPropertyType.toLowerCase() === pt.key.toLowerCase();
+                    const isAll = pt.key === "all";
+                    return (
+                      <button
+                        key={pt.key}
+                        onClick={() => setDraftPropertyType(pt.key)}
+                        className={`p-3 border text-center font-mono text-[10px] tracking-wider uppercase transition-all duration-200 cursor-pointer rounded-xs flex items-center justify-center gap-2 ${
+                          isAll && availablePropertyTypes.length % 2 === 1 ? "col-span-2" : ""
+                        } ${
+                          isSelected
+                            ? "border-[#B8873B] bg-[#B8873B] text-[#12130F] font-bold shadow-[0_0_15px_rgba(184,135,59,0.25)]"
+                            : "border-white/10 bg-[#171914] text-[#8C8477] hover:border-white/25 hover:text-[#C5BCAD]"
+                        }`}
+                      >
+                        <PropertyCategoryIcon type={pt.iconType} className={`w-3.5 h-3.5 ${isSelected ? "text-[#12130F]" : "text-[#B8873B]"}`} />
+                        <span>{isAr ? pt.ar : pt.en}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Category 2: Location */}
+              <div className={`pt-6 space-y-3 ${isAr ? "text-right" : ""}`}>
                 <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
                   {c.filterCityLabel}
                 </label>
@@ -620,7 +808,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                 </div>
               </div>
 
-              {/* Category 2: Status */}
+              {/* Category 3: Development Status */}
               <div className={`pt-6 space-y-3 ${isAr ? "text-right" : ""}`}>
                 <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
                   {c.filterStatusLabel}
@@ -645,7 +833,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                 </div>
               </div>
 
-              {/* Category 3: Payment Terms */}
+              {/* Category 4: Payment Terms */}
               <div className={`pt-6 space-y-3 ${isAr ? "text-right" : ""}`}>
                 <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
                   {c.filterPaymentLabel}
@@ -676,6 +864,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
             <div className={`p-4 sm:p-5 border-t border-white/10 bg-[#171813] flex items-center justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
               <button
                 onClick={() => {
+                  setDraftPropertyType("all");
                   setDraftCategory("all");
                   setDraftStatus("all");
                   setDraftPayment("all");
@@ -712,9 +901,17 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
             </div>
           ) : (
             <div className="py-20 text-center text-[#8C8477]">
-              <p className="font-mono text-sm uppercase tracking-widest">
-                {isAr ? "لا توجد مشاريع في هذه المدينة حالياً" : "No properties found in this location"}
+              <p className="font-mono text-sm uppercase tracking-widest mb-3">
+                {c.noResults}
               </p>
+              {isFiltered && (
+                <button
+                  onClick={resetAllFilters}
+                  className="font-mono text-xs text-[#B8873B] underline uppercase tracking-wider cursor-pointer"
+                >
+                  {c.clearAll}
+                </button>
+              )}
             </div>
           )}
 
@@ -749,9 +946,9 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                     onClick={() => handlePageChange(page)}
                     className="w-10 h-10 font-mono text-xs font-semibold rounded-sm transition-all duration-300 cursor-pointer border"
                     style={{
-                      borderColor: currentPage === page ? "#B8873B" : "rgba(255,255,255,0.1)",
-                      backgroundColor: currentPage === page ? "#B8873B" : "rgba(255,255,255,0.03)",
-                      color: currentPage === page ? "#12130F" : "#C5BCAD",
+                      borderColor: currentPage === page ? "#B8873B" : "rgba(255,255,255,0.12)",
+                      backgroundColor: currentPage === page ? "#B8873B" : "rgba(18,19,15,0.6)",
+                      color: currentPage === page ? "#12130F" : "#E8DFCE",
                     }}
                   >
                     {page}
@@ -769,7 +966,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                     backgroundColor: "rgba(18,19,15,0.6)",
                   }}
                 >
-                  {isAr ? "التالي ←" : "Next →"}
+                  {isAr ? "التالي →" : "Next →"}
                 </button>
               </div>
             </div>
@@ -777,24 +974,43 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         </div>
       </section>
 
-      {/* ── BOTTOM ADVISOR CTA ────────────────────────────────────────────── */}
-      <section className="py-20 px-6 sm:px-10 lg:px-20 border-t border-white/10 bg-[#0F1117]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-display text-3xl sm:text-5xl text-[#E8DFCE] font-normal mb-4">
+      {/* ── FOOTER CTA SECTION ────────────────────────────────────────────── */}
+      <section className="py-20 px-6 sm:px-10 lg:px-20 border-t border-white/10 bg-[#0F1117]/80">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 border rounded-full"
+            style={{ borderColor: "rgba(184,135,59,0.3)", backgroundColor: "rgba(18,19,15,0.8)" }}>
+            <span className="w-2 h-2 rounded-full bg-[#B8873B]" />
+            <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[#B8873B]">
+              {isAr ? "استشارات عقارية مخصصة" : "Bespoke Advisory"}
+            </span>
+          </div>
+
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-tight">
             {c.ctaTitle}
           </h2>
-          <p className="font-sans text-sm sm:text-base text-[#C5BCAD] mb-8 max-w-xl mx-auto">
+
+          <p className="font-sans text-sm sm:text-base text-[#C5BCAD] leading-relaxed max-w-xl mx-auto">
             {c.ctaSub}
           </p>
-          <a
-            href={getWhatsAppLink(undefined, undefined, isAr)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 font-mono text-xs tracking-widest uppercase font-semibold px-8 py-4 bg-[#B8873B] text-[#12130F] hover:bg-[#c99a49] transition-all duration-300 shadow-[0_0_30px_rgba(184,135,59,0.3)]"
-          >
-            <span>{c.ctaBtn}</span>
-            <span>→</span>
-          </a>
+
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/contact"
+              className="w-full sm:w-auto px-8 py-4 bg-[#B8873B] hover:bg-[#c99a49] text-[#12130F] font-mono text-xs tracking-[0.2em] uppercase font-bold transition-all duration-300 shadow-[0_0_30px_rgba(184,135,59,0.3)] rounded-sm"
+            >
+              {c.ctaBtn}
+            </Link>
+
+            <a
+              href={getWhatsAppLink(undefined, undefined, isAr)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 border border-[#25D366]/40 text-[#25D366] hover:bg-[#25D366]/10 font-mono text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 rounded-sm flex items-center justify-center gap-2"
+            >
+              <span>{isAr ? "تواصل عبر واتساب" : "Chat on WhatsApp"}</span>
+              <span>↗</span>
+            </a>
+          </div>
         </div>
       </section>
 

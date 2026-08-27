@@ -97,8 +97,12 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           {/* Bottom Overlay Badges: Payment Terms */}
           {paymentTerms && (
             <div className={`absolute bottom-2.5 ${isAr ? "right-2.5" : "left-2.5"} z-10 pointer-events-none`}>
-              <span className="inline-flex items-center gap-1 font-mono text-[8.5px] tracking-wider uppercase px-2.5 py-1 bg-black/75 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
-                💳 {paymentTerms}
+              <span className="inline-flex items-center gap-1.5 font-mono text-[8.5px] tracking-wider uppercase px-2.5 py-1 bg-black/75 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
+                <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                <span>{paymentTerms}</span>
               </span>
             </div>
           )}
@@ -310,8 +314,12 @@ export default function ProjectsSection() {
                       {(featured.paymentTermsEn || (featured as any).payment_terms_en) && (
                         <>
                           <span className="text-[#C5BCAD]">•</span>
-                          <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#E8DFCE] px-2.5 py-0.5 border border-[#B8873B]/40 bg-[#B8873B]/10">
-                            💳 {isAr ? (featured.paymentTermsAr || (featured as any).payment_terms_ar) : (featured.paymentTermsEn || (featured as any).payment_terms_en)}
+                          <span className="inline-flex items-center gap-1.5 font-mono text-[9px] tracking-[0.18em] uppercase text-[#E8DFCE] px-2.5 py-0.5 border border-[#B8873B]/40 bg-[#B8873B]/10">
+                            <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="2" y="5" width="20" height="14" rx="2" />
+                              <line x1="2" y1="10" x2="22" y2="10" />
+                            </svg>
+                            <span>{isAr ? (featured.paymentTermsAr || (featured as any).payment_terms_ar) : (featured.paymentTermsEn || (featured as any).payment_terms_en)}</span>
                           </span>
                         </>
                       )}

@@ -17,6 +17,8 @@ import {
   getWhatsAppLink,
 } from "@/data/contactConfig";
 import { submitWebsiteLead } from "@/lib/api";
+import PhoneInputWithCountry from "@/components/ui/PhoneInputWithCountry";
+import { validatePhoneNumber } from "@/data/countriesData";
 import PageNav from "@/components/shared/PageNav";
 import PageFooter from "@/components/shared/PageFooter";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
@@ -239,13 +241,31 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+
+    // Validate phone number against regional rules and reject junk/fake numbers
+    if (form.phone && form.phone.trim()) {
+      const phoneCheck = validatePhoneNumber(form.phone);
+      if (!phoneCheck.isValid) {
+        setErrorMsg(
+          isAr
+            ? phoneCheck.errorMessageAr || "يرجى إدخال رقم هاتف صحيح للدولة المحددة"
+            : phoneCheck.errorMessageEn || "Please enter a valid phone number for the selected country"
+        );
+        return;
+      }
+    } else {
+      setErrorMsg(isAr ? "يرجى إدخال رقم الهاتف للتواصل" : "Please enter your phone number");
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg(null);
     try {
+      const phoneCheck = validatePhoneNumber(form.phone);
       await submitWebsiteLead({
         name: form.name,
         email: form.email,
-        phone: form.phone,
+        phone: phoneCheck.formattedInternational || form.phone,
         interest: form.interest || "General Advisory Inquiry",
         budget: form.budget,
         message: form.message,
@@ -326,20 +346,30 @@ export default function ContactPage() {
               </div>
             ) : (
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 bg-[#141510] p-6 sm:p-8 border border-white/10 rounded-sm shadow-xl">
-                <div className="field-wrap">
+                <div className="field-wrap relative z-10">
                   <FloatingInput label={c.fields.name} value={form.name} onChange={(v) => setForm({ ...form, name: v })} isAr={isAr} required />
                 </div>
-                <div className="field-wrap">
+                <div className="field-wrap relative z-10">
                   <FloatingInput label={c.fields.email} type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} isAr={isAr} required />
                 </div>
-                <div className="field-wrap">
-                  <FloatingInput label={c.fields.phone} type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} isAr={isAr} />
+                <div className="field-wrap relative z-30">
+                  <PhoneInputWithCountry
+                    variant="floating"
+                    label={c.fields.phone}
+                    value={form.phone}
+                    onChange={(v) => {
+                      setForm((prev) => ({ ...prev, phone: v }));
+                      if (errorMsg) setErrorMsg(null);
+                    }}
+                    isAr={isAr}
+                    required
+                  />
                 </div>
-                <div className="field-wrap grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="field-wrap relative z-20 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FloatingSelect label={c.fields.interest} options={c.interests} value={form.interest} onChange={(v) => setForm({ ...form, interest: v })} isAr={isAr} />
                   <FloatingSelect label={c.fields.budget} options={c.budgets} value={form.budget} onChange={(v) => setForm({ ...form, budget: v })} isAr={isAr} />
                 </div>
-                <div className="field-wrap">
+                <div className="field-wrap relative z-10">
                   <textarea
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}

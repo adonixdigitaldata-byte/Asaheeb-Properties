@@ -1,25 +1,90 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { getWhatsAppLink } from "@/data/contactConfig";
+import { STANDARD_PROPERTY_TYPES } from "@/data/propertyTypes";
 
 const NAV_PAGES = [
   { en: "About Us",      ar: "من نحن",      href: "/about" },
-  { en: "Our Projects",  ar: "مشاريعنا",    href: "/projects" },
+  { en: "Our Projects",  ar: "مشاريعنا",    href: "/projects", hasDropdown: true },
   { en: "Services",      ar: "خدماتنا",     href: "/services" },
   { en: "Blog",          ar: "المدونة",      href: "/blog" },
   { en: "Contact Us",    ar: "تواصل معنا",  href: "/contact" },
 ];
+
+function PropertyCategoryIcon({ type, className = "w-4 h-4 text-[#B8873B]" }: { type?: string; className?: string }) {
+  switch (type) {
+    case "apartments":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <rect x="4" y="2" width="16" height="20" rx="1" />
+          <path d="M9 6h2M13 6h2M9 10h2M13 10h2M9 14h2M13 14h2M9 18h6" />
+        </svg>
+      );
+    case "villas":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M3 10.5L12 3l9 7.5" />
+          <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
+          <path d="M10 21v-6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6" />
+        </svg>
+      );
+    case "commercial":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M3 21h18M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+          <path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3" />
+        </svg>
+      );
+    case "residential":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <rect x="2" y="6" width="9" height="15" rx="1" />
+          <rect x="13" y="2" width="9" height="19" rx="1" />
+          <path d="M5 10h3M5 14h3M16 6h3M16 10h3M16 14h3" />
+        </svg>
+      );
+    case "land":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+      );
+    default:
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M3 3h18v18H3z" />
+          <path d="M3 9h18M9 21V9" />
+        </svg>
+      );
+  }
+}
 
 export default function PageNav() {
   const { lang, toggleLanguage, t } = useLanguage();
   const isAr = lang === "ar";
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [projectsHovered, setProjectsHovered] = useState(false);
+  const [mobileProjectsExpanded, setMobileProjectsExpanded] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleProjectsMouseEnter = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setProjectsHovered(true);
+  };
+
+  const handleProjectsMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setProjectsHovered(false);
+    }, 200);
+  };
 
   return (
     <>
@@ -47,10 +112,113 @@ export default function PageNav() {
             </div>
           </Link>
 
-          {/* Desktop nav links - shifted a bit to the right */}
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1 py-1 px-1 ml-6 lg:ml-16 rtl:ml-0 rtl:mr-6 lg:rtl:mr-12">
             {NAV_PAGES.map((page) => {
               const isActive = pathname === page.href;
+
+              if (page.hasDropdown) {
+                return (
+                  <div
+                    key={page.en}
+                    className="relative"
+                    onMouseEnter={handleProjectsMouseEnter}
+                    onMouseLeave={handleProjectsMouseLeave}
+                  >
+                    <Link
+                      href={page.href}
+                      className="flex items-center gap-1 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
+                      style={{
+                        color: isActive || projectsHovered ? "#B8873B" : "#D4C7B5",
+                        borderColor: isActive || projectsHovered ? "rgba(184,135,59,0.35)" : "transparent",
+                        backgroundColor: isActive || projectsHovered ? "rgba(184,135,59,0.08)" : "transparent",
+                      }}
+                    >
+                      <span>{isAr ? page.ar : page.en}</span>
+                      <svg
+                        className={`w-2.5 h-2.5 transition-transform duration-200 ${projectsHovered ? "rotate-180 text-[#B8873B]" : "text-[#8C8477]"}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Link>
+
+                    {/* Luxury Hover Dropdown Panel */}
+                    {projectsHovered && (
+                      <div
+                        className={`absolute top-full mt-1.5 w-[380px] p-2.5 border rounded-sm shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[250] ${
+                          isAr ? "right-0 text-right" : "left-0 text-left"
+                        }`}
+                        style={{
+                          backgroundColor: "#161712",
+                          borderColor: "rgba(184,135,59,0.4)",
+                          boxShadow: "0 25px 60px rgba(0,0,0,0.95), 0 0 0 1px rgba(184,135,59,0.3)",
+                        }}
+                        dir={isAr ? "rtl" : "ltr"}
+                      >
+                        {/* Header: All Projects link */}
+                        <Link
+                          href="/projects"
+                          onClick={() => setProjectsHovered(false)}
+                          className="flex items-center justify-between p-3 mb-1.5 border rounded-xs bg-[#1C1E17] hover:bg-[#B8873B]/20 transition-all duration-200 group border-white/5"
+                        >
+                          <div>
+                            <span className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#B8873B] font-bold block">
+                              {isAr ? "جميع المشاريع" : "All Projects"}
+                            </span>
+                            <span className="font-sans text-xs text-[#E8DFCE] font-medium">
+                              {isAr ? "استكشف محفظة أصاهيب الاستثمارية" : "Explore Curated Saudi Portfolio"}
+                            </span>
+                          </div>
+                          <span className="font-mono text-xs text-[#B8873B] group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
+                            {isAr ? "←" : "→"}
+                          </span>
+                        </Link>
+
+                        {/* Property Categories Submenu */}
+                        <div className="py-1">
+                          <div className="px-3 py-1 mb-1">
+                            <span className="font-mono text-[8.5px] tracking-[0.22em] uppercase text-[#8C8477] font-semibold">
+                              {isAr ? "فئات العقارات" : "Property Categories"}
+                            </span>
+                          </div>
+
+                          <div className="space-y-0.5">
+                            {STANDARD_PROPERTY_TYPES.map((type) => (
+                              <Link
+                                key={type.key}
+                                href={`/projects?type=${encodeURIComponent(type.key)}`}
+                                onClick={() => setProjectsHovered(false)}
+                                className="flex items-center justify-between p-2.5 rounded-xs hover:bg-[#B8873B]/10 transition-colors group"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-7 h-7 rounded-xs bg-[#1F211A] border border-white/10 flex items-center justify-center shrink-0 group-hover:border-[#B8873B]/40 transition-colors">
+                                    <PropertyCategoryIcon type={type.iconType} className="w-3.5 h-3.5 text-[#B8873B]" />
+                                  </div>
+                                  <div>
+                                    <p className="font-sans text-xs text-[#E8DFCE] group-hover:text-[#B8873B] transition-colors font-medium">
+                                      {isAr ? type.labelAr : type.labelEn}
+                                    </p>
+                                    <p className="font-sans text-[10px] text-[#8C8477] leading-tight">
+                                      {isAr ? type.descAr : type.descEn}
+                                    </p>
+                                  </div>
+                                </div>
+                                <span className="font-mono text-[10px] text-[#8C8477] opacity-0 group-hover:opacity-100 group-hover:text-[#B8873B] transition-all">
+                                  {isAr ? "عرض ←" : "View →"}
+                                </span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={page.en}
@@ -126,7 +294,7 @@ export default function PageNav() {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 top-[68px] z-[195] md:hidden flex flex-col p-6 space-y-3"
+          className="fixed inset-0 top-[68px] z-[195] md:hidden flex flex-col p-6 space-y-3 overflow-y-auto"
           style={{
             backgroundColor: "rgba(18,19,15,0.98)",
             backdropFilter: "blur(25px)",
@@ -135,6 +303,58 @@ export default function PageNav() {
         >
           {NAV_PAGES.map((page) => {
             const isActive = pathname === page.href;
+
+            if (page.hasDropdown) {
+              return (
+                <div key={page.en} className="space-y-1">
+                  <div
+                    className="py-3 px-4 rounded border font-mono text-sm tracking-[0.2em] uppercase flex items-center justify-between transition-colors cursor-pointer"
+                    style={{
+                      color: isActive ? "#B8873B" : "#E8DFCE",
+                      borderColor: isActive ? "rgba(184,135,59,0.4)" : "rgba(184,135,59,0.1)",
+                      backgroundColor: isActive ? "rgba(184,135,59,0.1)" : "transparent",
+                    }}
+                    onClick={() => setMobileProjectsExpanded(!mobileProjectsExpanded)}
+                  >
+                    <span>{isAr ? page.ar : page.en}</span>
+                    <svg
+                      className={`w-3.5 h-3.5 text-[#B8873B] transition-transform duration-200 ${
+                        mobileProjectsExpanded ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+
+                  {mobileProjectsExpanded && (
+                    <div className="pl-4 pr-4 py-2 space-y-1 bg-black/40 rounded border border-white/5">
+                      <Link
+                        href="/projects"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block py-2 text-xs font-mono text-[#B8873B] font-semibold border-b border-white/5"
+                      >
+                        {isAr ? "← جميع المشاريع" : "→ All Projects"}
+                      </Link>
+                      {STANDARD_PROPERTY_TYPES.map((type) => (
+                        <Link
+                          key={type.key}
+                          href={`/projects?type=${encodeURIComponent(type.key)}`}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center gap-2.5 py-2 text-xs font-sans text-[#C5BCAD] hover:text-[#B8873B]"
+                        >
+                          <PropertyCategoryIcon type={type.iconType} className="w-3.5 h-3.5 text-[#B8873B]" />
+                          <span>{isAr ? type.labelAr : type.labelEn}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={page.en}

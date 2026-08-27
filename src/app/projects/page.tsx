@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { getPublishedProjectDetails } from "@/lib/api";
 import ProjectsClient from "./ProjectsClient";
@@ -17,5 +18,9 @@ export const revalidate = 60;
 export default async function ProjectsPage() {
   const initialProjects = await getPublishedProjectDetails();
 
-  return <ProjectsClient initialProjects={initialProjects} />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#12130F]" />}>
+      <ProjectsClient initialProjects={initialProjects} />
+    </Suspense>
+  );
 }
