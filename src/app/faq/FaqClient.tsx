@@ -430,15 +430,28 @@ export default function FaqClient() {
                   value={propertyPrice}
                   onChange={(e) => setPropertyPrice(Number(e.target.value))}
                   style={{
-                    background: `linear-gradient(to right, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
+                    background: isAr
+                      ? `linear-gradient(to left, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
+                      : `linear-gradient(to right, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
                   }}
                   className="w-full h-2.5 rounded-lg appearance-none cursor-pointer accent-[#E8DFCE]"
                 />
                 <div className="flex justify-between text-[10px] font-mono text-[#8C8477] mt-1.5">
-                  <span>300K</span>
-                  <span>4M (Residency)</span>
-                  <span>10M</span>
-                  <span>15M+</span>
+                  {isAr ? (
+                    <>
+                      <span>300 ألف</span>
+                      <span>4 مليون (الإقامة)</span>
+                      <span>10 مليون</span>
+                      <span>+15 مليون</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>300K</span>
+                      <span>4M (Residency)</span>
+                      <span>10M</span>
+                      <span>15M+</span>
+                    </>
+                  )}
                 </div>
               </div>
 
