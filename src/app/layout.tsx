@@ -63,9 +63,9 @@ export const metadata: Metadata = {
       "Curated real estate investments aligned with Saudi Arabia's Vision 2030. Apartments, villas, commercial land, and buildings — vetted by experts.",
     images: [
       {
-        url: "/images/og-image.png",
+        url: "https://www.asaheebrealestate.com/icon.png",
         width: 1200,
-        height: 630,
+        height: 1200,
         alt: "Asaheeb Real Estate — Saudi Arabia Real Estate Investment",
       },
     ],
@@ -74,6 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Asaheeb Real Estate — Invest in Saudi Arabia's Future",
     description: "Premium real estate investment opportunities aligned with Vision 2030.",
+    images: ["https://www.asaheebrealestate.com/icon.png"],
   },
   alternates: {
     canonical: "https://www.asaheebrealestate.com",
@@ -89,6 +90,83 @@ export const metadata: Metadata = {
 
 import { LanguageProvider } from "@/context/LanguageContext";
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "RealEstateAgent",
+      "@id": "https://www.asaheebrealestate.com/#organization",
+      "name": "Asaheeb Real Estate",
+      "alternateName": ["شركة صهيب العقارية", "Asaheeb Properties", "Asaheeb Real Estate Company"],
+      "url": "https://www.asaheebrealestate.com",
+      "logo": "https://www.asaheebrealestate.com/icon.png",
+      "image": "https://www.asaheebrealestate.com/icon.png",
+      "description": "Premier Saudi real estate brokerage and advisory firm specializing in Vision 2030 residential, commercial land, and off-plan investment properties in Jeddah, Riyadh, and Madinah.",
+      "telephone": "+966565654450",
+      "email": "buy@asaheebrealestate.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Office 602, Matbouli Plaza, Fayd As Samaa, Al-Ruwais",
+        "addressLocality": "Jeddah",
+        "postalCode": "23213",
+        "addressCountry": "SA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 21.5204,
+        "longitude": 39.1728
+      },
+      "hasMap": "https://maps.app.goo.gl/azGoR8U9jpaXa3Qh8",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"],
+          "opens": "08:00",
+          "closes": "20:00"
+        }
+      ],
+      "priceRange": "$$$$",
+      "currenciesAccepted": "SAR, USD, EUR, GBP",
+      "paymentAccepted": "Bank Transfer, Electronic Payment",
+      "areaServed": [
+        { "@type": "City", "name": "Jeddah", "sameAs": "https://en.wikipedia.org/wiki/Jeddah" },
+        { "@type": "City", "name": "Riyadh", "sameAs": "https://en.wikipedia.org/wiki/Riyadh" },
+        { "@type": "City", "name": "Madinah", "sameAs": "https://en.wikipedia.org/wiki/Medina" },
+        { "@type": "Country", "name": "Saudi Arabia", "sameAs": "https://en.wikipedia.org/wiki/Saudi_Arabia" }
+      ],
+      "knowsAbout": [
+        "Saudi Real Estate General Authority (REGA / FAL) Licensing",
+        "Non-Saudi Property Ownership Framework (2% Ownership Fee)",
+        "Saudi Real Estate Transaction Tax (5% RETT)",
+        "Saudi Premium Residency Real Estate Track (SAR 4,000,000)",
+        "Wafi Off-Plan Project Due Diligence & Escrow Accounts",
+        "Jeddah Waterfront & Obhur Luxury Real Estate",
+        "Riyadh Commercial Land & Vision 2030 HQ Corridors"
+      ],
+      "sameAs": [
+        "https://www.instagram.com/Asaheebrealestate",
+        "https://www.snapchat.com/add/Asaheeb.re",
+        "https://www.tiktok.com/@Asaheeb.RealEstate"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.asaheebrealestate.com/#website",
+      "url": "https://www.asaheebrealestate.com",
+      "name": "Asaheeb Real Estate",
+      "publisher": {
+        "@id": "https://www.asaheebrealestate.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.asaheebrealestate.com/faq?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": ["en-US", "ar-SA"]
+    }
+  ]
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -102,6 +180,12 @@ export default function RootLayout({
       <head>
         {/* Google Search Console Verification */}
         <meta name="google-site-verification" content="DQlKOCqS_f9LA9dhsJhdPAfzxPPZbENPvs8us-aM6Uc" />
+
+        {/* Global Structured Data (JSON-LD) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
 
         {/* Google Tag Manager */}
         <Script

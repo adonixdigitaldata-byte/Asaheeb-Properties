@@ -8,6 +8,12 @@ export const COMPANY_ADDRESS_AR = "مكتب رقم ٦٠٢، متبولي بلا�
 export const GOOGLE_MAPS_LINK = "https://maps.app.goo.gl/azGoR8U9jpaXa3Qh8";
 export const GOOGLE_MAPS_EMBED_URL = "https://maps.google.com/maps?q=Matbouli%20Plaza,%20Al-Ruwais,%20Jeddah&t=k&z=17&ie=UTF8&iwloc=&output=embed";
 
+export const SOCIAL_LINKS = {
+  instagram: "https://www.instagram.com/Asaheebrealestate",
+  snapchat: "https://www.snapchat.com/add/Asaheeb.re",
+  tiktok: "https://www.tiktok.com/@Asaheeb.RealEstate",
+};
+
 export const BUSINESS_HOURS_EN = [
   { days: "Sun – Thu", hours: "8:00 AM – 8:00 PM" },
   { days: "Friday", hours: "Closed" },

@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about",
     "/projects",
     "/services",
+    "/faq",
     "/blog",
     "/contact",
     "/privacy",
@@ -17,8 +18,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: (route === "" ? "daily" : "weekly") as MetadataRoute.Sitemap[0]["changeFrequency"],
-    priority: route === "" ? 1.0 : route === "/projects" || route === "/blog" ? 0.9 : 0.8,
+    changeFrequency: (route === "" ? "daily" : route === "/faq" ? "daily" : "weekly") as MetadataRoute.Sitemap[0]["changeFrequency"],
+    priority: route === "" ? 1.0 : route === "/faq" ? 0.95 : route === "/projects" || route === "/blog" ? 0.9 : 0.8,
   }));
 
   // Fetch dynamic projects from DB

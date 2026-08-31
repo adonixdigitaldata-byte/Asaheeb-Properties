@@ -25,7 +25,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? `${dbProject.overview_en.substring(0, 160)}...`
     : `Discover investment opportunities in ${dbProject.name_en}. Detailed pricing, size, amenities, brochure, and advisory in ${dbProject.city_en}.`;
 
-  const imageUrl = dbProject.images?.[0]?.url || "/images/og-image.png";
+  const rawImg = dbProject.images?.[0]?.url;
+  const imageUrl = rawImg
+    ? rawImg.startsWith("http")
+      ? rawImg
+      : `https://www.asaheebrealestate.com${rawImg.startsWith("/") ? "" : "/"}${rawImg}`
+    : "https://www.asaheebrealestate.com/icon.png";
   const pageUrl = `https://www.asaheebrealestate.com/projects/${id}`;
 
   return {

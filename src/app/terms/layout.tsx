@@ -16,11 +16,20 @@ export const metadata: Metadata = {
     description: "Governing terms for real estate advisory and brokerage services in Saudi Arabia.",
     url: "https://www.asaheebrealestate.com/terms",
     siteName: "Asaheeb Real Estate",
+    images: [
+      {
+        url: "https://www.asaheebrealestate.com/icon.png",
+        width: 1200,
+        height: 1200,
+        alt: "Asaheeb Real Estate Terms of Use",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Terms of Use — Asaheeb Real Estate",
     description: "Compliance with Saudi Arabian real estate laws and RERA regulations.",
+    images: ["https://www.asaheebrealestate.com/icon.png"],
   },
   alternates: {
     canonical: "https://www.asaheebrealestate.com/terms",

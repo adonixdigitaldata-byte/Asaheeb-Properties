@@ -12,6 +12,7 @@ const NAV_PAGES = [
   { en: "About Us",      ar: "من نحن",      href: "/about" },
   { en: "Our Projects",  ar: "مشاريعنا",    href: "/projects", hasDropdown: true },
   { en: "Services",      ar: "خدماتنا",     href: "/services" },
+  { en: "Expat FAQ",     ar: "دليل التملك", href: "/faq" },
   { en: "Blog",          ar: "المدونة",      href: "/blog" },
   { en: "Contact Us",    ar: "تواصل معنا",  href: "/contact" },
 ];

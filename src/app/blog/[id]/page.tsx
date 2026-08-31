@@ -23,7 +23,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const title = `${dbBlog.title_en} (${dbBlog.title_ar}) — Asaheeb Market Intelligence`;
   const description = dbBlog.excerpt_en || "Saudi real estate market intelligence, Vision 2030 updates, and investment advisory.";
   const pageUrl = `https://www.asaheebrealestate.com/blog/${id}`;
-  const imageUrl = dbBlog.cover_image_url || "/images/og-image.png";
+  const rawImg = dbBlog.cover_image_url;
+  const imageUrl = rawImg
+    ? rawImg.startsWith("http")
+      ? rawImg
+      : `https://www.asaheebrealestate.com${rawImg.startsWith("/") ? "" : "/"}${rawImg}`
+    : "https://www.asaheebrealestate.com/icon.png";
 
   return {
     title,
@@ -38,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         {
           url: imageUrl,
           width: 1200,
-          height: 630,
+          height: 1200,
           alt: title,
         },
       ],
@@ -63,5 +68,38 @@ export default async function DynamicBlogDetailPage({ params }: { params: Promis
     notFound();
   }
 
-  return <DynamicBlogDetailClient post={post} />;
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.titleEn || post.titleAr,
+    "description": post.summaryEn?.[0] || post.summaryAr?.[0] || post.titleEn || "Saudi real estate market intelligence by Asaheeb Real Estate.",
+    "image": "https://www.asaheebrealestate.com/icon.png",
+    "author": {
+      "@type": "Organization",
+      "name": post.authorEn || post.authorAr || "Asaheeb Real Estate",
+      "url": "https://www.asaheebrealestate.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Asaheeb Real Estate",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.asaheebrealestate.com/icon.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://www.asaheebrealestate.com/blog/${id}`
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <DynamicBlogDetailClient post={post} />
+    </>
+  );
 }
