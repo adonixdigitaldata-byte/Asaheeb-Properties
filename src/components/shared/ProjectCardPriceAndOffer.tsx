@@ -56,7 +56,7 @@ export function ProjectCardPriceAndOffer({
 
   return (
     <div
-      className={`h-[46px] flex flex-col justify-end ${className}`}
+      className={`flex flex-col justify-end min-w-0 ${className}`}
       dir={isAr ? "rtl" : "ltr"}
     >
       {/* Optional Badge chip (used on sidebar/detail views when showBadges={true}) */}
@@ -99,26 +99,26 @@ export function ProjectCardPriceAndOffer({
         </div>
       )}
 
-      {/* Pricing Row - Strictly fixed height & original font-display typography */}
-      <div className="h-[42px] flex flex-col justify-end">
-        <p className="font-mono text-[8.5px] uppercase tracking-widest text-[#C5BCAD] mb-0.5 leading-none">
+      {/* Pricing Row */}
+      <div className="flex flex-col justify-end">
+        <p className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5 leading-none">
           {isAr ? "يبدأ من" : "STARTING"}
         </p>
 
-        <div className="flex items-baseline gap-2 leading-tight">
+        <div className="flex items-baseline gap-1.5 flex-wrap leading-tight">
           {hasOffer && discountedPrice ? (
             <>
               {originalPrice && (
-                <span className="font-display text-xs line-through text-[#8C8477] font-medium shrink-0">
+                <span className="font-display text-[11px] line-through text-[#8C8477] font-medium shrink-0">
                   {originalPrice}
                 </span>
               )}
-              <span className="font-display text-base font-bold text-[#B8873B] shrink-0">
+              <span className="font-display text-sm sm:text-base font-bold text-[#B8873B] shrink-0">
                 {discountedPrice}
               </span>
             </>
           ) : (
-            <span className="font-display text-base font-bold text-[#B8873B] shrink-0">
+            <span className="font-display text-sm sm:text-base font-bold text-[#B8873B] shrink-0">
               {isAr ? defaultPriceAr : defaultPriceEn}
             </span>
           )}

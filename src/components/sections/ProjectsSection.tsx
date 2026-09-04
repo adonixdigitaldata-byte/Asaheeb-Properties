@@ -41,7 +41,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
         ref={cardRef}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className={`group relative overflow-hidden cursor-pointer rounded-sm transition-all duration-500 ${
+        className={`group relative overflow-hidden cursor-pointer rounded-sm transition-all duration-500 bg-[#0F1117] h-full flex flex-col justify-between ${
           isOfferActive
             ? "border border-amber-500/60 shadow-[0_8px_32px_rgba(245,158,11,0.25)]"
             : ""
@@ -49,7 +49,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
         style={{
           border: isOfferActive
             ? undefined
-            : `1px solid ${hovered ? "#B8873B" + "50" : "rgba(255,255,255,0.07)"}`,
+            : `1px solid ${hovered ? "rgba(184,135,59,0.5)" : "rgba(255,255,255,0.08)"}`,
           transition: "border-color 0.4s ease, box-shadow 0.4s ease",
           boxShadow: hovered
             ? isOfferActive
@@ -66,7 +66,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
         )}
 
         {/* Image */}
-        <div className="relative overflow-hidden" style={{ height: "220px" }}>
+        <div className="relative overflow-hidden w-full h-56 shrink-0">
           <Image
             src={imageUrl}
             alt={name}
@@ -85,7 +85,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
 
           {/* Top accent line */}
           <div
-            className="absolute top-0 left-0 right-0 h-[1.5px] transition-opacity duration-300"
+            className="absolute top-0 left-0 right-0 h-[1.5px] transition-opacity duration-300 z-10"
             style={{
               background: `linear-gradient(to right, #B8873B, transparent)`,
               opacity: hovered ? 1 : 0.4,
@@ -96,7 +96,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none z-10">
             {/* Type badge */}
             <div
-              className="px-2.5 py-1 font-mono text-[8px] tracking-[0.18em] uppercase font-bold truncate max-w-[62%]"
+              className="px-2.5 py-1 font-mono text-[9px] tracking-[0.18em] uppercase font-bold truncate max-w-[60%]"
               style={{ color: "#12130F", backgroundColor: "#B8873B" }}
               title={type}
             >
@@ -105,7 +105,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
 
             {/* Status */}
             <div
-              className="px-2.5 py-1 font-mono text-[8px] tracking-[0.18em] uppercase shrink-0"
+              className="px-2.5 py-1 font-mono text-[9px] tracking-[0.18em] uppercase shrink-0"
               style={{
                 color: "#E8DFCE",
                 border: "1px solid rgba(232,223,206,0.25)",
@@ -121,7 +121,6 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           {isOfferActive && (
             <div className={`absolute bottom-2.5 ${isAr ? "left-2.5" : "right-2.5"} z-10 pointer-events-none`}>
               <span className="inline-flex items-center gap-1.5 font-mono text-[8.5px] font-black tracking-wider uppercase px-2.5 py-1 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 text-slate-950 rounded-xs shadow-[0_0_14px_rgba(245,158,11,0.5)] border border-amber-300/60 animate-pulse">
-                {/* Lightning SVG Icon */}
                 <svg className="w-3 h-3 text-slate-950 shrink-0 fill-current" viewBox="0 0 24 24">
                   <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                 </svg>
@@ -147,32 +146,35 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           )}
         </div>
 
-        {/* Body */}
+        {/* Card Body */}
         <div
-          className={`p-5 flex flex-col justify-between h-[145px] ${isAr ? "text-right" : ""}`}
+          className={`p-5 flex-1 flex flex-col justify-between ${isAr ? "text-right" : ""}`}
           style={{ backgroundColor: "rgba(11,14,18,0.95)" }}
         >
-          <p className={`font-mono text-[8px] tracking-[0.22em] uppercase text-[#C5BCAD] mb-1.5 flex items-center gap-1.5 ${isAr ? "flex-row-reverse" : ""}`}>
-            <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1C4.067 1 2.5 2.567 2.5 4.5c0 2.72 3.5 6.5 3.5 6.5s3.5-3.78 3.5-6.5C9.5 2.567 7.933 1 6 1z" stroke="#B8873B" strokeWidth="1.2"/>
-            </svg>
-            {location}
-          </p>
+          <div>
+            <p className={`font-mono text-[9px] tracking-[0.22em] uppercase text-[#C5BCAD] mb-1.5 flex items-center gap-1.5 ${isAr ? "flex-row-reverse" : ""}`}>
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="shrink-0">
+                <path d="M6 1C4.067 1 2.5 2.567 2.5 4.5c0 2.72 3.5 6.5 3.5 6.5s3.5-3.78 3.5-6.5C9.5 2.567 7.933 1 6 1z" stroke="#B8873B" strokeWidth="1.2"/>
+              </svg>
+              <span className="truncate">{location}</span>
+            </p>
 
-          <h3
-            className="font-display text-lg text-[#E8DFCE] font-normal leading-snug mb-3 line-clamp-1 h-7"
-            style={{ color: hovered ? "#FFFFFF" : "#E8DFCE", transition: "color 0.3s" }}
-          >
-            {name}
-          </h3>
+            <h3
+              className="font-display text-xl text-[#E8DFCE] font-normal leading-snug mb-3 line-clamp-1 truncate"
+              style={{ color: hovered ? "#FFFFFF" : "#E8DFCE", transition: "color 0.3s" }}
+              title={name}
+            >
+              {name}
+            </h3>
+          </div>
 
-          {/* Price + CTA */}
-          <div className={`flex items-end justify-between pt-3 border-t border-white/10 gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
+          {/* Price + CTA Footer */}
+          <div className={`pt-3 border-t border-white/10 flex items-center justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
             <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
               <ProjectCardPriceAndOffer project={project} isAr={isAr} showBadges={false} />
             </div>
             <button
-              className="flex items-center gap-2 font-mono text-[9px] tracking-[0.18em] uppercase px-3.5 py-2 border transition-all duration-300 font-semibold"
+              className="flex items-center gap-1.5 font-mono text-[9.5px] tracking-[0.16em] uppercase px-3 py-2 border transition-all duration-300 font-semibold shrink-0"
               style={{
                 borderColor: hovered ? "#B8873B" : "rgba(255,255,255,0.22)",
                 color: hovered ? "#B8873B" : "#D4C7B5",
