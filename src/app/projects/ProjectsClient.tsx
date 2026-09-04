@@ -13,6 +13,8 @@ import { ProjectDetail } from "@/types/database";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { getWhatsAppLink } from "@/data/contactConfig";
 import { STANDARD_PROPERTY_TYPES, normalizePropertyType, matchesPropertyType } from "@/data/propertyTypes";
+import { ProjectCardPriceAndOffer } from "@/components/shared/ProjectCardPriceAndOffer";
+import { getDiscountStatus } from "@/lib/offerUtils";
 
 // Architectural SVG Icon for property categories
 function PropertyCategoryIcon({ type, className = "w-3.5 h-3.5" }: { type?: string; className?: string }) {
@@ -165,6 +167,9 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
   const rawImageUrl = project.images?.[0]?.url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1200&auto=format&fit=crop";
   const imageUrl = getOptimizedImageUrl(rawImageUrl, 800);
 
+  const rawOffer = (project as any)?.discountOffer || (project as any)?.discount_offer;
+  const offerStatus = getDiscountStatus(rawOffer);
+
   const paymentTerms = isAr
     ? (project.paymentTermsAr || (project as any).payment_terms_ar)
     : (project.paymentTermsEn || (project as any).payment_terms_en);
@@ -176,16 +181,33 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
     ? (project.typeAr || (project as any).type_ar || standardTypeObj?.labelAr || rawPropertyType)
     : (project.typeEn || (project as any).type_en || standardTypeObj?.labelEn || rawPropertyType);
 
+  const isOfferActive = offerStatus.isActive && !offerStatus.isExpired;
+
   return (
     <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
       <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="group relative overflow-hidden cursor-pointer border border-white/10 hover:border-[#B8873B]/60 transition-all duration-500 rounded-sm bg-[#0F1117] h-full flex flex-col justify-between"
+        className={`group relative overflow-hidden cursor-pointer transition-all duration-500 rounded-sm bg-[#0F1117] h-full flex flex-col justify-between ${
+          isOfferActive
+            ? "border border-amber-500/60 shadow-[0_8px_32px_rgba(245,158,11,0.25)]"
+            : "border border-white/10 hover:border-[#B8873B]/60"
+        }`}
         style={{
-          boxShadow: hovered ? "0 20px 48px rgba(0,0,0,0.6), 0 0 30px rgba(184,135,59,0.15)" : "0 8px 32px rgba(0,0,0,0.3)",
+          boxShadow: hovered
+            ? isOfferActive
+              ? "0 24px 54px rgba(0,0,0,0.7), 0 0 35px rgba(245,158,11,0.3)"
+              : "0 20px 48px rgba(0,0,0,0.6), 0 0 30px rgba(184,135,59,0.15)"
+            : isOfferActive
+            ? "0 8px 32px rgba(245,158,11,0.2)"
+            : "0 8px 32px rgba(0,0,0,0.3)",
         }}
       >
+        {/* Top Gold Lightning Accent Line for active offer cards */}
+        {isOfferActive && (
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 z-20 animate-pulse" />
+        )}
+
         <div className="relative w-full h-60 overflow-hidden">
           <Image
             src={imageUrl}
@@ -221,8 +243,24 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
             </div>
           </div>
 
+          {/* Promotional Offer Badge (Top Overlay on Image with Lightning Bolt) */}
+          {isOfferActive && (
+            <div className={`absolute bottom-3 ${isAr ? "left-3" : "right-3"} z-10 pointer-events-none`}>
+              <span className="inline-flex items-center gap-1.5 font-mono text-[9px] font-black tracking-wider uppercase px-3 py-1 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 text-slate-950 rounded-sm shadow-[0_0_16px_rgba(245,158,11,0.5)] border border-amber-300/60 animate-pulse">
+                {/* Lightning SVG Icon */}
+                <svg className="w-3 h-3 text-slate-950 shrink-0 fill-current" viewBox="0 0 24 24">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                <span>{isAr ? offerStatus.badgeLabelAr || "عرض محدود" : offerStatus.badgeLabelEn || "LIMITED TIME OFFER"}</span>
+                {offerStatus.daysLeft !== null && (
+                  <span className="ml-1 pl-1 border-l border-slate-950/40 font-bold">{offerStatus.daysLeft === 0 ? (isAr ? "اليوم" : "Ends today") : `${offerStatus.daysLeft}d left`}</span>
+                )}
+              </span>
+            </div>
+          )}
+
           {/* Payment Terms Badge (Bottom overlay) */}
-          {paymentTerms && (
+          {!offerStatus.isActive && paymentTerms && (
             <div className={`absolute bottom-3 ${isAr ? "right-3" : "left-3"} z-10 pointer-events-none`}>
               <span className="inline-flex items-center gap-1.5 font-mono text-[9px] tracking-wider uppercase px-2.5 py-1 bg-black/80 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
                 <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -235,25 +273,24 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
           )}
         </div>
 
-        <div className={`p-6 flex-1 flex flex-col justify-between ${isAr ? "text-right" : ""}`}>
+        <div className={`p-6 flex-1 flex flex-col justify-between h-[195px] ${isAr ? "text-right" : ""}`}>
           <div>
-            <div className="font-mono text-[9.5px] tracking-[0.25em] uppercase mb-1.5 font-medium text-[#B8873B]">
+            <div className="font-mono text-[9.5px] tracking-[0.25em] uppercase mb-1.5 font-medium text-[#B8873B] truncate">
               {isAr ? project.districtAr : project.districtEn}
             </div>
-            <h3 className="font-display text-2xl text-[#E8DFCE] mb-2 tracking-tight group-hover:text-[#B8873B] transition-colors">
+            <h3 className="font-display text-2xl text-[#E8DFCE] mb-1.5 tracking-tight group-hover:text-[#B8873B] transition-colors line-clamp-1 h-7">
               {isAr ? project.nameAr : project.nameEn}
             </h3>
-            <p className="font-sans text-xs text-[#C5BCAD] leading-relaxed mb-4 line-clamp-2">
+            <p className="font-sans text-xs text-[#C5BCAD] leading-relaxed mb-3 line-clamp-2 h-9 overflow-hidden">
               {isAr ? project.overviewAr : project.overviewEn}
             </p>
           </div>
 
-          <div className={`pt-4 border-t border-white/10 flex items-end justify-between ${isAr ? "flex-row-reverse" : ""}`}>
-            <div>
-              <div className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "نطاق الأسعار" : "Price Range"}</div>
-              <div className="font-display text-lg text-[#B8873B] font-semibold">{isAr ? project.priceRangeAr : project.priceRangeEn}</div>
+          <div className={`pt-3 border-t border-white/10 flex items-end justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
+            <div className="flex-1 min-w-0 pr-1">
+              <ProjectCardPriceAndOffer project={project} isAr={isAr} showBadges={false} />
             </div>
-            <div className="font-mono text-[10px] tracking-widest uppercase text-[#B8873B] font-semibold group-hover:underline">
+            <div className="font-mono text-[10px] tracking-widest uppercase text-[#B8873B] font-semibold group-hover:underline shrink-0 pb-0.5 whitespace-nowrap">
               {isAr ? "التفاصيل ←" : "View Details →"}
             </div>
           </div>

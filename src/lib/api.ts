@@ -108,6 +108,8 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     brochureUrl: p.brochure_url,
     brochureSizeEn: p.brochure_size_en || p.brochure_size_ar,
     brochureSizeAr: p.brochure_size_ar || p.brochure_size_en,
+    discountOffer: p.discount_offer || p.discountOffer || null,
+    discount_offer: p.discount_offer || p.discountOffer || null,
   };
 }
 

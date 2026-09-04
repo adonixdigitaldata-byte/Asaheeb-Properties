@@ -14,6 +14,8 @@ import { getProjectWhatsAppLink } from "@/data/contactConfig";
 import ShareModal from "@/components/shared/ShareModal";
 import PhoneInputWithCountry from "@/components/ui/PhoneInputWithCountry";
 import { validatePhoneNumber } from "@/data/countriesData";
+import { ProjectPromotionalHeroBanner } from "@/components/shared/ProjectPromotionalHeroBanner";
+import { ProjectCardPriceAndOffer } from "@/components/shared/ProjectCardPriceAndOffer";
 
 export function ProjectDetailView({ project }: { project: ProjectDetail | null }) {
   const { lang } = useLanguage();
@@ -293,6 +295,12 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
             </div>
           </div>
 
+          {/* High-Impact Promotional Hero Banner */}
+          <ProjectPromotionalHeroBanner
+            offer={project.discountOffer || project.discount_offer}
+            locale={lang}
+          />
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
             
             {/* Title & Overview */}
@@ -350,12 +358,10 @@ export function ProjectDetailView({ project }: { project: ProjectDetail | null }
             {/* Quick Actions Card */}
             <div className="lg:col-span-4 p-6 sm:p-8 border border-[#B8873B]/30 bg-[#12130F] rounded-sm space-y-6">
               <div>
-                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#8C8477] mb-1">
-                  {isAr ? "نطاق الأسعار" : "Price Range"}
+                <p className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#8C8477] mb-1.5">
+                  {isAr ? "نطاق الأسعار والعروض" : "Price & Offer"}
                 </p>
-                <p className="font-display text-2xl sm:text-3xl text-[#B8873B] font-bold">
-                  {isAr ? project.priceRangeAr : project.priceRangeEn}
-                </p>
+                <ProjectCardPriceAndOffer project={project} isAr={isAr} />
               </div>
 
               <div className="h-px bg-white/10" />

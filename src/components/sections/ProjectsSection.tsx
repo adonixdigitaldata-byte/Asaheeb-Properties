@@ -10,6 +10,8 @@ import { getPublishedProjectDetails } from "@/lib/api";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { ProjectDetail } from "@/types/database";
 import { getWhatsAppLink } from "@/data/contactConfig";
+import { ProjectCardPriceAndOffer } from "@/components/shared/ProjectCardPriceAndOffer";
+import { getDiscountStatus } from "@/lib/offerUtils";
 
 function ProjectCard({ project, index }: { project: ProjectDetail; index: number }) {
   const { lang } = useLanguage();
@@ -29,19 +31,40 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
     ? (project.paymentTermsAr || (project as any).payment_terms_ar)
     : (project.paymentTermsEn || (project as any).payment_terms_en);
 
+  const rawOffer = (project as any)?.discountOffer || (project as any)?.discount_offer;
+  const offerStatus = getDiscountStatus(rawOffer);
+  const isOfferActive = offerStatus.isActive && !offerStatus.isExpired;
+
   return (
     <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
       <div
         ref={cardRef}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="group relative overflow-hidden cursor-pointer rounded-sm"
+        className={`group relative overflow-hidden cursor-pointer rounded-sm transition-all duration-500 ${
+          isOfferActive
+            ? "border border-amber-500/60 shadow-[0_8px_32px_rgba(245,158,11,0.25)]"
+            : ""
+        }`}
         style={{
-          border: `1px solid ${hovered ? "#B8873B" + "50" : "rgba(255,255,255,0.07)"}`,
-          transition: "border-color 0.4s ease",
-          boxShadow: hovered ? `0 24px 64px rgba(0,0,0,0.6), 0 0 40px #B8873B18` : "0 8px 32px rgba(0,0,0,0.35)",
+          border: isOfferActive
+            ? undefined
+            : `1px solid ${hovered ? "#B8873B" + "50" : "rgba(255,255,255,0.07)"}`,
+          transition: "border-color 0.4s ease, box-shadow 0.4s ease",
+          boxShadow: hovered
+            ? isOfferActive
+              ? "0 24px 64px rgba(0,0,0,0.7), 0 0 35px rgba(245,158,11,0.3)"
+              : "0 24px 64px rgba(0,0,0,0.6), 0 0 40px #B8873B18"
+            : isOfferActive
+            ? "0 8px 32px rgba(245,158,11,0.2)"
+            : "0 8px 32px rgba(0,0,0,0.35)",
         }}
       >
+        {/* Top Gold Lightning Accent Line for active offer cards */}
+        {isOfferActive && (
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 z-20 animate-pulse" />
+        )}
+
         {/* Image */}
         <div className="relative overflow-hidden" style={{ height: "220px" }}>
           <Image
@@ -94,8 +117,24 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
             </div>
           </div>
 
+          {/* Promotional Offer Badge (Top Overlay on Image with Lightning Bolt) */}
+          {isOfferActive && (
+            <div className={`absolute bottom-2.5 ${isAr ? "left-2.5" : "right-2.5"} z-10 pointer-events-none`}>
+              <span className="inline-flex items-center gap-1.5 font-mono text-[8.5px] font-black tracking-wider uppercase px-2.5 py-1 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 text-slate-950 rounded-xs shadow-[0_0_14px_rgba(245,158,11,0.5)] border border-amber-300/60 animate-pulse">
+                {/* Lightning SVG Icon */}
+                <svg className="w-3 h-3 text-slate-950 shrink-0 fill-current" viewBox="0 0 24 24">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                <span>{isAr ? offerStatus.badgeLabelAr || "عرض محدود" : offerStatus.badgeLabelEn || "LIMITED TIME OFFER"}</span>
+                {offerStatus.daysLeft !== null && (
+                  <span className="ml-1 pl-1 border-l border-slate-950/40 font-bold">{offerStatus.daysLeft === 0 ? (isAr ? "اليوم" : "Ends today") : `${offerStatus.daysLeft}d left`}</span>
+                )}
+              </span>
+            </div>
+          )}
+
           {/* Bottom Overlay Badges: Payment Terms */}
-          {paymentTerms && (
+          {!isOfferActive && paymentTerms && (
             <div className={`absolute bottom-2.5 ${isAr ? "right-2.5" : "left-2.5"} z-10 pointer-events-none`}>
               <span className="inline-flex items-center gap-1.5 font-mono text-[8.5px] tracking-wider uppercase px-2.5 py-1 bg-black/75 backdrop-blur-md border border-[#B8873B]/40 text-[#E8DFCE] rounded-xs font-medium">
                 <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -110,7 +149,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
 
         {/* Body */}
         <div
-          className={`p-5 ${isAr ? "text-right" : ""}`}
+          className={`p-5 flex flex-col justify-between h-[145px] ${isAr ? "text-right" : ""}`}
           style={{ backgroundColor: "rgba(11,14,18,0.95)" }}
         >
           <p className={`font-mono text-[8px] tracking-[0.22em] uppercase text-[#C5BCAD] mb-1.5 flex items-center gap-1.5 ${isAr ? "flex-row-reverse" : ""}`}>
@@ -121,17 +160,16 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
           </p>
 
           <h3
-            className="font-display text-lg text-[#E8DFCE] font-normal leading-snug mb-4"
+            className="font-display text-lg text-[#E8DFCE] font-normal leading-snug mb-3 line-clamp-1 h-7"
             style={{ color: hovered ? "#FFFFFF" : "#E8DFCE", transition: "color 0.3s" }}
           >
             {name}
           </h3>
 
           {/* Price + CTA */}
-          <div className={`flex items-center justify-between pt-3 border-t border-white/10 ${isAr ? "flex-row-reverse" : ""}`}>
-            <div className={isAr ? "text-right" : ""}>
-              <p className="font-mono text-[8px] uppercase tracking-widest text-[#C5BCAD] mb-0.5">{isAr ? "يبدأ من" : "Starting"}</p>
-              <p className="font-display text-base font-semibold text-[#B8873B]">{price}</p>
+          <div className={`flex items-end justify-between pt-3 border-t border-white/10 gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
+            <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
+              <ProjectCardPriceAndOffer project={project} isAr={isAr} showBadges={false} />
             </div>
             <button
               className="flex items-center gap-2 font-mono text-[9px] tracking-[0.18em] uppercase px-3.5 py-2 border transition-all duration-300 font-semibold"

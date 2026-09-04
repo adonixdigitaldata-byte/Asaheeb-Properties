@@ -11,6 +11,27 @@ export interface Landmark {
   distAr: string;
 }
 
+export interface ProjectDiscountOffer {
+  is_active: boolean;
+  title_en: string;
+  title_ar: string;
+  discount_type?: "PERCENTAGE" | "FIXED_AMOUNT" | "CUSTOM_TEXT";
+  discount_value?: number | null;
+  discount_badge_en?: string | null;
+  discount_badge_ar?: string | null;
+  applies_to?: "ALL_UNITS" | "SPECIFIC_UNITS";
+  applicable_units_en?: string | null;
+  applicable_units_ar?: string | null;
+  original_price_en?: string | null;
+  original_price_ar?: string | null;
+  discounted_price_en?: string | null;
+  discounted_price_ar?: string | null;
+  valid_until?: string | null; // e.g. "2026-09-30T23:59:59Z"
+  show_countdown?: boolean;
+  terms_note_en?: string | null;
+  terms_note_ar?: string | null;
+}
+
 export interface Amenity {
   badge: string;
   titleEn: string;
@@ -64,6 +85,8 @@ export interface Project {
   brochure_url?: string;
   brochure_size_en?: string;
   brochure_size_ar?: string;
+  discount_offer?: ProjectDiscountOffer | null;
+  discountOffer?: ProjectDiscountOffer | null;
   is_published: boolean;
   sort_order: number;
   created_at?: string;
@@ -175,6 +198,8 @@ export interface ProjectDetail {
   brochureUrl?: string;
   brochureSizeEn?: string;
   brochureSizeAr?: string;
+  discountOffer?: ProjectDiscountOffer | null;
+  discount_offer?: ProjectDiscountOffer | null;
 }
 
 export interface PostMetadata {
