@@ -740,26 +740,23 @@ export const DEFAULT_MARKETING_POPUP: MarketingPopup = {
 };
 
 /**
- * Fetches the active marketing popup from Supabase (`marketing_popups` table).
- * Single Source of Truth: When updated in CRM/Supabase, changes appear immediately on the website.
+ * Fetches all active marketing popups from Supabase (`marketing_popups` table).
+ * Single Source of Truth: When campaigns are added or updated in CRM/Supabase, they appear in the multi-campaign carousel immediately.
  */
-export async function getActiveMarketingPopup(): Promise<MarketingPopup | null> {
+export async function getActiveMarketingPopups(): Promise<MarketingPopup[]> {
   try {
     const { data, error } = await supabase
       .from("marketing_popups")
       .select("*")
       .eq("is_active", true)
-      .order("sort_order", { ascending: true })
-      .limit(1);
+      .order("sort_order", { ascending: true });
 
     if (error) {
-      // If table is not yet created in Supabase schema, return default pre-launch campaign
-      return DEFAULT_MARKETING_POPUP;
+      return [DEFAULT_MARKETING_POPUP];
     }
 
     if (data && data.length > 0) {
-      const row = data[0];
-      return {
+      return data.map((row) => ({
         id: row.id || "campaign-popup",
         is_active: row.is_active ?? true,
         title_en: row.title_en || row.title || DEFAULT_MARKETING_POPUP.title_en,
@@ -777,12 +774,17 @@ export async function getActiveMarketingPopup(): Promise<MarketingPopup | null> 
         frequency: row.frequency || "ONCE_PER_SESSION",
         created_at: row.created_at,
         updated_at: row.updated_at,
-      };
+      }));
     }
 
-    return null; // Explicitly no active campaign configured
+    return [];
   } catch (err) {
-    console.warn("Error fetching marketing popup from Supabase:", err);
-    return DEFAULT_MARKETING_POPUP;
+    console.warn("Error fetching marketing popups from Supabase:", err);
+    return [DEFAULT_MARKETING_POPUP];
   }
+}
+
+export async function getActiveMarketingPopup(): Promise<MarketingPopup | null> {
+  const popups = await getActiveMarketingPopups();
+  return popups.length > 0 ? popups[0] : null;
 }

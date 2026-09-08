@@ -9,13 +9,13 @@ import { getWhatsAppLink } from "@/data/contactConfig";
 import { STANDARD_PROPERTY_TYPES } from "@/data/propertyTypes";
 
 const NAV_PAGES = [
-  { en: "About Us",      ar: "من نحن",      href: "/about" },
-  { en: "Our Projects",  ar: "مشاريعنا",    href: "/projects", hasDropdown: true },
-  { en: "New Launches",  ar: "إطلاقات جديدة", href: "/new-launches", hasNewLaunchDropdown: true, isNew: true },
-  { en: "Services",      ar: "خدماتنا",     href: "/services" },
-  { en: "Expat FAQ",     ar: "دليل التملك", href: "/faq" },
-  { en: "Blog",          ar: "المدونة",      href: "/blog" },
-  { en: "Contact Us",    ar: "تواصل معنا",  href: "/contact" },
+  { en: "About Us", ar: "من نحن", href: "/about" },
+  { en: "Our Projects", ar: "مشاريعنا", href: "/projects", hasDropdown: true },
+  { en: "New Launches", ar: "إطلاقات جديدة", href: "/new-launches", hasNewLaunchDropdown: true, isNew: true },
+  { en: "Services", ar: "خدماتنا", href: "/services" },
+  { en: "Expat FAQ", ar: "دليل التملك", href: "/faq" },
+  { en: "Blog", ar: "المدونة", href: "/blog" },
+  { en: "Contact Us", ar: "تواصل معنا", href: "/contact" },
 ];
 
 function PropertyCategoryIcon({ type, className = "w-4 h-4 text-[#B8873B]" }: { type?: string; className?: string }) {
@@ -106,7 +106,7 @@ export default function PageNav() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-3 sm:px-6 lg:px-12 h-[72px] sm:h-[76px] gap-2 sm:gap-4"
+        className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-between px-2 sm:px-4 md:px-5 lg:px-6 xl:px-8 h-[68px] sm:h-[72px] lg:h-[76px] gap-1 sm:gap-2"
         style={{
           backgroundColor: "rgba(18,19,15,0.96)",
           backdropFilter: "blur(20px)",
@@ -114,9 +114,9 @@ export default function PageNav() {
         }}
       >
         {/* Logo and Nav Links */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1 lg:gap-2 flex-shrink-0">
           <Link href="/" className="flex items-center flex-shrink-0">
-            <div className="relative h-12 sm:h-14 lg:h-16 w-48 sm:w-64 lg:w-72 overflow-hidden">
+            <div className="relative h-10 sm:h-12 lg:h-14 w-40 sm:w-48 lg:w-56 xl:w-60 overflow-hidden">
               <Image
                 src="/images/asaheeb-horizontal-logo.png"
                 alt="Asaheeb Real Estate"
@@ -130,7 +130,7 @@ export default function PageNav() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden md:flex items-center gap-1 py-1 px-1 ml-4 lg:ml-10 rtl:ml-0 rtl:mr-4 lg:rtl:mr-10">
+          <div className="hidden md:flex items-center gap-0.5 lg:gap-1 py-1 px-0.5 ml-1 lg:ml-3 xl:ml-5 rtl:ml-0 rtl:mr-1 lg:rtl:mr-3 xl:rtl:mr-5">
             {NAV_PAGES.map((page) => {
               const isActive = pathname === page.href || pathname.startsWith(page.href + "/");
 
@@ -139,13 +139,13 @@ export default function PageNav() {
                 return (
                   <div
                     key={page.en}
-                    className="relative"
+                    className="relative shrink-0"
                     onMouseEnter={handleNewLaunchesMouseEnter}
                     onMouseLeave={handleNewLaunchesMouseLeave}
                   >
                     <Link
                       href={page.href}
-                      className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B] relative group"
+                      className="flex items-center gap-1 px-1.5 lg:px-2.5 py-1.5 font-mono text-[9.5px] lg:text-[10px] xl:text-[11px] tracking-[0.08em] lg:tracking-[0.12em] uppercase transition-all duration-300 border hover:text-[#B8873B] relative group whitespace-nowrap"
                       style={{
                         color: isActive || newLaunchesHovered ? "#B8873B" : "#D4C7B5",
                         borderColor: isActive || newLaunchesHovered ? "rgba(184,135,59,0.5)" : "rgba(184,135,59,0.25)",
@@ -155,9 +155,8 @@ export default function PageNav() {
                       <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B] animate-pulse" />
                       <span className="font-semibold">{isAr ? page.ar : page.en}</span>
                       <svg
-                        className={`w-2.5 h-2.5 transition-transform duration-200 ${
-                          newLaunchesHovered ? "rotate-180 text-[#B8873B]" : "text-[#8C8477]"
-                        }`}
+                        className={`w-2.5 h-2.5 transition-transform duration-200 ${newLaunchesHovered ? "rotate-180 text-[#B8873B]" : "text-[#8C8477]"
+                          }`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -169,9 +168,8 @@ export default function PageNav() {
                     {/* New Launches Luxury Hover Dropdown Panel */}
                     {newLaunchesHovered && (
                       <div
-                        className={`absolute top-full mt-1.5 w-[420px] p-3 border rounded-sm shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[250] ${
-                          isAr ? "right-0 text-right" : "left-0 text-left"
-                        }`}
+                        className={`absolute top-full mt-1.5 w-[420px] p-3 border rounded-sm shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[250] ${isAr ? "right-0 text-right" : "left-0 text-left"
+                          }`}
                         style={{
                           backgroundColor: "#151611",
                           borderColor: "rgba(184,135,59,0.45)",
@@ -247,13 +245,13 @@ export default function PageNav() {
                 return (
                   <div
                     key={page.en}
-                    className="relative"
+                    className="relative shrink-0"
                     onMouseEnter={handleProjectsMouseEnter}
                     onMouseLeave={handleProjectsMouseLeave}
                   >
                     <Link
                       href={page.href}
-                      className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
+                      className="flex items-center gap-1 px-1.5 lg:px-2.5 py-1.5 font-mono text-[9.5px] lg:text-[10px] xl:text-[11px] tracking-[0.08em] lg:tracking-[0.12em] uppercase transition-all duration-300 border hover:text-[#B8873B] whitespace-nowrap"
                       style={{
                         color: isActive || projectsHovered ? "#B8873B" : "#D4C7B5",
                         borderColor: isActive || projectsHovered ? "rgba(184,135,59,0.35)" : "transparent",
@@ -274,9 +272,8 @@ export default function PageNav() {
                     {/* Luxury Hover Dropdown Panel */}
                     {projectsHovered && (
                       <div
-                        className={`absolute top-full mt-1.5 w-[380px] p-2.5 border rounded-sm shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[250] ${
-                          isAr ? "right-0 text-right" : "left-0 text-left"
-                        }`}
+                        className={`absolute top-full mt-1.5 w-[380px] p-2.5 border rounded-sm shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[250] ${isAr ? "right-0 text-right" : "left-0 text-left"
+                          }`}
                         style={{
                           backgroundColor: "#161712",
                           borderColor: "rgba(184,135,59,0.4)",
@@ -305,7 +302,7 @@ export default function PageNav() {
 
                         {/* Property Categories Submenu */}
                         <div className="py-1">
-                          <div className="px-3 py-1 mb-1">
+                          <div className="px-3 py-1 mb-1 border-t border-white/5 pt-2">
                             <span className="font-mono text-[8.5px] tracking-[0.22em] uppercase text-[#8C8477] font-semibold">
                               {isAr ? "فئات العقارات" : "Property Categories"}
                             </span>
@@ -349,7 +346,7 @@ export default function PageNav() {
                 <Link
                   key={page.en}
                   href={page.href}
-                  className="flex-shrink-0 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
+                  className="flex-shrink-0 px-1.5 lg:px-2.5 py-1.5 font-mono text-[9.5px] lg:text-[10px] xl:text-[11px] tracking-[0.08em] lg:tracking-[0.12em] uppercase transition-all duration-300 border hover:text-[#B8873B] whitespace-nowrap"
                   style={{
                     color: isActive ? "#B8873B" : "#D4C7B5",
                     borderColor: isActive ? "rgba(184,135,59,0.35)" : "transparent",
@@ -364,16 +361,16 @@ export default function PageNav() {
         </div>
 
         {/* Right actions: Language Switch, Invest Now, and Hamburger (Compulsory on Mobile & Desktop) */}
-        <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
           {/* Language toggle */}
           <button
             onClick={toggleLanguage}
-            className="font-mono text-[9px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase px-2 sm:px-3 py-1.5 rounded-full border border-[#B8873B]/50 hover:bg-[#B8873B] hover:text-[#12130F] text-[#E8DFCE] transition-all duration-300 cursor-pointer flex items-center gap-1 shadow-sm"
+            className="flex-shrink-0 font-mono text-[9px] sm:text-[10px] xl:text-[11px] tracking-[0.1em] sm:tracking-[0.14em] uppercase px-2 sm:px-2.5 py-1.5 rounded-full border border-[#B8873B]/50 hover:bg-[#B8873B] hover:text-[#12130F] text-[#E8DFCE] transition-all duration-300 cursor-pointer flex items-center gap-1 shadow-sm whitespace-nowrap"
           >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="2" y1="12" x2="22" y2="12"/>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
             </svg>
             <span>{t.switchLang}</span>
           </button>
@@ -383,10 +380,10 @@ export default function PageNav() {
             href={getWhatsAppLink(undefined, undefined, isAr)}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-1.5 font-mono text-[9px] sm:text-[11px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm border border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-[#12130F] transition-all duration-300 font-semibold"
+            className="hidden md:flex flex-shrink-0 items-center gap-1.5 font-mono text-[9px] sm:text-[10px] xl:text-[11px] tracking-[0.12em] uppercase px-2.5 py-1.5 rounded-sm border border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-[#12130F] transition-all duration-300 font-semibold whitespace-nowrap"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="shrink-0">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
             </svg>
             <span>{isAr ? "واتساب" : "WhatsApp"}</span>
           </a>
@@ -394,7 +391,7 @@ export default function PageNav() {
           {/* Invest Now CTA Button */}
           <Link
             href="/contact"
-            className="font-mono text-[9px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.18em] uppercase px-2.5 sm:px-5 py-1.5 sm:py-2 border text-[#E8DFCE] hover:text-[#12130F] hover:bg-[#B8873B] transition-all duration-300 font-medium whitespace-nowrap"
+            className="flex-shrink-0 font-mono text-[9px] sm:text-[10px] xl:text-[11px] tracking-[0.1em] sm:tracking-[0.14em] uppercase px-2.5 sm:px-3.5 py-1.5 sm:py-2 border text-[#E8DFCE] hover:text-[#12130F] hover:bg-[#B8873B] transition-all duration-300 font-medium whitespace-nowrap shadow-sm"
             style={{ borderColor: "rgba(184,135,59,0.45)" }}
           >
             {t.investNow}
@@ -448,9 +445,8 @@ export default function PageNav() {
                       <span>{isAr ? page.ar : page.en}</span>
                     </div>
                     <svg
-                      className={`w-3.5 h-3.5 text-[#B8873B] transition-transform duration-200 ${
-                        mobileNewLaunchesExpanded ? "rotate-180" : ""
-                      }`}
+                      className={`w-3.5 h-3.5 text-[#B8873B] transition-transform duration-200 ${mobileNewLaunchesExpanded ? "rotate-180" : ""
+                        }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -513,9 +509,8 @@ export default function PageNav() {
                   >
                     <span>{isAr ? page.ar : page.en}</span>
                     <svg
-                      className={`w-3.5 h-3.5 text-[#B8873B] transition-transform duration-200 ${
-                        mobileProjectsExpanded ? "rotate-180" : ""
-                      }`}
+                      className={`w-3.5 h-3.5 text-[#B8873B] transition-transform duration-200 ${mobileProjectsExpanded ? "rotate-180" : ""
+                        }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -567,6 +562,29 @@ export default function PageNav() {
               </Link>
             );
           })}
+
+          {/* Quick Mobile Action CTA in Drawer */}
+          <div className="pt-4 border-t border-white/10 space-y-2.5">
+            <a
+              href={getWhatsAppLink(undefined, undefined, isAr)}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-3 px-4 rounded border border-[#25D366]/50 bg-[#25D366]/10 text-[#25D366] font-mono text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+              </svg>
+              <span>{isAr ? "محادثة واتساب مباشرة" : "Chat on WhatsApp"}</span>
+            </a>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-3 px-4 rounded bg-[#B8873B] text-[#0D0E0B] font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center shadow-md"
+            >
+              {t.investNow}
+            </Link>
+          </div>
         </div>
       )}
     </>
