@@ -11,6 +11,7 @@ import { STANDARD_PROPERTY_TYPES } from "@/data/propertyTypes";
 const NAV_PAGES = [
   { en: "About Us",      ar: "من نحن",      href: "/about" },
   { en: "Our Projects",  ar: "مشاريعنا",    href: "/projects", hasDropdown: true },
+  { en: "New Launches",  ar: "إطلاقات جديدة", href: "/new-launches", hasNewLaunchDropdown: true, isNew: true },
   { en: "Services",      ar: "خدماتنا",     href: "/services" },
   { en: "Expat FAQ",     ar: "دليل التملك", href: "/faq" },
   { en: "Blog",          ar: "المدونة",      href: "/blog" },
@@ -73,8 +74,12 @@ export default function PageNav() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [projectsHovered, setProjectsHovered] = useState(false);
+  const [newLaunchesHovered, setNewLaunchesHovered] = useState(false);
   const [mobileProjectsExpanded, setMobileProjectsExpanded] = useState(false);
+  const [mobileNewLaunchesExpanded, setMobileNewLaunchesExpanded] = useState(false);
+
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const newLaunchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleProjectsMouseEnter = () => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -84,6 +89,17 @@ export default function PageNav() {
   const handleProjectsMouseLeave = () => {
     hoverTimeoutRef.current = setTimeout(() => {
       setProjectsHovered(false);
+    }, 200);
+  };
+
+  const handleNewLaunchesMouseEnter = () => {
+    if (newLaunchTimeoutRef.current) clearTimeout(newLaunchTimeoutRef.current);
+    setNewLaunchesHovered(true);
+  };
+
+  const handleNewLaunchesMouseLeave = () => {
+    newLaunchTimeoutRef.current = setTimeout(() => {
+      setNewLaunchesHovered(false);
     }, 200);
   };
 
@@ -114,9 +130,118 @@ export default function PageNav() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden md:flex items-center gap-1 py-1 px-1 ml-6 lg:ml-16 rtl:ml-0 rtl:mr-6 lg:rtl:mr-12">
+          <div className="hidden md:flex items-center gap-1 py-1 px-1 ml-4 lg:ml-10 rtl:ml-0 rtl:mr-4 lg:rtl:mr-10">
             {NAV_PAGES.map((page) => {
-              const isActive = pathname === page.href;
+              const isActive = pathname === page.href || pathname.startsWith(page.href + "/");
+
+              // New Launches dropdown
+              if ((page as any).hasNewLaunchDropdown) {
+                return (
+                  <div
+                    key={page.en}
+                    className="relative"
+                    onMouseEnter={handleNewLaunchesMouseEnter}
+                    onMouseLeave={handleNewLaunchesMouseLeave}
+                  >
+                    <Link
+                      href={page.href}
+                      className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B] relative group"
+                      style={{
+                        color: isActive || newLaunchesHovered ? "#B8873B" : "#D4C7B5",
+                        borderColor: isActive || newLaunchesHovered ? "rgba(184,135,59,0.5)" : "rgba(184,135,59,0.25)",
+                        backgroundColor: isActive || newLaunchesHovered ? "rgba(184,135,59,0.12)" : "rgba(184,135,59,0.04)",
+                      }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B] animate-pulse" />
+                      <span className="font-semibold">{isAr ? page.ar : page.en}</span>
+                      <svg
+                        className={`w-2.5 h-2.5 transition-transform duration-200 ${
+                          newLaunchesHovered ? "rotate-180 text-[#B8873B]" : "text-[#8C8477]"
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Link>
+
+                    {/* New Launches Luxury Hover Dropdown Panel */}
+                    {newLaunchesHovered && (
+                      <div
+                        className={`absolute top-full mt-1.5 w-[420px] p-3 border rounded-sm shadow-[0_25px_60px_rgba(0,0,0,0.95)] z-[250] ${
+                          isAr ? "right-0 text-right" : "left-0 text-left"
+                        }`}
+                        style={{
+                          backgroundColor: "#151611",
+                          borderColor: "rgba(184,135,59,0.45)",
+                          boxShadow: "0 25px 60px rgba(0,0,0,0.95), 0 0 0 1px rgba(184,135,59,0.3)",
+                        }}
+                        dir={isAr ? "rtl" : "ltr"}
+                      >
+                        {/* Header banner */}
+                        <div className="flex items-center justify-between px-2 py-1.5 mb-2 border-b border-white/10">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-[#B8873B] animate-ping" />
+                            <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#B8873B] font-bold">
+                              {isAr ? "إطلاق حصري مبكر" : "Exclusive Pre-Launch"}
+                            </span>
+                          </div>
+                          <Link
+                            href="/new-launches"
+                            onClick={() => setNewLaunchesHovered(false)}
+                            className="font-mono text-[9px] text-[#A89F91] hover:text-[#B8873B] transition-colors uppercase tracking-wider"
+                          >
+                            {isAr ? "كافة الإطلاقات ←" : "View All →"}
+                          </Link>
+                        </div>
+
+                        {/* Featured Project Card: Fairmont Residences Rua Al Madinah */}
+                        <Link
+                          href="/new-launches/fairmont-residences-rua-al-madinah"
+                          onClick={() => setNewLaunchesHovered(false)}
+                          className="block rounded-sm p-2 bg-[#1B1D16] border border-[#B8873B]/30 hover:border-[#B8873B] hover:bg-[#20221A] transition-all duration-300 group"
+                        >
+                          <div className="relative aspect-[16/9] w-full rounded-xs overflow-hidden mb-2.5">
+                            <Image
+                              src="https://res.cloudinary.com/diwqmlpr/image/upload/v1788854134/asaheeb/projects/fairmont/jschdmsdvtlnqfmjbpak.png"
+                              alt="Fairmont Residences Rua Al Madinah"
+                              fill
+                              sizes="320px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                            <div className="absolute top-2 left-2 rtl:left-auto rtl:right-2 px-2 py-0.5 rounded-xs bg-[#B8873B] text-[#0D0E0B] font-mono text-[8px] font-bold uppercase tracking-wider">
+                              {isAr ? "إطلاق جديد" : "NEW LAUNCH"}
+                            </div>
+                            <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[10px] text-white font-mono">
+                              <span>120 Residences</span>
+                              <span className="text-[#F1C40F]">Next to Haram</span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="font-display text-sm text-white font-medium group-hover:text-[#B8873B] transition-colors">
+                              {isAr ? "فيرمونت ريزيدنسز رؤى المدينة" : "Fairmont Residences Rua Al Madinah"}
+                            </div>
+                            <div className="font-sans text-[11px] text-[#A89F91] line-clamp-1">
+                              {isAr
+                                ? "شرف الجوار بجانب المسجد النبوي الشريف • شركة رؤى المدينة القابضة"
+                                : "The privilege of living next to The Prophet’s Mosque • Rua Al Madinah Holding"}
+                            </div>
+                            <div className="pt-2 flex items-center justify-between text-[10px] font-mono text-[#B8873B] font-semibold">
+                              <span>{isAr ? "عرض صفحة المشروع والحجز المبكر" : "Explore Pre-Launch Landing Page"}</span>
+                              <span className="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
+                                {isAr ? "←" : "→"}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
 
               if (page.hasDropdown) {
                 return (
@@ -128,7 +253,7 @@ export default function PageNav() {
                   >
                     <Link
                       href={page.href}
-                      className="flex items-center gap-1 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
+                      className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
                       style={{
                         color: isActive || projectsHovered ? "#B8873B" : "#D4C7B5",
                         borderColor: isActive || projectsHovered ? "rgba(184,135,59,0.35)" : "transparent",
@@ -224,7 +349,7 @@ export default function PageNav() {
                 <Link
                   key={page.en}
                   href={page.href}
-                  className="flex-shrink-0 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
+                  className="flex-shrink-0 px-3 py-1.5 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 border hover:text-[#B8873B]"
                   style={{
                     color: isActive ? "#B8873B" : "#D4C7B5",
                     borderColor: isActive ? "rgba(184,135,59,0.35)" : "transparent",
@@ -303,7 +428,76 @@ export default function PageNav() {
           }}
         >
           {NAV_PAGES.map((page) => {
-            const isActive = pathname === page.href;
+            const isActive = pathname === page.href || pathname.startsWith(page.href + "/");
+
+            // Mobile New Launches item
+            if ((page as any).hasNewLaunchDropdown) {
+              return (
+                <div key={page.en} className="space-y-1">
+                  <div
+                    className="py-3 px-4 rounded border font-mono text-sm tracking-[0.2em] uppercase flex items-center justify-between transition-colors cursor-pointer"
+                    style={{
+                      color: "#B8873B",
+                      borderColor: "rgba(184,135,59,0.5)",
+                      backgroundColor: "rgba(184,135,59,0.15)",
+                    }}
+                    onClick={() => setMobileNewLaunchesExpanded(!mobileNewLaunchesExpanded)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#B8873B] animate-pulse" />
+                      <span>{isAr ? page.ar : page.en}</span>
+                    </div>
+                    <svg
+                      className={`w-3.5 h-3.5 text-[#B8873B] transition-transform duration-200 ${
+                        mobileNewLaunchesExpanded ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+
+                  {mobileNewLaunchesExpanded && (
+                    <div className="p-3 space-y-3 bg-black/60 rounded border border-[#B8873B]/30">
+                      <Link
+                        href="/new-launches/fairmont-residences-rua-al-madinah"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block group"
+                      >
+                        <div className="relative aspect-[16/9] w-full rounded overflow-hidden mb-2">
+                          <Image
+                            src="https://res.cloudinary.com/diwqmlpr/image/upload/v1788854134/asaheeb/projects/fairmont/jschdmsdvtlnqfmjbpak.png"
+                            alt="Fairmont Residences Rua Al Madinah"
+                            fill
+                            sizes="(max-width: 640px) 90vw, 360px"
+                            className="object-cover"
+                          />
+                          <div className="absolute top-2 left-2 rtl:left-auto rtl:right-2 px-2 py-0.5 rounded bg-[#B8873B] text-[#0D0E0B] font-mono text-[9px] font-bold">
+                            PRE-LAUNCH
+                          </div>
+                        </div>
+                        <div className="font-display text-sm text-white font-medium">
+                          {isAr ? "فيرمونت ريزيدنسز رؤى المدينة" : "Fairmont Residences Rua Al Madinah"}
+                        </div>
+                        <div className="text-[11px] text-[#A89F91]">
+                          {isAr ? "بجوار المسجد النبوي الشريف • اضغط للتفاصيل" : "Next to The Prophet's Mosque • Tap to view"}
+                        </div>
+                      </Link>
+
+                      <Link
+                        href="/new-launches"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block pt-2 border-t border-white/10 text-xs font-mono text-[#B8873B] font-semibold"
+                      >
+                        {isAr ? "← استكشف كافة الإطلاقات الحصرية" : "→ View All New Launches Portfolio"}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              );
+            }
 
             if (page.hasDropdown) {
               return (

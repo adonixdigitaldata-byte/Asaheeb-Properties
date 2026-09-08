@@ -100,15 +100,16 @@ export default function HeroDesktop() {
       
       img.onload = () => {
         if (i === 0) {
+          drawFrame(0);
           setTimeout(() => {
             window.dispatchEvent(new Event("resize"));
-          }, 50);
+          }, 20);
         }
       };
       images[i] = img;
     }
     frameDataRef.current = images;
-  }, []);
+  }, [drawFrame]);
 
   // ─── Handle Canvas Resize & High-DPI scaling ─────────────────────────────
   useEffect(() => {

@@ -16,11 +16,15 @@ import BlogCtaSection from "@/components/sections/BlogCtaSection";
 import PageFooter from "@/components/shared/PageFooter";
 import PageNav from "@/components/shared/PageNav";
 import MobileBottomNav from "@/components/sections/MobileBottomNav";
+import CampaignPopupModal from "@/components/modals/CampaignPopupModal";
 
 export default function Home() {
   return (
     <>
       <PageNav />
+      {/* ── Dynamic Homepage Campaign Pop-up Modal (Single Source of Truth: CRM / Supabase) ── */}
+      <CampaignPopupModal />
+
       <main className="relative bg-[var(--color-ink)] selection:bg-[var(--color-horizon-gold)] selection:text-[var(--color-ink)] transition-all duration-300 pb-16 md:pb-0">
 
         {/* ── Section 1: Cinematic Transformation Hero Video (Hero Desktop & Mobile) ── */}

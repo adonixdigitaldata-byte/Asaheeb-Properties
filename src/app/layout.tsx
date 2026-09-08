@@ -89,6 +89,7 @@ export const metadata: Metadata = {
 };
 
 import { LanguageProvider } from "@/context/LanguageContext";
+import PageLoader from "@/components/shared/PageLoader";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -187,6 +188,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
 
+        {/* Preload Initial Hero Frame for Instant Paint */}
+        <link rel="preload" href="/frames/frame_0001.webp" as="image" type="image/webp" />
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
@@ -217,6 +221,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager (noscript) */}
 
         <LanguageProvider>
+          <PageLoader />
           {children}
         </LanguageProvider>
       </body>

@@ -250,3 +250,23 @@ export interface NewsletterSubscriber {
   updated_at?: string;
 }
 
+export interface MarketingPopup {
+  id: string;
+  is_active: boolean;
+  title_en: string;
+  title_ar: string;
+  subtitle_en?: string;
+  subtitle_ar?: string;
+  badge_en?: string;
+  badge_ar?: string;
+  image_url: string;
+  target_url: string;
+  cta_text_en?: string;
+  cta_text_ar?: string;
+  auto_dismiss_seconds?: number;
+  sort_order?: number;
+  frequency?: "ONCE_PER_SESSION" | "ALWAYS" | "ONCE_PER_DAY";
+  created_at?: string;
+  updated_at?: string;
+}
+

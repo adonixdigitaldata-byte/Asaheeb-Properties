@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { PROJECTS_DATA } from "@/data/projectsData";
 import type {
   Project,
   Blog,
@@ -7,6 +8,7 @@ import type {
   BlogDetail,
   WebsiteInquiryPayload,
   LeadSubmissionPayload,
+  MarketingPopup,
 } from "@/types/database";
 
 // ─── HELPER CONVERTERS (To ensure seamless compatibility with existing UI) ────
@@ -285,11 +287,21 @@ export async function getPublishedProjects(): Promise<Project[]> {
 }
 
 /**
- * Fetch all published projects mapped to UI-ready ProjectDetail objects directly from Supabase.
+ * Fetch all published projects mapped to UI-ready ProjectDetail objects directly from Supabase,
+ * with static PROJECTS_DATA seamlessly merged.
  */
 export async function getPublishedProjectDetails(): Promise<ProjectDetail[]> {
   const dbProjects = await getPublishedProjects();
-  return dbProjects.map(mapProjectToDetail);
+  const dbMapped = dbProjects.map(mapProjectToDetail);
+  
+  // Merge static projects that might not yet be in the database
+  const merged = [...dbMapped];
+  for (const staticProj of PROJECTS_DATA) {
+    if (!merged.some((p) => p.id === staticProj.id)) {
+      merged.push(staticProj as any);
+    }
+  }
+  return merged.length > 0 ? merged : (PROJECTS_DATA as any);
 }
 
 /**
@@ -324,24 +336,70 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       .eq("is_published", true)
       .maybeSingle();
 
-    if (error || !data) {
-      return null;
+    if (data) {
+      return data as Project;
     }
 
-    return data as Project;
+    // Check static fallback
+    const staticProj = PROJECTS_DATA.find((p) => p.id === slug);
+    if (staticProj) {
+      return {
+        id: staticProj.id,
+        name_en: staticProj.nameEn,
+        name_ar: staticProj.nameAr,
+        developer_en: staticProj.developerEn,
+        developer_ar: staticProj.developerAr,
+        city_en: staticProj.cityEn,
+        city_ar: staticProj.cityAr,
+        district_en: staticProj.districtEn,
+        district_ar: staticProj.districtAr,
+        starting_price_en: staticProj.startingPriceEn,
+        starting_price_ar: staticProj.startingPriceAr,
+        price_range_en: staticProj.priceRangeEn,
+        price_range_ar: staticProj.priceRangeAr,
+        size_en: staticProj.sizeEn,
+        size_ar: staticProj.sizeAr,
+        type_en: staticProj.typeEn,
+        type_ar: staticProj.typeAr,
+        status_en: staticProj.statusEn,
+        status_ar: staticProj.statusAr,
+        expected_delivery_en: staticProj.expectedDeliveryEn,
+        expected_delivery_ar: staticProj.expectedDeliveryAr,
+        units_count_en: staticProj.unitsCountEn,
+        units_count_ar: staticProj.unitsCountAr,
+        floors_en: staticProj.floorsEn,
+        floors_ar: staticProj.floorsAr,
+        overview_en: staticProj.overviewEn,
+        overview_ar: staticProj.overviewAr,
+        highlights_en: staticProj.highlightsEn,
+        highlights_ar: staticProj.highlightsAr,
+        images: staticProj.images,
+        amenities: staticProj.amenities,
+        landmarks: staticProj.landmarks,
+        is_published: true,
+      } as any;
+    }
+
+    return null;
   } catch (err) {
     console.error("Error fetching project by slug:", err);
-    return null;
+    const staticProj = PROJECTS_DATA.find((p) => p.id === slug);
+    return (staticProj as any) || null;
   }
 }
 
 /**
- * Fetch a single published project mapped to UI-ready ProjectDetail directly from Supabase.
+ * Fetch a single published project mapped to UI-ready ProjectDetail directly from Supabase,
+ * with static PROJECTS_DATA fallback.
  */
 export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetail | null> {
   const dbProject = await getProjectBySlug(slug);
   if (dbProject) {
     return mapProjectToDetail(dbProject);
+  }
+  const staticProj = PROJECTS_DATA.find((p) => p.id === slug);
+  if (staticProj) {
+    return staticProj as any;
   }
   return null;
 }
@@ -465,47 +523,113 @@ export type { WebsiteInquiryPayload, LeadSubmissionPayload };
  * Submit website lead or property inquiry to Supabase leads table with standard columns and dynamic form_data.
  */
 export async function submitWebsiteLead(payload: WebsiteInquiryPayload) {
-  // 1. Fetch first stage UUID dynamically from lead_stages
-  const { data: stageData } = await supabase
-    .from("lead_stages")
-    .select("id")
-    .order("sort_order", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  let stageId: string | null = null;
+  try {
+    const { data: stageData } = await supabase
+      .from("lead_stages")
+      .select("id")
+      .order("sort_order", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (stageData?.id) {
+      stageId = stageData.id;
+    }
+  } catch (e) {
+    // Non-fatal stage lookup
+  }
 
-  const insertPayload: Record<string, any> = {
+  const messageText = payload.message || payload.notes || "";
+  const interestText = payload.interest || payload.property_id || "Fairmont Residences Rua Al Madinah (Pre-Launch)";
+  const sourceText = (payload.source === "WHATSAPP" || payload.source === "WEBSITE_FORM")
+    ? payload.source
+    : "PROPERTY_INQUIRY";
+
+  let dbInserted = false;
+
+  // Tier 1: Try comprehensive payload with form_data JSON
+  const tier1Payload: Record<string, any> = {
     name: payload.name.trim(),
     phone: payload.phone?.trim() || null,
     email: payload.email?.trim() || null,
     city: payload.city?.trim() || null,
-    property_id: payload.property_id?.trim() || null,
-    interest: payload.interest || payload.property_id || "General Property Inquiry",
-    source: payload.source || "PROPERTY_INQUIRY",
+    interest: interestText,
+    source: sourceText,
     form_data: {
       budget: payload.budget || "",
-      message: payload.message || payload.notes || "",
-      project_name: payload.interest || payload.property_id || "",
-      form_type: payload.form_type || payload.source || "PROPERTY_INQUIRY",
+      message: messageText,
+      notes: messageText,
+      project_name: interestText,
+      property_id: payload.property_id || "",
+      form_type: payload.form_type || sourceText,
       submitted_at: new Date().toISOString(),
     },
   };
-
-  // Only include stage_id if a valid UUID was fetched
-  if (stageData?.id) {
-    insertPayload.stage_id = stageData.id;
+  if (stageId) {
+    tier1Payload.stage_id = stageId;
   }
 
-  // Insert lead directly without .select().single() to allow anon insertions with RLS
-  const { error } = await supabase
-    .from("leads")
-    .insert([insertPayload]);
+  try {
+    const { error: err1 } = await supabase.from("leads").insert([tier1Payload]);
+    if (!err1) {
+      dbInserted = true;
+    } else {
+      console.warn("Tier 1 lead insert error (retrying tier 2):", err1.message);
 
-  if (error) {
-    console.error("Lead insertion error:", error.message);
-    throw error;
+      // Tier 2: Standard columns without form_data
+      const tier2Payload: Record<string, any> = {
+        name: payload.name.trim(),
+        phone: payload.phone?.trim() || null,
+        email: payload.email?.trim() || null,
+        city: payload.city?.trim() || null,
+        interest: interestText,
+        source: sourceText,
+      };
+      if (stageId) {
+        tier2Payload.stage_id = stageId;
+      }
+
+      const { error: err2 } = await supabase.from("leads").insert([tier2Payload]);
+      if (!err2) {
+        dbInserted = true;
+      } else {
+        console.warn("Tier 2 lead insert error (retrying tier 3):", err2.message);
+
+        // Tier 3: Core minimal columns (name, phone, email, source, interest)
+        const tier3Payload: Record<string, any> = {
+          name: payload.name.trim(),
+          phone: payload.phone?.trim() || null,
+          email: payload.email?.trim() || null,
+          interest: interestText,
+          source: sourceText,
+        };
+
+        const { error: err3 } = await supabase.from("leads").insert([tier3Payload]);
+        if (!err3) {
+          dbInserted = true;
+        } else {
+          console.warn("Tier 3 lead insert error (retrying tier 4):", err3.message);
+
+          // Tier 4: Bare minimum (name, phone, source)
+          const tier4Payload: Record<string, any> = {
+            name: payload.name.trim(),
+            phone: payload.phone?.trim() || null,
+            source: sourceText,
+          };
+
+          const { error: err4 } = await supabase.from("leads").insert([tier4Payload]);
+          if (!err4) {
+            dbInserted = true;
+          } else {
+            console.error("All lead insert tiers failed:", err4.message);
+          }
+        }
+      }
+    }
+  } catch (dbErr: any) {
+    console.warn("Exception during Supabase lead insert execution:", dbErr?.message || dbErr);
   }
 
-  // Trigger internal email route for inquiry leads (skipped for brochure downloads)
+  // Trigger internal email route for all inquiry leads
   if (!payload.skipEmail) {
     try {
       const baseUrl = typeof window !== "undefined"
@@ -516,14 +640,14 @@ export async function submitWebsiteLead(payload: WebsiteInquiryPayload) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          formType: payload.form_type || payload.source || "Website Lead",
-          projectName: payload.interest || payload.property_id || "",
+          formType: payload.form_type || sourceText || "Website Lead",
+          projectName: interestText,
           name: payload.name,
           phone: payload.phone,
           email: payload.email,
-          interest: payload.interest,
+          interest: interestText,
           budget: payload.budget,
-          message: payload.message || payload.notes,
+          message: messageText,
         }),
       });
     } catch (emailErr) {
@@ -531,7 +655,7 @@ export async function submitWebsiteLead(payload: WebsiteInquiryPayload) {
     }
   }
 
-  return { success: true };
+  return { success: true, dbInserted };
 }
 
 /**
@@ -593,4 +717,72 @@ export async function subscribeNewsletter({ email, source = "WEBSITE_FOOTER" }: 
   }
 
   return { success: true, email: cleanEmail, dbRecorded, alreadySubscribed };
+}
+
+// ─── MARKETING CAMPAIGN POPUPS (CRM / SUPABASE SINGLE SOURCE OF TRUTH) ────
+
+export const DEFAULT_MARKETING_POPUP: MarketingPopup = {
+  id: "fairmont-residences-rua-al-madinah-launch",
+  is_active: true,
+  title_en: "Fairmont Residences Rua Al Madinah",
+  title_ar: "فيرمونت ريزيدنسز رؤى المدينة",
+  subtitle_en: "Directly adjacent to The Prophet's Mosque • 120 Limited Branded Residences",
+  subtitle_ar: "بجوار المسجد النبوي الشريف مباشرة • ١٢٠ وحدة سكنية فندقية حصرية",
+  badge_en: "EXCLUSIVE PRE-LAUNCH",
+  badge_ar: "إطلاق حصري مبكر",
+  image_url: "https://res.cloudinary.com/diwqmlpr/image/upload/v1788854134/asaheeb/projects/fairmont/jschdmsdvtlnqfmjbpak.png",
+  target_url: "/new-launches/fairmont-residences-rua-al-madinah",
+  cta_text_en: "Explore Priority Access",
+  cta_text_ar: "استكشف أولوية الحجز",
+  auto_dismiss_seconds: 6,
+  sort_order: 1,
+  frequency: "ONCE_PER_SESSION",
+};
+
+/**
+ * Fetches the active marketing popup from Supabase (`marketing_popups` table).
+ * Single Source of Truth: When updated in CRM/Supabase, changes appear immediately on the website.
+ */
+export async function getActiveMarketingPopup(): Promise<MarketingPopup | null> {
+  try {
+    const { data, error } = await supabase
+      .from("marketing_popups")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .limit(1);
+
+    if (error) {
+      // If table is not yet created in Supabase schema, return default pre-launch campaign
+      return DEFAULT_MARKETING_POPUP;
+    }
+
+    if (data && data.length > 0) {
+      const row = data[0];
+      return {
+        id: row.id || "campaign-popup",
+        is_active: row.is_active ?? true,
+        title_en: row.title_en || row.title || DEFAULT_MARKETING_POPUP.title_en,
+        title_ar: row.title_ar || row.title || DEFAULT_MARKETING_POPUP.title_ar,
+        subtitle_en: row.subtitle_en || row.subtitle || DEFAULT_MARKETING_POPUP.subtitle_en,
+        subtitle_ar: row.subtitle_ar || row.subtitle || DEFAULT_MARKETING_POPUP.subtitle_ar,
+        badge_en: row.badge_en || row.badge || DEFAULT_MARKETING_POPUP.badge_en,
+        badge_ar: row.badge_ar || row.badge || DEFAULT_MARKETING_POPUP.badge_ar,
+        image_url: row.image_url || DEFAULT_MARKETING_POPUP.image_url,
+        target_url: row.target_url || DEFAULT_MARKETING_POPUP.target_url,
+        cta_text_en: row.cta_text_en || DEFAULT_MARKETING_POPUP.cta_text_en,
+        cta_text_ar: row.cta_text_ar || DEFAULT_MARKETING_POPUP.cta_text_ar,
+        auto_dismiss_seconds: row.auto_dismiss_seconds || DEFAULT_MARKETING_POPUP.auto_dismiss_seconds,
+        sort_order: row.sort_order ?? 1,
+        frequency: row.frequency || "ONCE_PER_SESSION",
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+      };
+    }
+
+    return null; // Explicitly no active campaign configured
+  } catch (err) {
+    console.warn("Error fetching marketing popup from Supabase:", err);
+    return DEFAULT_MARKETING_POPUP;
+  }
 }

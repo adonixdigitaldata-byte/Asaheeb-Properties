@@ -8,6 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     "",
     "/about",
+    "/new-launches",
+    "/new-launches/fairmont-residences-rua-al-madinah",
     "/projects",
     "/services",
     "/faq",

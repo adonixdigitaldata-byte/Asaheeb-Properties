@@ -75,6 +75,153 @@ export interface ProjectDetail {
 }
 
 export const PROJECTS_DATA: ProjectDetail[] = [
+  // ── 0. FAIRMONT RESIDENCES RUA AL MADINAH (PRE-LAUNCH) ─────────────────────
+  {
+    id: "fairmont-residences-rua-al-madinah",
+    nameEn: "Fairmont Residences Rua Al Madinah",
+    nameAr: "فيرمونت ريزيدنسز رؤى المدينة",
+    developerEn: "Rua Al Madinah Holding (PIF Company)",
+    developerAr: "شركة رؤى المدينة القابضة (صندوق الاستثمارات العامة)",
+    cityEn: "Madinah",
+    cityAr: "المدينة المنورة",
+    districtEn: "Directly Adjacent to The Prophet's Mosque",
+    districtAr: "بجوار المسجد النبوي الشريف مباشرة",
+
+    startingPriceEn: "Price on Application",
+    startingPriceAr: "السعر عند الطلب",
+    priceRangeEn: "Exclusive Pre-Launch Allocation",
+    priceRangeAr: "تخصيص أولوية الحجز المبكر",
+
+    sizeEn: "1 - 3 Bedroom Branded Luxury Residences",
+    sizeAr: "شقق فندقية فاخرة من ١ إلى ٣ غرف نوم",
+    typeEn: "Ultra-Luxury Branded Residences",
+    typeAr: "وحدات سكنية فندقية فائقة الفخامة",
+    statusEn: "New Launch",
+    statusAr: "إطلاق حصري",
+    expectedDeliveryEn: "Q4 2028",
+    expectedDeliveryAr: "الربع الرابع ٢٠٢٨",
+    unitsCountEn: "120 Limited Residences",
+    unitsCountAr: "١٢٠ وحدة سكنية حصرية",
+    floorsEn: "Multi-Storey Luxury Tower",
+    floorsAr: "برج سكني فاخر متكامل",
+
+    overviewEn: "Nestled in the heart of Madinah, directly adjacent to The Prophet’s Mosque, Fairmont Residences Rua Al Madinah blends heartfelt, five-star service with an unparalleled location. This exclusive ultra-luxury residential collection, with captivating views and timeless design, offers an exceptional lifestyle defined by elegance, spirituality, and enduring value. A collaboration between Rua Al Madinah Holding, a PIF company, and the globally renowned Fairmont, the residences are positioned within one of the Kingdom’s most transformative destinations, Rua Al Madinah Project.",
+    overviewAr: "يقع مشروع فيرمونت ريزيدنسز رؤى المدينة في قلب المدينة المنورة وبجوار المسجد النبوي الشريف مباشرة، ليجمع بين كرم الضيافة الفندقية من فئة الخمس نجوم والموقع الاستثنائي غير المسبوق. تقدم هذه المجموعة السكنية الحصرية فائقة الفخامة، بإطلالاتها الأخاذة وتصميمها الخالد، أسلوب حياة استثنائي يجسد الأناقة والروحانية والقيمة الاستثمارية المتوارثة عبر الأجيال. ثمرة تعاون مشترك بين شركة رؤى المدينة القابضة (إحدى شركات صندوق الاستثمارات العامة) وعلامة فيرمونت العالمية المرموقة.",
+
+    highlightsEn: [
+      "Directly adjacent to The Prophet's Mosque with awe-inspiring views",
+      "Ultra-exclusive boutique collection of only 120 branded residences",
+      "Developed by Rua Al Madinah Holding (PIF Public Investment Fund company)",
+      "Legendary 5-star Fairmont hospitality & 24/7 dedicated resident services",
+      "Exclusive Accor Ownership Benefits Program with worldwide VIP status across 5,600+ hotels",
+      "Timeless architecture inspired by Al Madinah Al Munawarah sacred heritage",
+      "Prime flagship address in the Kingdom's visionary Rua Al Madinah masterplan"
+    ],
+    highlightsAr: [
+      "موقع مباشر وملاصق لساحات المسجد النبوي الشريف بإطلالات روحانية آسرة",
+      "مجموعة حصرية فائقة الفخامة تضم ١٢٠ وحدة سكنية فقط",
+      "تطوير شركة رؤى المدينة القابضة (إحدى شركات صندوق الاستثمارات العامة PIF)",
+      "خدمات ضيافة فيرمونت الأسطورية ذات الخمس نجوم وخدمات كونسيرج على مدار الساعة",
+      "عضوية برنامج مزايا ملاك أكور مع تصنيف VIP عالمي في أكثر من ٥,٦٠٠ فندق ومنتجع",
+      "تصميم معماري خالد مستوحى من عبق التراث الإسلامي للمدينة المنورة",
+      "أيقونة مشروع رؤى المدينة ضمن مستهدفات رؤية المملكة ٢٠٣٠"
+    ],
+
+    images: [
+      {
+        url: "https://res.cloudinary.com/diwqmlpr/image/upload/v1788854134/asaheeb/projects/fairmont/jschdmsdvtlnqfmjbpak.png",
+        captionEn: "Fairmont Residences Rua Al Madinah - Exterior View next to The Prophet's Mosque",
+        captionAr: "واجهة فيرمونت ريزيدنسز رؤى المدينة بجوار المسجد النبوي الشريف"
+      },
+      {
+        url: "https://res.cloudinary.com/diwqmlpr/image/upload/v1788854132/asaheeb/projects/fairmont/iap2hel6ludqsq82y3vh.jpg",
+        captionEn: "Aerial Masterplan View of Fairmont Residences in Rua Al Madinah",
+        captionAr: "إطلالة جوية شاملة لموقع فيرمونت ضمن المخطط العام لرؤى المدينة"
+      },
+      {
+        url: "https://res.cloudinary.com/diwqmlpr/image/upload/v1788854135/asaheeb/projects/fairmont/dnwurdek26humgzq2oce.jpg",
+        captionEn: "Elegantly Crafted Ultra-Luxury Interior Living Suite",
+        captionAr: "تصميم داخلي فائق الرقي والتشطيبات الفاخرة المستوحاة من تراث المدينة"
+      },
+      {
+        url: "https://res.cloudinary.com/diwqmlpr/image/upload/v1788854133/asaheeb/projects/fairmont/akdqqezcesd3kta8ww6d.jpg",
+        captionEn: "Grand Arrival Drop-off & Valet Portal",
+        captionAr: "المدخل الرئيسي الفاخر ومحطة استقبال وخدمة السيارات"
+      }
+    ],
+
+    amenities: [
+      {
+        badge: "🕌",
+        titleEn: "Haram Direct Proximity",
+        titleAr: "ملاصق للمسجد النبوي",
+        descEn: "Steps from The Prophet's Mosque courtyard with sublime spiritual ambience.",
+        descAr: "خطوات معدودة تفصلك عن رحاب وساحات المسجد النبوي الشريف."
+      },
+      {
+        badge: "👑",
+        titleEn: "Fairmont 5-Star Hospitality",
+        titleAr: "خدمات ضيافة فيرمونت ٥ نجوم",
+        descEn: "Dedicated 24/7 concierge, in-residence dining, valet, and housekeeping.",
+        descAr: "خدمات كونسيرج على مدار الساعة، خدمة الغرف والطهي الخاص، وتنظيف فندقي متكامل."
+      },
+      {
+        badge: "🌍",
+        titleEn: "Accor VIP Global Program",
+        titleAr: "برنامج مزايا ملاك أكور العالمي",
+        descEn: "VIP diamond tier access with preferential rates across 5,600+ hotels worldwide.",
+        descAr: "مكانة VIP عالمية وأسعار حصرية في أكثر من ٥,٦٠٠ فندق ومنتجع حول العالم."
+      },
+      {
+        badge: "✨",
+        titleEn: "Heritage Crafted Finishes",
+        titleAr: "تشطيبات تراثية راقية",
+        descEn: "Artisanal materials honoring Al Madinah Al Munawarah cultural legacy.",
+        descAr: "أجود المواد الحرفية المستلهمة من التراث الأصيل للمدينة المنورة."
+      },
+      {
+        badge: "🌿",
+        titleEn: "Private Wellness & Lounges",
+        titleAr: "صالات استرخاء ونادٍ صحي خاص",
+        descEn: "Private resident lounges, wellness spa, fitness suite, and quiet sanctuaries.",
+        descAr: "صالات استقبال خاصة للملاك، سبا ونادي رياضي متطور، ومساحات تأمل هادئة."
+      },
+      {
+        badge: "🔒",
+        titleEn: "Maximum Privacy & Security",
+        titleAr: "أعلى درجات الخصوصية والأمان",
+        descEn: "High-security biometric private lifts and discreet residential lobbies.",
+        descAr: "مصاعد خاصة بمصادقة أمنية متقدمة ومداخل سكنية منفصلة بالكامل."
+      }
+    ],
+
+    landmarks: [
+      {
+        nameEn: "The Prophet's Mosque (Al-Masjid an-Nabawi)",
+        nameAr: "المسجد النبوي الشريف",
+        distEn: "Directly Adjacent / 1 Min Walk",
+        distAr: "ملاصق مباشرة / دقيقة واحدة مشياً"
+      },
+      {
+        nameEn: "Rua Al Madinah Central Boulevard & Plazas",
+        nameAr: "بوليفارد وساحات رؤى المدينة المركزية",
+        distEn: "On-Site",
+        distAr: "ضمن المجمع مباشرة"
+      },
+      {
+        nameEn: "Haramain High-Speed Railway Station",
+        nameAr: "محطة قطار الحرمين السريع",
+        distEn: "8 Minutes Drive",
+        distAr: "٨ دقائق بالسيارة"
+      },
+      {
+        nameEn: "Prince Mohammad Bin Abdulaziz International Airport",
+        nameAr: "مطار الأمير محمد بن عبدالعزيز الدولي",
+        distEn: "15 Minutes Drive",
+        distAr: "١٥ دقيقة بالسيارة"
+      }
+    ]
+  },
   // ── 1. SUHAIL COMPOUND ───────────────────────────────────────────────────
   {
     id: "suhail-compound",
