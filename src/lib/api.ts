@@ -1,5 +1,4 @@
 import { supabase } from "./supabase";
-import { PROJECTS_DATA } from "@/data/projectsData";
 import type {
   Project,
   Blog,
@@ -120,7 +119,7 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
  */
 export function formatVideoEmbedUrl(url: string): string {
   if (!url) return "";
-  let cleanUrl = url.trim();
+  const cleanUrl = url.trim();
 
   // YouTube standard watch URL: https://www.youtube.com/watch?v=VIDEO_ID or youtu.be/VIDEO_ID
   if (cleanUrl.includes("youtube.com/watch?v=")) {
@@ -287,21 +286,12 @@ export async function getPublishedProjects(): Promise<Project[]> {
 }
 
 /**
- * Fetch all published projects mapped to UI-ready ProjectDetail objects directly from Supabase,
- * with static PROJECTS_DATA seamlessly merged.
+ * Fetch all published projects mapped to UI-ready ProjectDetail objects directly from Supabase.
+ * The database is the single source of truth for all projects.
  */
 export async function getPublishedProjectDetails(): Promise<ProjectDetail[]> {
   const dbProjects = await getPublishedProjects();
-  const dbMapped = dbProjects.map(mapProjectToDetail);
-  
-  // Merge static projects that might not yet be in the database
-  const merged = [...dbMapped];
-  for (const staticProj of PROJECTS_DATA) {
-    if (!merged.some((p) => p.id === staticProj.id)) {
-      merged.push(staticProj as any);
-    }
-  }
-  return merged.length > 0 ? merged : (PROJECTS_DATA as any);
+  return dbProjects.map(mapProjectToDetail);
 }
 
 /**
@@ -340,66 +330,20 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       return data as Project;
     }
 
-    // Check static fallback
-    const staticProj = PROJECTS_DATA.find((p) => p.id === slug);
-    if (staticProj) {
-      return {
-        id: staticProj.id,
-        name_en: staticProj.nameEn,
-        name_ar: staticProj.nameAr,
-        developer_en: staticProj.developerEn,
-        developer_ar: staticProj.developerAr,
-        city_en: staticProj.cityEn,
-        city_ar: staticProj.cityAr,
-        district_en: staticProj.districtEn,
-        district_ar: staticProj.districtAr,
-        starting_price_en: staticProj.startingPriceEn,
-        starting_price_ar: staticProj.startingPriceAr,
-        price_range_en: staticProj.priceRangeEn,
-        price_range_ar: staticProj.priceRangeAr,
-        size_en: staticProj.sizeEn,
-        size_ar: staticProj.sizeAr,
-        type_en: staticProj.typeEn,
-        type_ar: staticProj.typeAr,
-        status_en: staticProj.statusEn,
-        status_ar: staticProj.statusAr,
-        expected_delivery_en: staticProj.expectedDeliveryEn,
-        expected_delivery_ar: staticProj.expectedDeliveryAr,
-        units_count_en: staticProj.unitsCountEn,
-        units_count_ar: staticProj.unitsCountAr,
-        floors_en: staticProj.floorsEn,
-        floors_ar: staticProj.floorsAr,
-        overview_en: staticProj.overviewEn,
-        overview_ar: staticProj.overviewAr,
-        highlights_en: staticProj.highlightsEn,
-        highlights_ar: staticProj.highlightsAr,
-        images: staticProj.images,
-        amenities: staticProj.amenities,
-        landmarks: staticProj.landmarks,
-        is_published: true,
-      } as any;
-    }
-
     return null;
   } catch (err) {
     console.error("Error fetching project by slug:", err);
-    const staticProj = PROJECTS_DATA.find((p) => p.id === slug);
-    return (staticProj as any) || null;
+    return null;
   }
 }
 
 /**
- * Fetch a single published project mapped to UI-ready ProjectDetail directly from Supabase,
- * with static PROJECTS_DATA fallback.
+ * Fetch a single published project mapped to UI-ready ProjectDetail directly from Supabase.
  */
 export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetail | null> {
   const dbProject = await getProjectBySlug(slug);
   if (dbProject) {
     return mapProjectToDetail(dbProject);
-  }
-  const staticProj = PROJECTS_DATA.find((p) => p.id === slug);
-  if (staticProj) {
-    return staticProj as any;
   }
   return null;
 }
