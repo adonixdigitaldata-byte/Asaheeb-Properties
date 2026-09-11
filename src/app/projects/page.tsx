@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     siteName: "Asaheeb Real Estate",
     images: [
       {
-        url: "https://www.asaheebrealestate.com/icon.png",
+        url: "https://www.asaheebrealestate.com/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Asaheeb Real Estate Portfolio",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: "Curated Saudi Real Estate Portfolio | Asaheeb Real Estate",
     description:
       "Explore premier vetted investment properties and promotional offers in Riyadh, Jeddah, and Madinah.",
-    images: ["https://www.asaheebrealestate.com/icon.png"],
+    images: ["https://www.asaheebrealestate.com/images/og-image.jpg"],
   },
   alternates: {
     canonical: "https://www.asaheebrealestate.com/projects",

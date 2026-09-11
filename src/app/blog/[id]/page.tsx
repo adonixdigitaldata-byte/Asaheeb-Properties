@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? rawImg.startsWith("http")
       ? rawImg
       : `https://www.asaheebrealestate.com${rawImg.startsWith("/") ? "" : "/"}${rawImg}`
-    : "https://www.asaheebrealestate.com/icon.png";
+    : "https://www.asaheebrealestate.com/images/og-image.jpg";
 
   return {
     title,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         {
           url: imageUrl,
           width: 1200,
-          height: 1200,
+          height: 630,
           alt: title,
         },
       ],
@@ -73,7 +73,7 @@ export default async function DynamicBlogDetailPage({ params }: { params: Promis
     "@type": "Article",
     "headline": post.titleEn || post.titleAr,
     "description": post.summaryEn?.[0] || post.summaryAr?.[0] || post.titleEn || "Saudi real estate market intelligence by Asaheeb Real Estate.",
-    "image": "https://www.asaheebrealestate.com/icon.png",
+    "image": (post as any)?.cover_image_url || "https://www.asaheebrealestate.com/images/og-image.jpg",
     "author": {
       "@type": "Organization",
       "name": post.authorEn || post.authorAr || "Asaheeb Real Estate",

@@ -63,9 +63,9 @@ export const metadata: Metadata = {
       "Curated real estate investments aligned with Saudi Arabia's Vision 2030. Apartments, villas, commercial land, and buildings — vetted by experts.",
     images: [
       {
-        url: "https://www.asaheebrealestate.com/icon.png",
+        url: "https://www.asaheebrealestate.com/images/og-image.jpg",
         width: 1200,
-        height: 1200,
+        height: 630,
         alt: "Asaheeb Real Estate — Saudi Arabia Real Estate Investment",
       },
     ],
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Asaheeb Real Estate — Invest in Saudi Arabia's Future",
     description: "Premium real estate investment opportunities aligned with Vision 2030.",
-    images: ["https://www.asaheebrealestate.com/icon.png"],
+    images: ["https://www.asaheebrealestate.com/images/og-image.jpg"],
   },
   alternates: {
     canonical: "https://www.asaheebrealestate.com",
@@ -101,7 +101,7 @@ const organizationSchema = {
       "alternateName": ["شركة صهيب العقارية", "Asaheeb Properties", "Asaheeb Real Estate Company"],
       "url": "https://www.asaheebrealestate.com",
       "logo": "https://www.asaheebrealestate.com/icon.png",
-      "image": "https://www.asaheebrealestate.com/icon.png",
+      "image": "https://www.asaheebrealestate.com/images/og-image.jpg",
       "description": "Premier Saudi real estate brokerage and advisory firm specializing in Vision 2030 residential, commercial land, and off-plan investment properties in Jeddah, Riyadh, and Madinah.",
       "telephone": "+966565654450",
       "email": "buy@asaheebrealestate.com",

@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? rawImg.startsWith("http")
       ? rawImg
       : `https://www.asaheebrealestate.com${rawImg.startsWith("/") ? "" : "/"}${rawImg}`
-    : "https://www.asaheebrealestate.com/icon.png";
+    : "https://www.asaheebrealestate.com/images/og-image.jpg";
   const pageUrl = `https://www.asaheebrealestate.com/projects/${id}`;
 
   return {
@@ -94,7 +94,7 @@ export default async function DynamicProjectDetailPage({ params }: { params: Pro
     ? rawImg.startsWith("http")
       ? rawImg
       : `https://www.asaheebrealestate.com${rawImg.startsWith("/") ? "" : "/"}${rawImg}`
-    : "https://www.asaheebrealestate.com/icon.png";
+    : "https://www.asaheebrealestate.com/images/og-image.jpg";
   const pageUrl = `https://www.asaheebrealestate.com/projects/${id}`;
 
   // JSON-LD RealEstateListing & Offer Schema for Google Search Rich Snippets

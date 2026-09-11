@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     siteName: "Asaheeb Real Estate",
     images: [
       {
-        url: "https://www.asaheebrealestate.com/icon.png",
+        url: "https://www.asaheebrealestate.com/images/og-image.jpg",
         width: 1200,
-        height: 1200,
+        height: 630,
         alt: "Asaheeb Real Estate Advisory Services",
       },
     ],
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Real Estate Advisory & Investment Services — Asaheeb",
     description: "Curated deal sourcing, due diligence, and portfolio advisory in Saudi Arabia.",
-    images: ["https://www.asaheebrealestate.com/icon.png"],
+    images: ["https://www.asaheebrealestate.com/images/og-image.jpg"],
   },
   alternates: {
     canonical: "https://www.asaheebrealestate.com/services",

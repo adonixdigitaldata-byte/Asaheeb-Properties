@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     siteName: "Asaheeb Real Estate",
     images: [
       {
-        url: "https://www.asaheebrealestate.com/icon.png",
+        url: "https://www.asaheebrealestate.com/images/og-image.jpg",
         width: 1200,
-        height: 1200,
+        height: 630,
         alt: "Contact Asaheeb Real Estate",
       },
     ],
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Contact Asaheeb Real Estate — Speak to a Property Advisor",
     description: "Connect with Asaheeb's real estate investment specialists in Saudi Arabia.",
-    images: ["https://www.asaheebrealestate.com/icon.png"],
+    images: ["https://www.asaheebrealestate.com/images/og-image.jpg"],
   },
   alternates: {
     canonical: "https://www.asaheebrealestate.com/contact",
