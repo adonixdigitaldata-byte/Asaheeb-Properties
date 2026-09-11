@@ -13,6 +13,10 @@ export const metadata: Metadata = {
     "إطلاقات عقارية جديدة السعودية",
     "مشاريع تحت الإنشاء المدينة المنورة",
   ],
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title: "New Launches & Pre-Launch Properties | Asaheeb Real Estate",
     description:

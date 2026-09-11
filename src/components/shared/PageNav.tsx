@@ -11,7 +11,7 @@ import { STANDARD_PROPERTY_TYPES } from "@/data/propertyTypes";
 const NAV_PAGES = [
   { en: "About Us", ar: "من نحن", href: "/about" },
   { en: "Our Projects", ar: "مشاريعنا", href: "/projects", hasDropdown: true },
-  { en: "New Launches", ar: "إطلاقات جديدة", href: "/new-launches", hasNewLaunchDropdown: true, isNew: true },
+  // { en: "New Launches", ar: "إطلاقات جديدة", href: "/new-launches", hasNewLaunchDropdown: true, isNew: true },
   { en: "Services", ar: "خدماتنا", href: "/services" },
   { en: "Expat FAQ", ar: "دليل التملك", href: "/faq" },
   { en: "Blog", ar: "المدونة", href: "/blog" },

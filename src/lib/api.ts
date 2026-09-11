@@ -667,7 +667,7 @@ export async function subscribeNewsletter({ email, source = "WEBSITE_FOOTER" }: 
 
 export const DEFAULT_MARKETING_POPUP: MarketingPopup = {
   id: "fairmont-residences-rua-al-madinah-launch",
-  is_active: true,
+  is_active: false,
   title_en: "Fairmont Residences Rua Al Madinah",
   title_ar: "فيرمونت ريزيدنسز رؤى المدينة",
   subtitle_en: "Directly adjacent to The Prophet's Mosque • 120 Limited Branded Residences",

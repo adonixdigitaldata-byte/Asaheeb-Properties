@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/leads/", "/_next/"],
+        disallow: ["/api/leads/", "/_next/", "/new-launches", "/new-launches/"],
       },
       {
         userAgent: [
@@ -24,7 +24,7 @@ export default function robots(): MetadataRoute.Robots {
           "Googlebot",
         ],
         allow: ["/", "/llms.txt", "/llms-full.txt", "/faq", "/projects", "/blog", "/services", "/about"],
-        disallow: ["/api/leads/"],
+        disallow: ["/api/leads/", "/new-launches", "/new-launches/"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

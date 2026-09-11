@@ -44,6 +44,10 @@ export const metadata: Metadata = {
     description: "The privilege of living next to The Prophet’s Mosque. Register your pre-launch interest.",
     images: ["https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.png"],
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
   alternates: {
     canonical: "https://www.asaheebrealestate.com/new-launches/fairmont-residences-rua-al-madinah",
   },
