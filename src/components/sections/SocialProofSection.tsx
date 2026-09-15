@@ -25,8 +25,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const PARTNERS = ["Developer 1", "Developer 2", "Developer 3", "Developer 4", "Developer 5", "Developer 6"];
-
 const PROOF_STATS = [
   { valueEn: "500+", valueAr: "٥٠٠+", labelEn: "Investors Guided", labelAr: "مستثمر تمت إرشادهم" },
   { valueEn: "SAR 2.4B", valueAr: "٢.٤ مليار ر.س", labelEn: "Total Deal Value", labelAr: "إجمالي قيمة الصفقات" },
@@ -141,24 +139,6 @@ export default function SocialProofSection() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Partner Logos — placeholder strip */}
-        <div className={`${isAr ? "text-right" : "text-center"} mb-8`}>
-          <p className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#8C8477] mb-6">
-            {isAr ? "شركاؤنا الموثوقون" : "Trusted Developer Partners"}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8">
-            {PARTNERS.map((p, i) => (
-              <div
-                key={i}
-                className="px-5 py-2.5 border font-mono text-[10px] tracking-[0.2em] uppercase text-[#8C8477] transition-all duration-300 hover:border-[#B8873B]/40 hover:text-[#B8873B]"
-                style={{ borderColor: "rgba(255,255,255,0.08)" }}
-              >
-                {p}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>

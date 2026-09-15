@@ -11,7 +11,7 @@ const STEPS = [
     titleEn: "Discover",
     titleAr: "اكتشف",
     bodyEn: "We listen first. Your goals, timeline, and risk appetite shape everything. No generic pitch decks.",
-    bodyAr: "نستمع أولاً. أهدافك وجدولك الزمني وشهيتك للمخاطر تشكّل كل شيء. لا عروض تقديمية جاهزة.",
+    bodyAr: "تتبع أهدافك وتحركات السوق، واكتشف الفرص التي قد تصنع فرقًا في استثمارك.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="11" cy="11" r="8" />
@@ -23,9 +23,9 @@ const STEPS = [
   {
     numEn: "02",
     titleEn: "Vet",
-    titleAr: "دقِّق",
+    titleAr: "دقّق",
     bodyEn: "We partner with Saudi Arabia's most trusted developers. Every opportunity is inspected, compared, and stress-tested before it reaches you.",
-    bodyAr: "نتشارك مع أبرز المطورين في المملكة. كل فرصة تُفحَص وتُقارَن وتُختبر قبل أن تصل إليك.",
+    bodyAr: "راجع أبرز المؤشرات والمتغيرات في السوق، وقارن بين الفرص قبل اتخاذ قرارك.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 12l2 2 4-4" />
@@ -37,9 +37,9 @@ const STEPS = [
   {
     numEn: "03",
     titleEn: "Guide",
-    titleAr: "اهتدِ",
+    titleAr: "اهتم",
     bodyEn: "Legals. Financing options. Market context. We walk beside you through every decision, in Arabic and English.",
-    bodyAr: "الجوانب القانونية. خيارات التمويل. سياق السوق. نرافقك في كل خطوة بالعربية والإنجليزية.",
+    bodyAr: "اهتم بتفاصيل استثمارك، وتابع كل خطوة لضمان اختيار الفرصة الأنسب.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -50,9 +50,9 @@ const STEPS = [
   {
     numEn: "04",
     titleEn: "Close",
-    titleAr: "أنجِز",
+    titleAr: "أنجز",
     bodyEn: "From first enquiry to final signature — we handle the complexity so you don't have to. Your investment is real, not just planned.",
-    bodyAr: "من أول استفسار إلى التوقيع النهائي — نتولى التعقيدات نيابةً عنك. استثمارك حقيقي، ليس مجرد خطة.",
+    bodyAr: "حوّل رؤيتك الاستثمارية إلى خطوات عملية وابدأ نحو نتائج ملموسة",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -117,7 +117,7 @@ export default function HowItWorksSection() {
           </div>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-[-0.02em] leading-[1.1] max-w-lg">
             {isAr ? (
-              <>من أول سؤال{" "}<span className="italic text-[#B8873B]">إلى التوقيع الأخير.</span></>
+              <>من اول استفسار ... <span className="italic text-[#B8873B]">إلى آخر توقيع</span></>
             ) : (
               <>From first question{" "}<span className="italic text-[#B8873B]">to final signature.</span></>
             )}

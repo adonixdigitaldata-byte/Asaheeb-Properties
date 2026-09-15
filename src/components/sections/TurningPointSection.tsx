@@ -113,13 +113,13 @@ export default function TurningPointSection() {
             className="block opacity-0 text-4xl sm:text-5xl lg:text-7xl italic font-normal"
             style={{ color: "#B8873B" }}
           >
-            {isAr ? "لم يكن صدفة." : "wasn't an accident."}
+            {isAr ? "لم يكن صدفة" : "wasn't an accident."}
           </span>
           <span
             ref={line3Ref}
             className="block opacity-0 text-3xl sm:text-4xl lg:text-5xl text-[#C5BAB0] font-normal mt-2"
           >
-            {isAr ? "كان رؤية ٢٠٣٠ — ولا تزال تتسارع." : "It was Vision 2030 — and it's only getting started."}
+            {isAr ? "كان رؤية 2030 ولا يزال التحول يتسارع" : "It was Vision 2030 — and it's only getting started."}
           </span>
         </h2>
 
@@ -132,7 +132,7 @@ export default function TurningPointSection() {
             onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 0 60px rgba(184,135,59,0.65)"; }}
             onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 0 40px rgba(184,135,59,0.35)"; }}
           >
-            <span>{isAr ? "اكتشف رؤية ٢٠٣٠" : "Discover Vision 2030"}</span>
+            <span>{isAr ? "اكتشف رؤية 2030" : "Discover Vision 2030"}</span>
             <svg className="group-hover:translate-x-1 transition-transform duration-300" width="14" height="14" viewBox="0 0 16 16" fill="none">
               <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

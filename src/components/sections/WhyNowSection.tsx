@@ -10,23 +10,23 @@ export default function WhyNowSection() {
     {
       iconPath: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
       titleEn: "Pre-peak pricing",
-      titleAr: "أسعار ما قبل الذروة",
+      titleAr: "أسعار اليوم قبل الذروة",
       bodyEn: "Land near mega-projects is priced today for what it is — not for what it's about to become. That window closes fast.",
-      bodyAr: "أسعار الأراضي القريبة من المشاريع العملاقة تعكس وضعها الراهن — لا ما ستصبح عليه قريباً. هذه الفرصة لن تدوم.",
+      bodyAr: "اغتنم فرصة التملك قبل وصول الأسعار إلى مستوياتها الأعلى.",
     },
     {
       iconPath: "M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3",
       titleEn: "Legal foreign ownership",
-      titleAr: "تملك أجنبي قانوني",
+      titleAr: "تملك أجنبي وفق الأنظمة",
       bodyEn: "Saudi Arabia now allows foreign real estate ownership in key zones under Vision 2030 reforms. The regulatory door is open.",
-      bodyAr: "تتيح المملكة الآن للأجانب تملك العقارات في مناطق رئيسية ضمن إصلاحات رؤية 2030. الباب التنظيمي مفتوح.",
+      bodyAr: "فرصة استثمارية متاحة للمستثمرين الأجانب ضمن الأطر والأنظمة المعتمدة.",
     },
     {
       iconPath: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
       titleEn: "SAR-pegged stability",
       titleAr: "استقرار الريال السعودي",
       bodyEn: "The Saudi Riyal is pegged to the USD — no currency volatility risk for international investors.",
-      bodyAr: "الريال السعودي مرتبط بالدولار الأمريكي — بلا مخاطر تقلب العملة للمستثمر الدولي.",
+      bodyAr: "استقرار العملة يعزز الثقة ويوفر بيئة أكثر أمانًا للاستثمار",
     },
   ];
 
@@ -56,10 +56,9 @@ export default function WhyNowSection() {
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-[-0.02em] leading-[1.1] mb-8">
               {isAr ? (
                 <>
-                  السؤال ليس{" "}
-                  <span className="italic text-[#B8873B]">إذا كانت المملكة ستنمو.</span>
-                  <br />بل هل ستملك جزءاً منها
-                  <br />قبل أن يلتفت الجميع؟
+                  السؤال ليس :{" "}
+                  <span className="italic text-[#B8873B]">هل تستثمر المملكة ؟</span>
+                  <br />بل هل ستكون جزءا من هذا الاستثمار ؟
                 </>
               ) : (
                 <>
@@ -73,7 +72,7 @@ export default function WhyNowSection() {
 
             <p className="font-sans text-sm text-[#C5BCAD] leading-[1.9]">
               {isAr
-                ? "العقار السعودي يُسعَّر اليوم وفق قيمته الحالية — لا وفق إمكاناته المستقبلية. النافذة لا تزال مفتوحة."
+                ? "تشهد المملكة استثمارات ومشاريع كبرى في مختلف المناطق، مدفوعة ومستهدفات رؤية 2030، مما يخلق فرصًا عقارية واعدة"
                 : "Saudi real estate is priced today for what it is — not for what it's about to become. The window is still open."}
             </p>
           </div>

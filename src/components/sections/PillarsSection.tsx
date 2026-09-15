@@ -18,7 +18,7 @@ const PILLARS = [
     titleEn: "A Thriving Economy",
     titleAr: "اقتصاد مزدهر",
     bodyEn: "GDP diversification beyond oil. A $1T+ investment ecosystem reshaping financial infrastructure across the Kingdom.",
-    bodyAr: "تنويع الناتج المحلي بعيداً عن النفط. منظومة استثمارية تتجاوز تريليون دولار تعيد تشكيل البنية الاقتصادية.",
+    bodyAr: "تنويع مصادر الدخل وتعزيز الاستثمارات لخلق اقتصاد أكثر استدامة ونموًا",
     accentColor: "#B8873B",
     gradient: "from-[#B8873B]/8 to-transparent",
   },
@@ -35,7 +35,7 @@ const PILLARS = [
     titleEn: "A Vibrant Society",
     titleAr: "مجتمع حيوي",
     bodyEn: "Cultural renaissance, entertainment expansion, tourism opening. Saudi Arabia is becoming a global destination.",
-    bodyAr: "نهضة ثقافية، توسع في الترفيه، انفتاح سياحي. المملكة تتحول إلى وجهة عالمية.",
+    bodyAr: "بناء مجتمع يتمتع بجودة حياة عالية ويواكب التطورات ويستفيد من الفرص الجديدة",
     accentColor: "#7FA8B3",
     gradient: "from-[#7FA8B3]/8 to-transparent",
   },
@@ -49,9 +49,9 @@ const PILLARS = [
       </svg>
     ),
     titleEn: "An Ambitious Nation",
-    titleAr: "أمة طموحة",
+    titleAr: "وطن طموح",
     bodyEn: "12 giga-projects. Madinah Al-Munawwarah. Qiddiya. The Red Sea. Diriyah. A nation building the cities of tomorrow — today.",
-    bodyAr: "١٢ مشروعاً عملاقاً. المدينة المنورة. قدية. البحر الأحمر. الدرعية. أمة تبني مدن الغد — اليوم.",
+    bodyAr: "تطوير بيئة داعمة للابتكار والاستثمار وتحقيق تطلعات المملكة نحو مستقبل أكثر تقدمًا",
     accentColor: "#B8873B",
     gradient: "from-[#B8873B]/8 to-transparent",
   },
@@ -107,13 +107,13 @@ export default function PillarsSection() {
           <div className={`flex items-center gap-3 mb-6 ${isAr ? "justify-end" : "justify-center"}`}>
             <div className="h-px w-10 bg-[#B8873B]/40" />
             <span className="font-mono text-[9px] tracking-[0.36em] uppercase text-[#B8873B]">
-              {isAr ? "رؤية ٢٠٣٠" : "Vision 2030"}
+              {isAr ? "رؤية 2030" : "Vision 2030"}
             </span>
             <div className="h-px w-10 bg-[#B8873B]/40" />
           </div>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-[-0.02em] leading-[1.1]">
             {isAr ? (
-              <>ثلاثة أعمدة. <span className="italic text-[#B8873B]">مستقبل واحد.</span></>
+              <>ثلاثة اعمدة <span className="italic text-[#B8873B]">مستقبل واحد</span></>
             ) : (
               <>Three Pillars. <span className="italic text-[#B8873B]">One Future.</span></>
             )}

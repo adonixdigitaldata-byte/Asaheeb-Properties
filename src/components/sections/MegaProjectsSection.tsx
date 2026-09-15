@@ -9,9 +9,9 @@ import Image from "next/image";
 const MEGA_PROJECTS = [
   {
     nameEn: "Madinah Al-Munawwarah",
-    nameAr: "المدينة المنورة",
+    nameAr: "المدينة المنورة مستقبل يتشكل",
     tagEn: "Sacred heritage transformation & 47,000 luxury hospitality suites — Vision 2030 holy city development",
-    tagAr: "التحول الحضري والتطوير الفندقي الفاخر بقيمة ١٤٠ مليار ريال بجوار المسجد النبوي الشريف",
+    tagAr: "تحول نوعي تشهده المدينة المنورة مع مشاريع تنموية واستثمارات متزايدة تعزز مكانتها وتدعم نموها المستقبلي",
     stat: "SAR 140B",
     statLabelEn: "Masterplan",
     statLabelAr: "المخطط الشامل",
@@ -169,7 +169,7 @@ export default function MegaProjectsSection() {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-[#E8DFCE] font-normal tracking-[-0.02em] leading-[1.1]">
               {isAr ? (
-                <>هذه ليست <span className="italic text-[#B8873B]">إعلانات.</span><br />إنها حلم الملايين.</>
+                <>ليست مجرد <span className="italic text-[#B8873B]">اعلانات</span><br />بل واقع وحلم الملايين</>
               ) : (
                 <>These aren&apos;t <span className="italic text-[#B8873B]">announcements.</span><br />These are the dream of millions.</>
               )}
