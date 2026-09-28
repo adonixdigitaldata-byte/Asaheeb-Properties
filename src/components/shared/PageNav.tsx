@@ -13,6 +13,7 @@ const NAV_PAGES = [
   { en: "Our Projects", ar: "مشاريعنا", href: "/projects", hasDropdown: true },
   // { en: "New Launches", ar: "إطلاقات جديدة", href: "/new-launches", hasNewLaunchDropdown: true, isNew: true },
   { en: "Services", ar: "خدماتنا", href: "/services" },
+  { en: "Mortgage Calculator", ar: "حاسبة التمويل", href: "/mortgage-calculator" },
   { en: "Expat FAQ", ar: "دليل التملك", href: "/faq" },
   { en: "Blog", ar: "المدونة", href: "/blog" },
   { en: "Contact Us", ar: "تواصل معنا", href: "/contact" },

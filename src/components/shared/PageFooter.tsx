@@ -6,12 +6,13 @@ import { useLanguage } from "@/context/LanguageContext";
 import { PHONE_NUMBER_DISPLAY, WHATSAPP_NUMBER, CONTACT_EMAIL, getWhatsAppLink } from "@/data/contactConfig";
 
 const NAV_LINKS = [
-  { en: "About Us",     ar: "من نحن",     href: "/about" },
-  { en: "Our Projects", ar: "مشاريعنا",   href: "/projects" },
-  { en: "Services",     ar: "خدماتنا",    href: "/services" },
-  { en: "Expat FAQ",    ar: "دليل التملك", href: "/faq" },
-  { en: "Blog",         ar: "المدونة",     href: "/blog" },
-  { en: "Contact Us",   ar: "تواصل معنا", href: "/contact" },
+  { en: "About Us",             ar: "من نحن",           href: "/about" },
+  { en: "Our Projects",         ar: "مشاريعنا",         href: "/projects" },
+  { en: "Services",             ar: "خدماتنا",          href: "/services" },
+  { en: "Mortgage Calculator",  ar: "حاسبة التمويل",    href: "/mortgage-calculator" },
+  { en: "Expat FAQ",            ar: "دليل التملك",       href: "/faq" },
+  { en: "Blog",                 ar: "المدونة",           href: "/blog" },
+  { en: "Contact Us",           ar: "تواصل معنا",       href: "/contact" },
 ];
 
 const GOV_LOGOS = [

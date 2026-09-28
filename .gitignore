@@ -43,3 +43,6 @@ next-env.d.ts
 # ignore markdown files
 *.md
 
+# reference folder (internal docs, not for deployment)
+/reference/
+
