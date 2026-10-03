@@ -145,70 +145,70 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🅿️",
+        badge: "PARKING",
         titleEn: "COVERED PARKING",
         titleAr: "مواقف مغطاة",
         descEn: "Dedicated covered parking slots assigned for each residential unit.",
         descAr: "مواقف سيارات خاصة ومغطاة مخصصة لكل وحدة سكنية."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY",
         titleAr: "أمان وحراسة 24/7",
         descEn: "Round-the-clock integrated security and CCTV surveillance monitoring.",
         descAr: "أنظمة أمان وحراسة متواصلة وكاميرات مراقبة على مدار الساعة."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME",
         titleAr: "أنظمة المنزل الذكي",
         descEn: "Advanced digital keyless access and automated smart home controls.",
         descAr: "أنظمة تحكم ودخول ذكي إلكترونية حديثة لكافة الوحدات."
       },
       {
-        badge: "🌳",
+        badge: "GARDEN",
         titleEn: "PRIVATE GARDEN",
         titleAr: "حديقة خاصة ولاندسكيب",
         descEn: "Thoughtfully designed internal landscape gardens and green spaces.",
         descAr: "حديقة داخلية ومساحات خضراء مصممة بعناية فائقة."
       },
       {
-        badge: "🏢",
+        badge: "ROOFTOP",
         titleEn: "SHARED ROOFTOP",
         titleAr: "أسطح ترفيهية مشتركة",
         descEn: "Shared leisure rooftop sitting areas with open panoramic views.",
         descAr: "أسطح ترفيهية وجلسات مشتركة بإطلالات رحبة ومفتوحة."
       },
       {
-        badge: "🏙️",
+        badge: "LANDMARK VIEW",
         titleEn: "LANDMARK VIEW",
         titleAr: "إطلالات على المعالم",
         descEn: "Scenic open views overlooking vibrant Madinah city landmarks.",
         descAr: "إطلالات بانورامية مفتوحة على أهم معالم المدينة المنورة."
       },
       {
-        badge: "💧",
+        badge: "UTILITIES",
         titleEn: "INDEPENDENT TANKS",
         titleAr: "خزانات مياه مستقلة",
         descEn: "Dedicated upper and lower private water tanks for complete independence.",
         descAr: "خزان مياه مستقل (علوي وسفلي) لكل شقة لضمان الاستقلالية التامة."
       },
       {
-        badge: "⚡",
+        badge: "POWER",
         titleEn: "PRIVATE POWER METER",
         titleAr: "عداد كهرباء مستقل",
         descEn: "Dedicated smart electricity meter assigned to each apartment.",
         descAr: "عداد كهرباء مستقل وخاص بكل وحدة سكنية."
       },
       {
-        badge: "📜",
+        badge: "WARRANTY",
         titleEn: "STRUCTURAL GUARANTEES",
         titleAr: "ضمانات إنشائية وتأمين",
         descEn: "20-year structural framework warranty, 15-year MEP, and 10-year Tawuniya insurance.",
         descAr: "ضمان ٢٠ عاماً على الهيكل الإنشائي و١٥ عاماً على التمديدات وتأمين التعاونية."
       },
       {
-        badge: "🛋️",
+        badge: "LOUNGE",
         titleEn: "INTERNAL SITTING AREAS",
         titleAr: "جلسات واستراحات داخلية",
         descEn: "Elegantly furnished community seating lounges and family waiting spaces.",
@@ -305,42 +305,42 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🏊",
+        badge: "WELLNESS",
         titleEn: "SWIMMING POOL",
         titleAr: "حمام سباحة",
         descEn: "Includes a dedicated swimming pool area for residents and families.",
         descAr: "يتضمن مسبحاً مخصصاً وحصرياً للسكان والعائلات."
       },
       {
-        badge: "🏋️",
+        badge: "FITNESS",
         titleEn: "FITNESS GYM",
         titleAr: "نادي رياضي",
         descEn: "Fully equipped health club and gym facilities.",
         descAr: "نادي رياضي متكامل مجهز بأحدث المعدات الرياضية."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY & SURVEILLANCE",
         titleAr: "حراسة وأمان 24 ساعة",
         descEn: "Round-the-clock security team and CCTV coverage.",
         descAr: "حراسة أمنية مستمرة وكاميرات مراقبة على مدار اليوم."
       },
       {
-        badge: "🅿️",
+        badge: "PARKING",
         titleEn: "PRIVATE COVERED PARKING",
         titleAr: "مواقف سيارات مغطاة",
         descEn: "Designated covered parking slots for every unit owner.",
         descAr: "مواقف سيارات مخصصة ومغطاة لكل وحدة سكنية."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "HIGH-SPEED ELEVATORS",
         titleAr: "مصاعد فائقة السرعة",
         descEn: "8 modern high-speed elevators including service lifts.",
         descAr: "٨ مصاعد حديثة وفائقة السرعة شاملة مصاعد الخدمات."
       },
       {
-        badge: "🌳",
+        badge: "GARDEN",
         titleEn: "COMMUNAL LANDSCAPED GARDENS",
         titleAr: "حدائق ومساحات خضراء",
         descEn: "Lush green outdoor promenades for families and leisure.",
@@ -447,70 +447,70 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "📹",
+        badge: "CCTV",
         titleEn: "SURVEILLANCE SYSTEM",
         titleAr: "أنظمة المراقبة والأمان",
         descEn: "24/7 active surveillance systems active throughout the property.",
         descAr: "أنظمة مراقبة وأمان تعمل على مدار الساعة ٢٤/٧ في جميع مرافق المشروع."
       },
       {
-        badge: "🏛️",
+        badge: "️",
         titleEn: "AC COMMUNITY HALL",
         titleAr: "صالة مناسبات مجتمعية",
         descEn: "A climate-controlled communal space for resident gatherings and events.",
         descAr: "صالة مغلقة ومكيفة مخصصة لفعاليات واجتماعات السكان."
       },
       {
-        badge: "🧯",
+        badge: "SAFETY",
         titleEn: "FIREFIGHTING SYSTEM",
         titleAr: "أنظمة المكافحة والسلامة",
         descEn: "Integrated safety systems built to high-quality construction standards.",
         descAr: "أنظمة سلامة وإطفاء متكاملة مبنية وفق أعلى معايير الجودة العالمية."
       },
       {
-        badge: "🎠",
+        badge: "PLAY AREA",
         titleEn: "CHILDREN'S PLAY AREA",
         titleAr: "منطقة ألعاب الأطفال",
         descEn: "Dedicated family zones designed for safety and recreation.",
         descAr: "منطقة ألعاب آمنة ومجهزة للأطفال والعائلات."
       },
       {
-        badge: "🏊",
+        badge: "WELLNESS",
         titleEn: "SWIMMING POOL",
         titleAr: "حمام السباحة",
         descEn: "Dedicated pool area for residents and relaxation.",
         descAr: "حمام سباحة مخصص ومجهز لجميع السكان."
       },
       {
-        badge: "🏋️",
+        badge: "FITNESS",
         titleEn: "FITNESS GYM",
         titleAr: "النادي الرياضي",
         descEn: "A fully equipped fitness center with state-of-the-art machinery.",
         descAr: "مركز لياقة بدنية وجيم مجهز بالكامل بأحدث الأجهزة."
       },
       {
-        badge: "🎾",
+        badge: "SPORTS",
         titleEn: "PADDLE TENNIS COURT",
         titleAr: "ملعب بادل تينس",
         descEn: "On-site modern sports facilities for residents.",
         descAr: "ملعب رياضي مخصص لرياضة البادل تينس."
       },
       {
-        badge: "🏃",
+        badge: "TRACK",
         titleEn: "RUNNING TRACK",
         titleAr: "مسار الجري والمشي",
         descEn: "Dedicated outdoor running path for daily exercise.",
         descAr: "مسار مخصص للركض والمشي في الهواء الطلق."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME SYSTEM",
         titleAr: "أنظمة المنزل الذكي",
         descEn: "Enhanced security and convenience through digital access controls.",
         descAr: "تحكم رقمي بالمنزل وأنظمة دخول إلكترونية شفرية."
       },
       {
-        badge: "🍖",
+        badge: "",
         titleEn: "BBQ AREAS",
         titleAr: "مناطق الشواء",
         descEn: "Designated spots for outdoor cooking and social gatherings.",
@@ -608,105 +608,105 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🔥",
+        badge: "",
         titleEn: "CENTRAL GAS",
         titleAr: "شبكة غاز مركزي",
         descEn: "Safe and modern centralized piped gas distribution infrastructure.",
         descAr: "شبكة غاز مركزي حديثة وآمنة لكافة الوحدات السكنية."
       },
       {
-        badge: "🏋️",
+        badge: "FITNESS",
         titleEn: "GYM / FITNESS CENTER",
         titleAr: "نادي رياضي متكامل",
         descEn: "Modern health club equipped with advanced cardiovascular and strength machinery.",
         descAr: "مركز لياقة بدنية مجهز بأحدث الأجهزة الرياضية المتطورة."
       },
       {
-        badge: "📹",
+        badge: "CCTV",
         titleEn: "CCTV SECURITY",
         titleAr: "كاميرات مراقبة أمنية",
         descEn: "High-definition 24/7 security surveillance covering all shared facilities.",
         descAr: "كاميرات مراقبة عالية الدقة تعمل على مدار الساعة لضمان الأمان."
       },
       {
-        badge: "🧺",
+        badge: "",
         titleEn: "LAUNDRY ROOM",
         titleAr: "غرفة غسيل مخصصة",
         descEn: "Dedicated on-site laundry and drying services for residents.",
         descAr: "مرافق وغرفة غسيل متكاملة مخصصة لخدمة السكان."
       },
       {
-        badge: "🅿️",
+        badge: "PARKING",
         titleEn: "COVERED PARKING",
         titleAr: "مواقف سيارات مغطاة",
         descEn: "Secure private covered parking bays assigned to each apartment.",
         descAr: "مواقف سيارات خاصة ومغطاة مخصصة لكل شقة سكنية."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "HIGH-SPEED ELEVATORS",
         titleAr: "مصاعد فائقة السرعة",
         descEn: "Modern automated passenger and service elevators.",
         descAr: "مصاعد حديثة وسريعة ومصاعد خدمات مخصصة."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY",
         titleAr: "حراسة أمنية 24/7",
         descEn: "Round-the-clock trained security personnel and gated access control.",
         descAr: "طاقم حراسة أمنية متواجد على مدار اليوم مع بوابات دخول آمنة."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME",
         titleAr: "أنظمة سمارت هوم",
         descEn: "Comprehensive digital access controls and smart automation systems.",
         descAr: "أنظمة تحكم رقمية ودخول ذكي إلكتروني مشفر."
       },
       {
-        badge: "🛒",
+        badge: "",
         titleEn: "MINI MARKET",
         titleAr: "ميني ماركت داخلي",
         descEn: "On-site convenience grocery store fulfilling daily household needs.",
         descAr: "متجر تمويني داخل المجمع لتلبية الاحتياجات اليومية بكل يسر."
       },
       {
-        badge: "🕌",
+        badge: "MOSQUE",
         titleEn: "PRAYER ROOM",
         titleAr: "مصلى خاص",
         descEn: "Quiet, dedicated on-site community prayer hall for residents.",
         descAr: "مصلى هادئ ومجهز لأداء الصلوات لسكان المجمع."
       },
       {
-        badge: "🚿",
+        badge: "",
         titleEn: "CAR WASH AREA",
         titleAr: "منطقة غسيل سيارات",
         descEn: "Designated community car wash and detailing service bay.",
         descAr: "مساحة مجهزة ومخصصة لغسيل وتنظيف السيارات."
       },
       {
-        badge: "🌳",
+        badge: "GARDEN",
         titleEn: "PRIVATE GARDEN",
         titleAr: "حديقة خاصة ولاندسكيب",
         descEn: "Peaceful landscaped garden retreats and lush outdoor sitting spaces.",
         descAr: "حدائق خضراء خاصة ومساحات جلوس طبيعية هادئة."
       },
       {
-        badge: "🏞️",
+        badge: "️",
         titleEn: "PARK FACING VIEW",
         titleAr: "إطلالات مباشرة على الحديقة",
         descEn: "Open panoramic views directly overlooking the central landscaped park.",
         descAr: "إطلالات بانورامية مفتوحة ومباشرة على الحديقة المركزية."
       },
       {
-        badge: "🏀",
+        badge: "",
         titleEn: "MULTI PURPOSE SPORTS COURT",
         titleAr: "ملعب رياضي متعدد الاستخدامات",
         descEn: "Versatile sports court designed for basketball, tennis, and recreation.",
         descAr: "ملعب رياضي متعدد الأغراض لممارسة مختلف الأنشطة الرياضية."
       },
       {
-        badge: "⚡",
+        badge: "POWER",
         titleEn: "SEPARATE MALE & FEMALE GYMS",
         titleAr: "نوادي رياضية منفصلة للرجال والنساء",
         descEn: "Private, distinct fitness centers tailored for men and women.",
@@ -798,98 +798,98 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🔥",
+        badge: "",
         titleEn: "CENTRAL GAS",
         titleAr: "شبكة غاز مركزي",
         descEn: "Centralized piped gas network infrastructure delivering convenience and maximum safety.",
         descAr: "شبكة غاز مركزي حديثة وآمنة وفق أعلى معايير السلامة."
       },
       {
-        badge: "🏋️",
+        badge: "FITNESS",
         titleEn: "GYM / FITNESS CENTER",
         titleAr: "نادي رياضي متكامل",
         descEn: "Fully air-conditioned fitness club equipped with state-of-the-art exercise machinery.",
         descAr: "صالة رياضية وجيم مكيف بالكامل ومجهز بأحدث الأجهزة الرياضية."
       },
       {
-        badge: "🅿️",
+        badge: "PARKING",
         titleEn: "COVERED PARKING",
         titleAr: "مواقف مغطاة",
         descEn: "Dedicated private covered parking spaces allocated for every apartment.",
         descAr: "مواقف سيارات خاصة ومغطاة مخصصة لكل وحدة سكنية."
       },
       {
-        badge: "🚶",
+        badge: "",
         titleEn: "WALKWAY",
         titleAr: "ممرات مشاة مخصصة",
         descEn: "Dedicated paved pedestrian paths interwoven through the landscaped gardens.",
         descAr: "ممرات مشاة أنيقة ومريحة مخصصة للتنزه وسط المساحات الخضراء."
       },
       {
-        badge: "❄️",
+        badge: "️",
         titleEn: "CENTRAL AC",
         titleAr: "تكييف مركزي متطور",
         descEn: "Advanced central climate-controlled cooling systems across all residences.",
         descAr: "أنظمة تكييف وتبريد مركزية متطورة تغطي كافة الوحدات."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME",
         titleAr: "أنظمة المنزل الذكي",
         descEn: "Integrated smart automation providing effortless control over lighting and appliances.",
         descAr: "أنظمة سمارت هوم حديثة للتحكم الذكي بالإضاءة والأجهزة المنزلية."
       },
       {
-        badge: "🚪",
+        badge: "",
         titleEn: "SMART ENTRANCE",
         titleAr: "مداخل إلكترونية ذكية",
         descEn: "Secure keyless smart access control and automated building entry systems.",
         descAr: "بوابات ومداخل إلكترونية ذكية توفر أعلى مستويات الأمان والخصوصية."
       },
       {
-        badge: "✨",
+        badge: "EXCLUSIVE",
         titleEn: "LUXURY FINISHES",
         titleAr: "تشطيبات فاخرة",
         descEn: "High-grade architectural materials, porcelain tiles, and premium interior detailing.",
         descAr: "تشطيبات هندسية راقية ومواد بناء فاخرة على أعلى معايير الجودة."
       },
       {
-        badge: "💡",
+        badge: "",
         titleEn: "AMBIENT LIGHTING",
         titleAr: "إضاءة محيطية هادئة",
         descEn: "Custom aesthetic landscape and facade lighting creating a warm evening ambiance.",
         descAr: "إضاءة هادئة ومدروسة تضفي طابعاً ساحراً على الواجهات والمسطحات الخضراء."
       },
       {
-        badge: "🌳",
+        badge: "GARDEN",
         titleEn: "CENTRAL LANDSCAPE (16M)",
         titleAr: "مسطحات خضراء ولاندسكيب مركزي",
         descEn: "Expansive 16-meter central green landscaped area creating a natural community oasis.",
         descAr: "مسطحات خضراء مركزية ممتدة بعرض ١٦ متراً تدمج الطبيعة بالحياة اليومية."
       },
       {
-        badge: "🛍️",
+        badge: "️",
         titleEn: "COMMERCIAL GROUND SHOWROOMS",
         titleAr: "معارض تجارية بالدور الأرضي",
         descEn: "Ground-floor boutique retail outlets, cafes, and essential community services.",
         descAr: "معارض ومحلات تجارية راقية بالدور الأرضي لخدمة السكان والزوار."
       },
       {
-        badge: "💧",
+        badge: "UTILITIES",
         titleEn: "INDEPENDENT WATER",
         titleAr: "خزانات مياه مستقلة",
         descEn: "Private dedicated upper and lower water tanks ensuring complete utility independence.",
         descAr: "خزان مياه مستقل (علوي وسفلي) لكل وحدة سكنية لضمان الاستقلالية التامة."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "EXTENDED WARRANTIES",
         titleAr: "ضمانات ممتدة وتأمين",
         descEn: "10-year Tawuniya insurance, 5-year MEP guarantee, and 25-year warranty on switches.",
         descAr: "تأمين شامل ١٠ سنوات من التعاونية و٢٥ عاماً على المفاتيح والأفياش."
       },
       {
-        badge: "⚡",
+        badge: "POWER",
         titleEn: "PRIVATE POWER METER",
         titleAr: "عداد كهرباء مستقل",
         descEn: "Individual digital electricity meter assigned directly to each property.",
@@ -981,63 +981,63 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🔥",
+        badge: "",
         titleEn: "CENTRAL GAS",
         titleAr: "شبكة غاز مركزي",
         descEn: "Centralized piped gas network delivering maximum safety and constant availability.",
         descAr: "شبكة تمديدات غاز مركزي متطورة وآمنة تغذي كافة الوحدات السكنية."
       },
       {
-        badge: "🅿️",
+        badge: "PARKING",
         titleEn: "COVERED PARKING",
         titleAr: "مواقف سيارات مغطاة",
         descEn: "Dedicated private covered parking bay assigned for each residential unit.",
         descAr: "موقف سيارات خاص ومظلل مخصص لكل شقة سكنية."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "HIGH-SPEED ELEVATOR",
         titleAr: "مصاعد أوتوماتيكية سريعة",
         descEn: "Modern automated high-speed elevator systems with advanced safety features.",
         descAr: "مصاعد حديثة عالية السرعة وأوتوماتيكية بالكامل مع أنظمة أمان متقدمة."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY",
         titleAr: "أمان وحراسة 24/7",
         descEn: "Round-the-clock integrated security personnel and continuous CCTV monitoring.",
         descAr: "أنظمة حراسة وأمان متواصلة مع كاميرات مراقبة على مدار الساعة."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME",
         titleAr: "أنظمة سمارت هوم",
         descEn: "Comprehensive digital automation and mobile keyless access control.",
         descAr: "تحكم ذكي متكامل في الإضاءة والتكييف والدخول الإلكتروني."
       },
       {
-        badge: "🏨",
+        badge: "",
         titleEn: "HOTEL LOBBY",
         titleAr: "مدخل واستقبال فندقي فاخر",
         descEn: "Fully air-conditioned luxury hospitality entrance and reception hall.",
         descAr: "مداخل واستقبال بنمط فندقي فاخر ومكيف بالكامل لراحة الضيوف."
       },
       {
-        badge: "🏛️",
+        badge: "️",
         titleEn: "HIGH CEILINGS",
         titleAr: "أسقف عالية وارتفاعات رحبة",
         descEn: "Spacious architectural ceiling heights providing expansive luxury ambiance.",
         descAr: "ارتفاعات أسقف مميزة ورحبة تمنح شعوراً بالاتساع والفخامة."
       },
       {
-        badge: "🏢",
+        badge: "ROOFTOP",
         titleEn: "MODERN FACADES",
         titleAr: "واجهات معمارية حديثة",
         descEn: "Contemporary architectural facades featuring large panoramic glass panels.",
         descAr: "واجهات معمارية عصرية وأنيقة بنوافذ بانورامية واسعة."
       },
       {
-        badge: "⚡",
+        badge: "POWER",
         titleEn: "INDEPENDENT METER",
         titleAr: "عدادات مستقلة",
         descEn: "Dedicated independent electricity meters and private water tank setups.",
@@ -1124,84 +1124,84 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🏋️",
+        badge: "FITNESS",
         titleEn: "GYM / FITNESS CENTER",
         titleAr: "نادي رياضي متكامل",
         descEn: "State-of-the-art health club and fitness gym equipped with modern machines.",
         descAr: "صالة لياقة بدنية مجهزة بأحدث المعدات والأجهزة الرياضية المتطورة."
       },
       {
-        badge: "📹",
+        badge: "CCTV",
         titleEn: "CCTV SECURITY",
         titleAr: "كاميرات مراقبة أمنية",
         descEn: "High-definition CCTV coverage monitoring all building gates and common areas.",
         descAr: "شبكة كاميرات مراقبة رقمية عالية الدقة تغطي كافة المداخل والمرافق."
       },
       {
-        badge: "🏊",
+        badge: "WELLNESS",
         titleEn: "SWIMMING POOL",
         titleAr: "مسبح متكامل",
         descEn: "Private community swimming pool designed for leisure and family relaxation.",
         descAr: "مسبح خاص مجهز بأعلى معايير النظافة والراحة لجميع أفراد الأسرة."
       },
       {
-        badge: "🛋️",
+        badge: "LOUNGE",
         titleEn: "LOUNGE",
         titleAr: "صالة ضيافة واستراحة",
         descEn: "Elegantly furnished community lounge and hospitality reception space.",
         descAr: "صالة استراحة وضيافة فاخرة مخصصة لاستقبال الزوار والتجمعات."
       },
       {
-        badge: "🕌",
+        badge: "MOSQUE",
         titleEn: "MOSQUE",
         titleAr: "مسجد ومصلى مجهز",
         descEn: "Dedicated peaceful on-site mosque and prayer area for community residents.",
         descAr: "مصلى مجهز وهادئ داخل المجمع لأداء الصلوات اليومية."
       },
       {
-        badge: "🅿️",
+        badge: "PARKING",
         titleEn: "COVERED PARKING",
         titleAr: "مواقف سيارات مغطاة",
         descEn: "Dedicated secure private covered parking bays assigned to each apartment.",
         descAr: "مواقف سيارات خاصة ومظللة مخصصة لكل شقة سكنية."
       },
       {
-        badge: "📺",
+        badge: "",
         titleEn: "TV ROOM",
         titleAr: "غرفة ترفيه وشاشات سينمائية",
         descEn: "Dedicated media entertainment and theater lounge for residents.",
         descAr: "غرفة سينمائية وترفيهية مجهزة بأحدث الشاشات وأنظمة الصوت."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "ELEVATOR",
         titleAr: "مصاعد أوتوماتيكية حديثة",
         descEn: "High-speed automated passenger elevators ensuring swift floor-to-floor access.",
         descAr: "مصاعد حديثة عالية السرعة وأوتوماتيكية بالكامل مع أعلى معايير الأمان."
       },
       {
-        badge: "🎠",
+        badge: "PLAY AREA",
         titleEn: "KIDS PLAY AREA",
         titleAr: "منطقة ألعاب أطفال آمنة",
         descEn: "Safe, cushioned outdoor & indoor play zone tailored for young children.",
         descAr: "منطقة ترفيهية آمنة ومجهزة بأحدث الألعاب المخصصة للأطفال."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY",
         titleAr: "حراسة وأمان 24/7",
         descEn: "Round-the-clock trained security personnel ensuring complete safety.",
         descAr: "طاقم حراسة وأمن متواجد على مدار الساعة لضمان الطمأنينة والأمان."
       },
       {
-        badge: "🚗",
+        badge: "",
         titleEn: "DRIVER ROOM",
         titleAr: "غرف مخصصة للسائقين",
         descEn: "Dedicated private accommodation rooms for drivers on site.",
         descAr: "غرف خاصة ومجهزة مخصصة لسكن السائقين داخل المشروع."
       },
       {
-        badge: "🍳",
+        badge: "",
         titleEn: "EQUIPPED KITCHEN",
         titleAr: "مطابخ مجهزة بالكامل",
         descEn: "Contemporary open and closed kitchen layouts with high-end prep utilities.",
@@ -1293,42 +1293,42 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🏨",
+        badge: "",
         titleEn: "HOTEL-STYLE LOBBY",
         titleAr: "مدخل فندقي فاخر",
         descEn: "Hospitality entrance lobby with marble finishes.",
         descAr: "مدخل بنمط فندقي فاخر وتشطيبات رخامية راقية."
       },
       {
-        badge: "❄️",
+        badge: "️",
         titleEn: "CENTRAL AIR CONDITIONING",
         titleAr: "تكييف مركزي",
         descEn: "Integrated climate control system across all units.",
         descAr: "نظام تكييف مركزي متكامل يغطي كافة الوحدات."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME AUTOMATION",
         titleAr: "أنظمة سمارت هوم",
         descEn: "Digital access controls and smart automation.",
         descAr: "تحكم ذكي بالمنزل وأنظمة دخول إلكترونية شفرية."
       },
       {
-        badge: "🚪",
+        badge: "",
         titleEn: "PREMIUM WPC DOORS",
         titleAr: "أبواب WPC فاخرة",
         descEn: "Durable moisture-resistant WPC wooden doors.",
         descAr: "أبواب خشبية فاخرة مقاومة للرطوبة والعوامل الجوية."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY & SURVEILLANCE",
         titleAr: "أمان ومراقبة 24 ساعة",
         descEn: "Round-the-clock CCTV cameras and security coverage.",
         descAr: "أنظمة أمان ومراقبة تعمل على مدار الساعة."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "ELEVATORS PER BUILDING",
         titleAr: "مصعدين لكل عمارة",
         descEn: "2 high-speed elevators dedicated per building.",
@@ -1410,42 +1410,42 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🏨",
+        badge: "",
         titleEn: "HOTEL-STYLE LOBBY",
         titleAr: "مدخل طابع فندقي",
         descEn: "Hospitality entrance lobby with marble finishes.",
         descAr: "مدخل بنمط فندقي فاخر وتشطيبات رخامية راقية."
       },
       {
-        badge: "❄️",
+        badge: "️",
         titleEn: "CENTRAL AIR CONDITIONING",
         titleAr: "تكييف مركزي",
         descEn: "Integrated climate control system across all units.",
         descAr: "نظام تكييف مركزي متكامل يغطي كافة الوحدات."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME AUTOMATION",
         titleAr: "أنظمة سمارت هوم",
         descEn: "Digital access controls and smart automation.",
         descAr: "تحكم ذكي بالمنزل وأنظمة دخول إلكترونية شفرية."
       },
       {
-        badge: "🚪",
+        badge: "",
         titleEn: "PREMIUM WPC DOORS",
         titleAr: "أبواب WPC فاخرة",
         descEn: "Durable moisture-resistant WPC wooden doors.",
         descAr: "أبواب خشبية فاخرة مقاومة للرطوبة والعوامل الجوية."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY & SURVEILLANCE",
         titleAr: "أمان ومراقبة 24 ساعة",
         descEn: "Round-the-clock CCTV cameras and security coverage.",
         descAr: "أنظمة أمان ومراقبة تعمل على مدار الساعة."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "ELEVATORS PER BUILDING",
         titleAr: "مصعدين لكل عمارة",
         descEn: "2 high-speed elevators dedicated per building.",
@@ -1532,42 +1532,42 @@ export const PROJECTS_DATA: ProjectDetail[] = [
     
     amenities: [
       {
-        badge: "🏨",
+        badge: "",
         titleEn: "HOTEL-STYLE LOBBY",
         titleAr: "مدخل طابع فندقي",
         descEn: "Hospitality entrance lobby with marble finishes.",
         descAr: "مدخل بنمط فندقي فاخر وتشطيبات رخامية راقية."
       },
       {
-        badge: "❄️",
+        badge: "️",
         titleEn: "CENTRAL AIR CONDITIONING",
         titleAr: "تكييف مركزي",
         descEn: "Integrated climate control system across all units.",
         descAr: "نظام تكييف مركزي متكامل يغطي كافة الوحدات."
       },
       {
-        badge: "📱",
+        badge: "SMART LIVING",
         titleEn: "SMART HOME AUTOMATION",
         titleAr: "أنظمة سمارت هوم",
         descEn: "Digital access controls and smart automation.",
         descAr: "تحكم ذكي بالمنزل وأنظمة دخول إلكترونية شفرية."
       },
       {
-        badge: "🚪",
+        badge: "",
         titleEn: "PREMIUM WPC DOORS",
         titleAr: "أبواب WPC فاخرة",
         descEn: "Durable moisture-resistant WPC wooden doors.",
         descAr: "أبواب خشبية فاخرة مقاومة للرطوبة والعوامل الجوية."
       },
       {
-        badge: "🛡️",
+        badge: "SECURITY",
         titleEn: "24/7 SECURITY & SURVEILLANCE",
         titleAr: "أمان ومراقبة 24 ساعة",
         descEn: "Round-the-clock CCTV cameras and security coverage.",
         descAr: "أنظمة أمان ومراقبة تعمل على مدار الساعة."
       },
       {
-        badge: "🛗",
+        badge: "ELEVATOR",
         titleEn: "ELEVATORS PER BUILDING",
         titleAr: "مصعدين لكل عمارة",
         descEn: "2 high-speed elevators dedicated per building.",

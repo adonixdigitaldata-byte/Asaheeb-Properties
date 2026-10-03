@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import FairmontLandingClient from "./FairmontLandingClient";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Fairmont Residences Rua Al Madinah | Exclusive Pre-Launch — Asaheeb Real Estate",
   description:

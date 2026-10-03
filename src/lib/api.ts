@@ -99,6 +99,13 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     videoItems,
     paymentTermsEn: p.payment_terms_en,
     paymentTermsAr: p.payment_terms_ar,
+    paymentMilestones: (p as any).payment_milestones || (p as any).paymentMilestones || null,
+    paymentPlanImages:
+      (p as any).payment_plan_images ||
+      (p as any).paymentPlanImages ||
+      (p as any).payment_plans ||
+      (p as any).paymentPlans ||
+      [],
     floorPlans,
     brochureUrlEn: p.brochure_url_en,
     brochureUrlAr: p.brochure_url_ar,

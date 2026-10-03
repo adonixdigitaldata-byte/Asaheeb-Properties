@@ -109,16 +109,16 @@ export function ProjectCardPriceAndOffer({
           {hasOffer && discountedPrice ? (
             <>
               {originalPrice && (
-                <span className="font-display text-[11px] line-through text-[#8C8477] font-medium shrink-0">
+                <span className="font-display text-xs line-through text-[#8C8477] font-medium shrink-0">
                   {originalPrice}
                 </span>
               )}
-              <span className="font-display text-sm sm:text-base font-bold text-[#B8873B] shrink-0">
+              <span className="font-display text-base sm:text-lg font-bold text-[#B8873B] shrink-0">
                 {discountedPrice}
               </span>
             </>
           ) : (
-            <span className="font-display text-sm sm:text-base font-bold text-[#B8873B] shrink-0">
+            <span className="font-display text-base sm:text-lg font-bold text-[#B8873B] shrink-0">
               {isAr ? defaultPriceAr : defaultPriceEn}
             </span>
           )}

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getBlogBySlug, getBlogDetailBySlug, getPublishedBlogs } from "@/lib/api";
 import DynamicBlogDetailClient from "./BlogDetailClient";
 
-export const revalidate = 60;
+// Revalidate every 1 hour (ISR)
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const blogs = await getPublishedBlogs();

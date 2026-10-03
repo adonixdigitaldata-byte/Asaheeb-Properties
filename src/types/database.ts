@@ -40,6 +40,44 @@ export interface Amenity {
   descAr: string;
 }
 
+export interface FloorPlanItem {
+  url: string;
+  captionEn?: string;
+  captionAr?: string;
+  modelEn?: string;
+  modelAr?: string;
+  category?: "studio" | "1_bed" | "2_bed" | "3_bed" | "4_bed" | "duplex" | "penthouse" | "townhouse" | string;
+  categoryEn?: string;
+  categoryAr?: string;
+  areaSqm?: number | string;
+  bedrooms?: number | string;
+  bathrooms?: number | string;
+  featuresEn?: string[];
+  featuresAr?: string[];
+  startingPriceEn?: string;
+  startingPriceAr?: string;
+  sortOrder?: number;
+}
+
+export interface PaymentMilestone {
+  stageNumber?: string;
+  percentage?: string;
+  titleEn?: string;
+  titleAr?: string;
+  descEn?: string;
+  descAr?: string;
+  url?: string;
+}
+
+export interface PaymentPlanImage {
+  url: string;
+  titleEn?: string;
+  titleAr?: string;
+  captionEn?: string;
+  captionAr?: string;
+  sortOrder?: number;
+}
+
 export interface Project {
   id: string; // Slug used for URL (e.g. "suhail-compound")
   name_en: string;
@@ -75,7 +113,9 @@ export interface Project {
   video_items?: Array<{ url: string; titleEn?: string; titleAr?: string }>;
   payment_terms_en?: string;
   payment_terms_ar?: string;
-  floor_plans?: Array<{ url: string; captionEn?: string; captionAr?: string }>;
+  payment_milestones?: PaymentMilestone[];
+  payment_plan_images?: PaymentPlanImage[];
+  floor_plans?: FloorPlanItem[];
   brochure_url_en?: string;
   brochure_url_ar?: string;
   map_embed_url?: string;
@@ -188,7 +228,12 @@ export interface ProjectDetail {
   videoItems?: Array<{ url: string; titleEn?: string; titleAr?: string }>;
   paymentTermsEn?: string;
   paymentTermsAr?: string;
-  floorPlans?: Array<{ url: string; captionEn?: string; captionAr?: string }>;
+  paymentMilestones?: PaymentMilestone[];
+  payment_milestones?: PaymentMilestone[];
+  paymentPlanImages?: PaymentPlanImage[];
+  payment_plan_images?: PaymentPlanImage[];
+  floorPlans?: FloorPlanItem[];
+  floor_plans?: FloorPlanItem[];
   brochureUrlEn?: string;
   brochureUrlAr?: string;
   mapEmbedUrl?: string;

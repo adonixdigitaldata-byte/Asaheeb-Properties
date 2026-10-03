@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Revalidate every 60 seconds (ISR) or on-demand
-export const revalidate = 60;
+// Revalidate every 1 hour (ISR) or on-demand
+export const revalidate = 3600;
 
 export default async function BlogPage() {
   const [posts, featBlog] = await Promise.all([

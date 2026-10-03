@@ -1,10 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProjectBySlug, getProjectDetailBySlug, getPublishedProjects } from "@/lib/api";
+import { getProjectBySlug, getProjectDetailBySlug, getPublishedProjects, getPublishedProjectDetails } from "@/lib/api";
 import { getDiscountStatus } from "@/lib/offerUtils";
+import type { ProjectDetail } from "@/types/database";
 import DynamicProjectDetailClient from "./ProjectDetailClient";
 
-export const revalidate = 60;
+// Revalidate every 1 hour (ISR)
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const projects = await getPublishedProjects();
@@ -79,11 +81,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function DynamicProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
   const project = await getProjectDetailBySlug(id);
 
   if (!project) {
     notFound();
   }
+
+  // Fetch all published projects for Similar Properties showcase
+  const allProjects = await getPublishedProjectDetails();
+  const similarProjects = allProjects
+    .filter((p) => p.id !== project!.id)
+    .slice(0, 3);
 
   const rawOffer = (project as any)?.discountOffer || (project as any)?.discount_offer;
   const offerStatus = getDiscountStatus(rawOffer);
@@ -120,7 +129,7 @@ export default async function DynamicProjectDetailPage({ params }: { params: Pro
         : project.startingPriceEn,
       "priceValidUntil": isOfferActive && offerStatus.offer?.valid_until ? offerStatus.offer.valid_until : undefined,
       "availability": "https://schema.org/InStock",
-      "validFrom": isOfferActive ? new Date().toISOString() : undefined,
+      "validFrom": isOfferActive && (offerStatus.offer as any)?.valid_from ? (offerStatus.offer as any).valid_from : undefined,
     },
   };
 
@@ -130,7 +139,7 @@ export default async function DynamicProjectDetailPage({ params }: { params: Pro
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <DynamicProjectDetailClient project={project} />
+      <DynamicProjectDetailClient project={project} similarProjects={similarProjects} />
     </>
   );
 }
