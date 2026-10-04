@@ -128,6 +128,7 @@ export default function BlogCtaSection() {
             <Link
               key={post.id}
               href={`/blog/${post.id}`}
+              prefetch={false}
               className="home-blog-card block group text-left cursor-pointer border border-[rgba(184,135,59,0.15)] hover:border-[rgba(184,135,59,0.45)] transition-all duration-300"
               style={{
                 background: "linear-gradient(135deg, rgba(18,19,15,0.9) 0%, rgba(12,13,10,1) 100%)",

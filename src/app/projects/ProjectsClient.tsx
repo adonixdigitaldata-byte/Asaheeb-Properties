@@ -184,7 +184,7 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
   const isOfferActive = offerStatus.isActive && !offerStatus.isExpired;
 
   return (
-    <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
+    <Link href={`/projects/${project.id}`} prefetch={false} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
       <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}

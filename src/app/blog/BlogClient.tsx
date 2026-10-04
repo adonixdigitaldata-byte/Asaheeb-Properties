@@ -70,6 +70,7 @@ function PostCard({ post, isAr, readMore }: {
   return (
     <Link
       href={`/blog/${post.id}`}
+      prefetch={false}
       className="block text-left group cursor-pointer"
       dir={isAr ? "rtl" : "ltr"}
     >
@@ -243,7 +244,7 @@ export default function BlogClient({
               {c.featuredLabel}
             </p>
 
-            <Link href={`/blog/${featuredPost.id}`} className="block group">
+            <Link href={`/blog/${featuredPost.id}`} prefetch={false} className="block group">
               <div
                 ref={featuredRef}
                 className="relative overflow-hidden border border-[#B8873B]/30 group-hover:border-[#B8873B]/70 transition-all duration-500 cursor-pointer"

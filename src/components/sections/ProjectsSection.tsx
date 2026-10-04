@@ -36,7 +36,7 @@ function ProjectCard({ project, index }: { project: ProjectDetail; index: number
   const isOfferActive = offerStatus.isActive && !offerStatus.isExpired;
 
   return (
-    <Link href={`/projects/${project.id}`} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
+    <Link href={`/projects/${project.id}`} prefetch={false} className="block text-left" dir={isAr ? "rtl" : "ltr"}>
       <div
         ref={cardRef}
         onMouseEnter={() => setHovered(true)}
@@ -314,7 +314,7 @@ export default function ProjectsSection() {
         {/* ── FEATURED #1 PROJECT CARD ────────────────────────── */}
         {featured && (
           <div ref={featRef} className="mb-8">
-            <Link href={`/projects/${featured.id}`} className="block group">
+            <Link href={`/projects/${featured.id}`} prefetch={false} className="block group">
               <div
                 className="relative overflow-hidden border border-[#B8873B]/30 hover:border-[#B8873B]/70 transition-all duration-500 rounded-sm"
                 style={{

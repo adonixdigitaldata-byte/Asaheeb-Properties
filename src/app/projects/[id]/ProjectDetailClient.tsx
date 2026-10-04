@@ -1616,6 +1616,7 @@ export function ProjectDetailView({
                   <Link
                     key={sim.id}
                     href={`/projects/${sim.id}`}
+                    prefetch={false}
                     className="border border-white/15 bg-[#12140F] rounded-xs overflow-hidden group hover:border-[#B8873B]/50 transition-all flex flex-col shadow-sm"
                   >
                     <div className="relative h-44 w-full overflow-hidden bg-black">

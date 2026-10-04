@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Revalidate every 1 hour (ISR)
-export const revalidate = 3600;
+// Revalidate every 24 hours (ISR)
+export const revalidate = 86400;
 
 export default async function ProjectsPage() {
   const initialProjects = await getPublishedProjectDetails();

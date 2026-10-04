@@ -5,8 +5,10 @@ import { getDiscountStatus } from "@/lib/offerUtils";
 import type { ProjectDetail } from "@/types/database";
 import DynamicProjectDetailClient from "./ProjectDetailClient";
 
-// Revalidate every 1 hour (ISR)
-export const revalidate = 3600;
+// Revalidate every 24 hours (ISR)
+export const revalidate = 86400;
+// Disable on-demand generation for unknown slugs to prevent bot probe cache writes
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const projects = await getPublishedProjects();
@@ -88,11 +90,25 @@ export default async function DynamicProjectDetailPage({ params }: { params: Pro
     notFound();
   }
 
-  // Fetch all published projects for Similar Properties showcase
+  // Fetch all published projects for Similar Properties showcase (streamlined fields to minimize cache write payload)
   const allProjects = await getPublishedProjectDetails();
   const similarProjects = allProjects
     .filter((p) => p.id !== project!.id)
-    .slice(0, 3);
+    .slice(0, 3)
+    .map((p) => ({
+      id: p.id,
+      nameEn: p.nameEn,
+      nameAr: p.nameAr,
+      cityEn: p.cityEn,
+      cityAr: p.cityAr,
+      districtEn: p.districtEn,
+      districtAr: p.districtAr,
+      startingPriceEn: p.startingPriceEn,
+      startingPriceAr: p.startingPriceAr,
+      overviewEn: p.overviewEn,
+      overviewAr: p.overviewAr,
+      images: p.images?.slice(0, 1) || [],
+    })) as ProjectDetail[];
 
   const rawOffer = (project as any)?.discountOffer || (project as any)?.discount_offer;
   const offerStatus = getDiscountStatus(rawOffer);

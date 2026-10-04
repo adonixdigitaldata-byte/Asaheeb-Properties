@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import { getBlogBySlug, getBlogDetailBySlug, getPublishedBlogs } from "@/lib/api";
 import DynamicBlogDetailClient from "./BlogDetailClient";
 
-// Revalidate every 1 hour (ISR)
-export const revalidate = 3600;
+// Revalidate every 24 hours (ISR)
+export const revalidate = 86400;
+// Disable on-demand generation for unknown slugs to prevent bot probe cache writes
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const blogs = await getPublishedBlogs();

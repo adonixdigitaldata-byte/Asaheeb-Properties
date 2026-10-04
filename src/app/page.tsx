@@ -22,8 +22,8 @@ export default function Home() {
   return (
     <>
       <PageNav />
-      {/* ── Dynamic Homepage Campaign Pop-up Modal (Single Source of Truth: CRM / Supabase) ── */}
-      <CampaignPopupModal />
+      {/* ── Dynamic Homepage Campaign Pop-up Modal (Temporarily paused) ── */}
+      {/* <CampaignPopupModal /> */}
 
       <main className="relative bg-[var(--color-ink)] selection:bg-[var(--color-horizon-gold)] selection:text-[var(--color-ink)] transition-all duration-300 pb-16 md:pb-0">
 
