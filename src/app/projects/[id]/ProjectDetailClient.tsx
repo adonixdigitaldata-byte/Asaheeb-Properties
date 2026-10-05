@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
@@ -190,6 +190,8 @@ function parseFloorPlan(plan: any, idx: number): ParsedFloorPlan {
     const baMatch = capEn.match(/(\d+(?:\.\d+)?)\s*(?:bath|bathroom)/i);
     if (baMatch) baths = baMatch[1];
   }
+  if (beds !== undefined && beds !== null) beds = stripEmojis(String(beds)).trim();
+  if (baths !== undefined && baths !== null) baths = stripEmojis(String(baths)).trim();
 
   // 5. Starting price (Deterministic formatting prevents SSR vs client locale hydration mismatch)
   const rawPrice = plan.starting_price || plan.startingPrice || plan.startingPriceEn || plan.starting_price_en;
@@ -259,6 +261,7 @@ export function ProjectDetailView({
   const isAr = lang === "ar";
 
   // Lightbox, Video & Share State
+  const [activeHeroIndex, setActiveHeroIndex] = useState<number>(0);
   const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
   const [activeFloorPlanIndex, setActiveFloorPlanIndex] = useState<number | null>(null);
   const [activePaymentPlanIndex, setActivePaymentPlanIndex] = useState<number | null>(null);
@@ -445,6 +448,38 @@ export function ProjectDetailView({
     },
     [activePaymentPlanIndex, paymentPlanImages.length]
   );
+
+  // Mobile Touch Swipe Gesture Handlers
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const createTouchEndHandler = (onSwipeNext: () => void, onSwipePrev: () => void) => {
+    return (e: React.TouchEvent) => {
+      if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+      const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
+      const deltaY = touchStartYRef.current - e.changedTouches[0].clientY;
+
+      // Minimum swipe distance: 35px; horizontal movement dominates vertical
+      if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.1) {
+        if (deltaX > 0) {
+          // Swiped left
+          if (isAr) onSwipePrev();
+          else onSwipeNext();
+        } else {
+          // Swiped right
+          if (isAr) onSwipeNext();
+          else onSwipePrev();
+        }
+      }
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+    };
+  };
 
   // Keyboard navigation & Escape key for Lightboxes
   useEffect(() => {
@@ -760,40 +795,57 @@ export function ProjectDetailView({
 
           {/* ── BENTO PHOTO GALLERY (PLACED ON TOP AS REQUESTED) ─────────────── */}
           {images.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 mb-5">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 mb-5">
               {/* Left Column: 1 Large Hero Featured Image */}
               <div
-                onClick={() => setActiveImageIndex(0)}
-                className="lg:col-span-8 relative h-72 sm:h-96 lg:h-[460px] overflow-hidden border border-white/15 group cursor-pointer rounded-xs bg-[#10120E] shadow-xl"
+                onClick={() => setActiveImageIndex(activeHeroIndex)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={createTouchEndHandler(
+                  () => setActiveHeroIndex((prev) => (prev + 1) % images.length),
+                  () => setActiveHeroIndex((prev) => (prev - 1 + images.length) % images.length)
+                )}
+                className="lg:col-span-8 relative h-[280px] sm:h-[400px] lg:h-[480px] overflow-hidden border border-white/15 group cursor-pointer rounded-sm bg-[#10120E] shadow-xl"
               >
                 <Image
-                  src={getOptimizedImageUrl(images[0].url, 1600)}
-                  alt={isAr ? images[0].captionAr || project.nameAr : images[0].captionEn || project.nameEn}
+                  src={getOptimizedImageUrl(images[activeHeroIndex]?.url || images[0].url, 1600)}
+                  alt={isAr ? images[activeHeroIndex]?.captionAr || images[0].captionAr || project.nameAr : images[activeHeroIndex]?.captionEn || images[0].captionEn || project.nameEn}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 1024px) 100vw, 67vw"
                   priority
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-300" />
-                <div className={`absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between font-mono text-xs text-white/90 ${isAr ? "flex-row-reverse text-right" : ""}`}>
-                  <span className="inline-flex items-center gap-1.5 bg-black/80 backdrop-blur-sm px-3 py-1 border border-[#B8873B]/50 text-[10px] tracking-wider uppercase text-[#E2B768] font-bold rounded-xs shadow-md">
+                {/* Gradient overlay always visible at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
+
+                {/* Mobile touch swipe counter badge */}
+                <div className={`absolute top-3 ${isAr ? "left-3" : "right-3"} sm:hidden z-10 pointer-events-none`}>
+                  <span className="font-mono text-[9px] tracking-wider bg-black/80 backdrop-blur-xs text-[#E2B768] border border-[#B8873B]/50 px-2.5 py-0.5 rounded-full font-bold shadow-md">
+                    {activeHeroIndex + 1} / {images.length}
+                  </span>
+                </div>
+
+                {/* Bottom info bar */}
+                <div className={`absolute bottom-0 left-0 right-0 p-3.5 flex items-end justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}>
+                  <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
+                    {(images[activeHeroIndex]?.captionEn || images[0].captionEn) && (
+                      <p className="font-sans text-xs sm:text-sm text-white/90 leading-snug line-clamp-2">
+                        {isAr ? images[activeHeroIndex]?.captionAr || images[0].captionAr : images[activeHeroIndex]?.captionEn || images[0].captionEn}
+                      </p>
+                    )}
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 bg-black/70 backdrop-blur-sm px-3 py-1.5 border border-[#B8873B]/50 text-[10px] tracking-wider uppercase text-[#E2B768] font-bold rounded-sm shadow-md shrink-0 group-hover:bg-[#B8873B] group-hover:text-[#080907] transition-all duration-300">
                     <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="11" cy="11" r="8" />
                       <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <span>{isAr ? "تكبير الصورة" : "View Photo"}</span>
+                    <span className="hidden sm:inline">{isAr ? "تكبير" : "Enlarge"}</span>
                   </span>
-                  {images[0].captionEn && (
-                    <span className="font-sans text-xs text-[#FAF6EE] hidden sm:inline-block max-w-sm truncate bg-black/60 px-2.5 py-1 backdrop-blur-xs rounded-xs">
-                      {isAr ? images[0].captionAr : images[0].captionEn}
-                    </span>
-                  )}
                 </div>
               </div>
 
               {/* Right Column: 2 Stacked Images */}
-              <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-3.5 h-auto lg:h-[460px]">
+              <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-2.5 h-auto lg:h-[480px]">
                 {images.slice(1, 3).map((img, i) => {
                   const actualIdx = i + 1;
                   const isLastSlot = i === 1;
@@ -803,34 +855,48 @@ export function ProjectDetailView({
                     <div
                       key={actualIdx}
                       onClick={() => setActiveImageIndex(actualIdx)}
-                      className="relative h-36 sm:h-44 lg:h-full overflow-hidden border border-white/15 group cursor-pointer rounded-xs bg-[#10120E] shadow-xl"
+                      className="relative h-[130px] sm:h-[170px] lg:h-full overflow-hidden border border-white/15 group cursor-pointer rounded-sm bg-[#10120E] shadow-xl"
                     >
                       <Image
                         src={getOptimizedImageUrl(img.url, 1000)}
                         alt={isAr ? img.captionAr || project.nameAr : img.captionEn || project.nameEn}
                         fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-108"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 1024px) 50vw, 33vw"
                         priority={actualIdx === 1}
                       />
-                      <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors duration-300 pointer-events-none" />
 
-                      {/* + N More Photos Overlay */}
-                      {showOverlay ? (
-                        <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex flex-col items-center justify-center text-center p-3 group-hover:bg-black/65 transition-colors">
-                          <span className="font-display text-2xl sm:text-3xl font-bold text-[#E2B768]">
-                            +{extraCount + 1}
-                          </span>
-                          <span className="font-mono text-[9.5px] sm:text-[10px] tracking-[0.2em] uppercase text-white font-bold mt-1">
-                            {isAr ? "جميع الصور" : "View All Photos"}
+                      {/* Image Caption - Always Visible */}
+                      {img.captionEn && (
+                        <p
+                          className={`absolute bottom-2.5 ${isAr ? "right-2.5 text-right" : "left-2.5"} ${
+                            showOverlay
+                              ? isAr
+                                ? "left-28 sm:left-32"
+                                : "right-28 sm:right-32"
+                              : isAr
+                              ? "left-2.5"
+                              : "right-2.5"
+                          } font-sans text-[10px] sm:text-[11px] text-white/90 line-clamp-2 bg-black/60 px-2 py-1 backdrop-blur-xs rounded-xs leading-snug`}
+                        >
+                          {isAr ? img.captionAr : img.captionEn}
+                        </p>
+                      )}
+
+                      {/* + N More Photos Badge (Positioned at bottom-right so 3rd image is 100% visible) */}
+                      {showOverlay && (
+                        <div className={`absolute bottom-2.5 ${isAr ? "left-2.5" : "right-2.5"} z-10`}>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 bg-black/85 hover:bg-[#B8873B] text-[#FAF6EE] hover:text-[#080907] border border-[#B8873B]/70 rounded-xs font-mono text-[10px] sm:text-[11px] tracking-wider uppercase font-bold shadow-2xl backdrop-blur-md transition-all duration-300 group-hover:scale-105">
+                            <svg className="w-3.5 h-3.5 text-[#E2B768] group-hover:text-[#080907]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="3" y="3" width="18" height="18" rx="2" />
+                              <circle cx="8.5" cy="8.5" r="1.5" />
+                              <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                            <span>+{extraCount + 1} {isAr ? "صور" : "Photos"}</span>
                           </span>
                         </div>
-                      ) : (
-                        img.captionEn && (
-                          <div className={`absolute bottom-2.5 left-2.5 right-2.5 font-sans text-xs text-white/90 truncate hidden sm:block bg-black/60 px-2 py-0.5 backdrop-blur-xs ${isAr ? "text-right" : ""}`}>
-                            {isAr ? img.captionAr : img.captionEn}
-                          </div>
-                        )
                       )}
                     </div>
                   );
@@ -840,53 +906,70 @@ export function ProjectDetailView({
           )}
 
           {/* ── 5-METRIC KEY SPECS RIBBON (DIRECTLY UNDER GALLERY) ──────────── */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 pt-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 pt-1">
             {/* Price Range */}
-            <div className="p-3.5 sm:p-4 border border-[#B8873B]/25 bg-[#12140F] rounded-xs shadow-sm">
-              <div className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#C99A49] mb-1 font-semibold">
-                {isAr ? "نطاق الأسعار" : "Price Range"}
+            <div className="p-3 sm:p-4 border border-[#B8873B]/30 bg-[#12140F] rounded-sm shadow-sm hover:border-[#B8873B]/50 transition-colors">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <svg className="w-3 h-3 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                </svg>
+                <span className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#C99A49] font-semibold">{isAr ? "نطاق الأسعار" : "Price Range"}</span>
               </div>
-              <div className="font-display text-base sm:text-lg text-[#E2B768] font-bold">
+              <div className="font-display text-sm sm:text-base text-[#E2B768] font-bold leading-tight">
                 {isAr ? project.priceRangeAr || project.startingPriceAr : project.priceRangeEn || project.startingPriceEn}
               </div>
             </div>
 
             {/* Size */}
-            <div className="p-3.5 sm:p-4 border border-[#B8873B]/25 bg-[#12140F] rounded-xs shadow-sm">
-              <div className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#C99A49] mb-1 font-semibold">
-                {isAr ? "مساحة الوحدات" : "Property Sizes"}
+            <div className="p-3 sm:p-4 border border-[#B8873B]/30 bg-[#12140F] rounded-sm shadow-sm hover:border-[#B8873B]/50 transition-colors">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <svg className="w-3 h-3 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+                </svg>
+                <span className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#C99A49] font-semibold">{isAr ? "مساحة الوحدات" : "Unit Sizes"}</span>
               </div>
-              <div className="font-display text-sm sm:text-base text-[#FAF6EE] font-bold">
+              <div className="font-display text-sm sm:text-base text-[#FAF6EE] font-bold leading-tight">
                 {isAr ? project.sizeAr : project.sizeEn}
               </div>
             </div>
 
             {/* Type */}
-            <div className="p-3.5 sm:p-4 border border-[#B8873B]/25 bg-[#12140F] rounded-xs shadow-sm">
-              <div className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#C99A49] mb-1 font-semibold">
-                {isAr ? "نوع العقار" : "Property Type"}
+            <div className="p-3 sm:p-4 border border-[#B8873B]/30 bg-[#12140F] rounded-sm shadow-sm hover:border-[#B8873B]/50 transition-colors">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <svg className="w-3 h-3 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#C99A49] font-semibold">{isAr ? "نوع العقار" : "Property Type"}</span>
               </div>
-              <div className="font-display text-sm sm:text-base text-[#FAF6EE] font-bold truncate">
+              <div className="font-display text-sm sm:text-base text-[#FAF6EE] font-bold leading-tight">
                 {isAr ? project.typeAr : project.typeEn}
               </div>
             </div>
 
             {/* Status */}
-            <div className="p-3.5 sm:p-4 border border-[#B8873B]/25 bg-[#12140F] rounded-xs shadow-sm">
-              <div className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#C99A49] mb-1 font-semibold">
-                {isAr ? "حالة المشروع" : "Project Status"}
+            <div className="p-3 sm:p-4 border border-[#B8873B]/30 bg-[#12140F] rounded-sm shadow-sm hover:border-[#B8873B]/50 transition-colors">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <svg className="w-3 h-3 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#C99A49] font-semibold">{isAr ? "حالة المشروع" : "Status"}</span>
               </div>
-              <div className="font-display text-sm sm:text-base text-[#B8873B] font-bold">
+              <div className="font-display text-sm sm:text-base text-[#B8873B] font-bold leading-tight">
                 {isAr ? project.statusAr : project.statusEn}
               </div>
             </div>
 
             {/* Delivery or Total Units */}
-            <div className="p-3.5 sm:p-4 border border-[#B8873B]/25 bg-[#12140F] rounded-xs shadow-sm col-span-2 sm:col-span-1">
-              <div className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-[#C99A49] mb-1 font-semibold">
-                {project.expectedDeliveryEn ? (isAr ? "التسليم المتوقع" : "Expected Delivery") : (isAr ? "عدد الوحدات" : "Total Units")}
+            <div className="p-3 sm:p-4 border border-[#B8873B]/30 bg-[#12140F] rounded-sm shadow-sm hover:border-[#B8873B]/50 transition-colors col-span-2 sm:col-span-1">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <svg className="w-3 h-3 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#C99A49] font-semibold">
+                  {project.expectedDeliveryEn ? (isAr ? "التسليم المتوقع" : "Delivery") : (isAr ? "عدد الوحدات" : "Total Units")}
+                </span>
               </div>
-              <div className="font-display text-sm sm:text-base text-[#8FC3D1] font-bold">
+              <div className="font-display text-sm sm:text-base text-[#8FC3D1] font-bold leading-tight">
                 {project.expectedDeliveryEn
                   ? (isAr ? project.expectedDeliveryAr : project.expectedDeliveryEn)
                   : (isAr ? project.unitsCountAr || "متوفر" : project.unitsCountEn || "Available")}
@@ -1100,18 +1183,18 @@ export function ProjectDetailView({
             )}
 
             {/* Space-Saving Architectural Layout Cards Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {visibleFloorPlans.map((plan: ParsedFloorPlan) => (
                 <div
                   key={plan.originalIndex}
-                  className="border border-white/15 hover:border-[#B8873B]/50 bg-[#12140F] rounded-xs overflow-hidden flex flex-col sm:flex-row group transition-all duration-300 shadow-md min-w-0"
+                  className="border border-white/15 hover:border-[#B8873B]/50 bg-gradient-to-b from-[#141711] to-[#0E100C] rounded-sm overflow-hidden flex flex-col sm:flex-row group transition-all duration-300 shadow-md hover:shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
                 >
                   {/* Left: Blueprint Preview Canvas */}
                   <div
                     onClick={() => setActiveFloorPlanIndex(plan.originalIndex)}
-                    className="relative w-full sm:w-52 md:w-56 shrink-0 h-48 sm:h-auto min-h-[190px] bg-[#181B15] p-2.5 flex items-center justify-center cursor-pointer overflow-hidden border-b sm:border-b-0 sm:border-r border-white/10 rtl:sm:border-r-0 rtl:sm:border-l"
+                    className="relative w-full sm:w-52 md:w-56 shrink-0 h-52 sm:h-auto min-h-[220px] bg-[#181B15] p-2.5 flex items-center justify-center cursor-pointer overflow-hidden border-b sm:border-b-0 sm:border-r border-white/10 rtl:sm:border-r-0 rtl:sm:border-l"
                   >
-                    <div className="relative w-full h-full bg-white/95 rounded-xs p-2 flex items-center justify-center shadow-inner">
+                    <div className="relative w-full h-full bg-white/97 rounded-xs p-2 flex items-center justify-center shadow-inner">
                       <Image
                         src={getOptimizedImageUrl(plan.url, 1200)}
                         alt={isAr ? plan.modelAr : plan.modelEn}
@@ -1122,7 +1205,7 @@ export function ProjectDetailView({
                     </div>
 
                     {/* Top Left: Category Badge */}
-                    <div className="absolute top-2 left-2 bg-black/85 backdrop-blur-sm px-2 py-0.5 font-mono text-[9px] tracking-wider text-[#E2B768] border border-[#B8873B]/40 font-bold rounded-xs shadow-sm uppercase">
+                    <div className="absolute top-2 left-2 rtl:left-auto rtl:right-2 bg-black/85 backdrop-blur-sm px-2 py-0.5 font-mono text-[9px] tracking-wider text-[#E2B768] border border-[#B8873B]/40 font-bold rounded-xs shadow-sm uppercase">
                       {isAr ? plan.categoryAr : plan.categoryEn}
                     </div>
 
@@ -1140,106 +1223,115 @@ export function ProjectDetailView({
                     </div>
                   </div>
 
-                  {/* Right: Compact Specs & Content */}
-                  <div className={`p-4 sm:p-4.5 flex-1 min-w-0 flex flex-col justify-between overflow-hidden ${isAr ? "text-right" : ""}`}>
-                    <div className="min-w-0 w-full overflow-hidden">
-                      {/* Header: Model Title & Starting Price */}
-                      <div className={`flex items-start justify-between gap-3 mb-2.5 min-w-0 ${isAr ? "flex-row-reverse" : ""}`}>
-                        <div className="flex-1 min-w-0 overflow-hidden">
-                          <h3
-                            className="font-display text-base sm:text-lg text-[#FAF6EE] font-bold truncate block w-full"
-                            title={isAr ? plan.modelAr : plan.modelEn}
-                          >
-                            {isAr ? plan.modelAr : plan.modelEn}
-                          </h3>
-                        </div>
+                  {/* Right: Architectural Content & Specs */}
+                  <div className={`p-4 flex-1 flex flex-col justify-between ${isAr ? "text-right" : ""}`}>
+                    <div className="w-full">
+                      {/* 1. Model Title (Full Width - No crowded price eating space) */}
+                      <h3 className="font-display text-lg sm:text-xl text-[#FAF6EE] font-bold leading-tight break-words mb-2">
+                        {isAr ? plan.modelAr : plan.modelEn}
+                      </h3>
 
-                        {(isAr ? plan.startingPriceAr : plan.startingPriceEn) && (
-                          <span className="font-mono text-xs sm:text-[13px] tracking-wider font-extrabold text-[#080907] bg-[#B8873B] px-2.5 py-1 rounded-xs shrink-0 whitespace-nowrap shadow-sm">
-                            {isAr ? plan.startingPriceAr : plan.startingPriceEn}
+                      {/* 2. Compact Specs using clear native monochrome icons (Zero verbose clutter, luxury gold styling) */}
+                      <div className={`flex items-center gap-2 mb-3 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+                        {plan.bedrooms && (
+                          <span
+                            title={isAr ? `${plan.bedrooms} غرف نوم` : `${plan.bedrooms} Bedrooms`}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.04] border border-white/10 rounded-xs text-xs font-bold text-[#FAF6EE] shadow-xs"
+                          >
+                            <svg className="w-4 h-4 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M2 4v16" />
+                              <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                              <path d="M2 17h20" />
+                              <path d="M6 8v9" />
+                            </svg>
+                            <span>{plan.bedrooms}</span>
+                          </span>
+                        )}
+                        {plan.bathrooms && (
+                          <span
+                            title={isAr ? `${plan.bathrooms} دورات مياه` : `${plan.bathrooms} Bathrooms`}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.04] border border-white/10 rounded-xs text-xs font-bold text-[#FAF6EE] shadow-xs"
+                          >
+                            <svg className="w-4 h-4 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-1.5C4.7 2 4 2.7 4 3.5V5" />
+                              <path d="M2 12h20" />
+                              <path d="M7 12v-2a2 2 0 0 1 2-2h1" />
+                              <path d="M4 12v5a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-5" />
+                              <path d="m6 19-1.5 2" />
+                              <path d="m18 19 1.5 2" />
+                            </svg>
+                            <span>{plan.bathrooms}</span>
+                          </span>
+                        )}
+                        {plan.areaEn && (
+                          <span
+                            title={isAr ? `المساحة ${isAr ? plan.areaAr : plan.areaEn}` : `Total Area ${plan.areaEn}`}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#B8873B]/10 border border-[#B8873B]/35 rounded-xs text-xs font-bold text-[#E2B768] shadow-xs"
+                          >
+                            <svg className="w-4 h-4 text-[#C99A49] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M21.17 19.34 4.66 2.83A1 1 0 0 0 3 3.53V20a1 1 0 0 0 1 1h16.47a1 1 0 0 0 .7-1.66z" />
+                              <path d="M7 21v-3M11 21v-2M15 21v-3" />
+                            </svg>
+                            <span>{isAr ? plan.areaAr : plan.areaEn}</span>
                           </span>
                         )}
                       </div>
 
-                      {/* Compact 3-Metric Specs Ribbon */}
-                      <div className="grid grid-cols-3 gap-1.5 p-2 bg-white/[0.03] border border-white/10 rounded-xs mb-2.5">
-                        {/* Bedrooms */}
-                        <div className="text-center border-r border-white/10 last:border-0 rtl:border-r-0 rtl:border-l">
-                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#A89F91] block mb-0.5 font-medium">
-                            {isAr ? "الغرف" : "Beds"}
-                          </span>
-                          <span className="font-sans text-xs sm:text-sm font-bold text-[#FAF6EE]">
-                            {plan.bedrooms ? `${plan.bedrooms}` : (isAr ? plan.categoryAr : plan.categoryEn)}
-                          </span>
-                        </div>
-
-                        {/* Bathrooms */}
-                        <div className="text-center border-r border-white/10 last:border-0 rtl:border-r-0 rtl:border-l">
-                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#A89F91] block mb-0.5 font-medium">
-                            {isAr ? "الحمامات" : "Baths"}
-                          </span>
-                          <span className="font-sans text-xs sm:text-sm font-bold text-[#FAF6EE]">
-                            {plan.bathrooms ? `${plan.bathrooms}` : (isAr ? "معتمدة" : "Standard")}
-                          </span>
-                        </div>
-
-                        {/* Net Area */}
-                        <div className="text-center">
-                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#A89F91] block mb-0.5 font-medium">
-                            {isAr ? "المساحة" : "Area"}
-                          </span>
-                          <span className="font-sans text-xs sm:text-sm font-bold text-[#E2B768]">
-                            {plan.areaEn ? (isAr ? plan.areaAr : plan.areaEn) : (isAr ? "حسب المخطط" : "As per plan")}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Features Pills (Compact Single Row) */}
+                      {/* 3. Features Pills */}
                       {((isAr ? plan.featuresAr : plan.featuresEn) || []).length > 0 && (
                         <div className={`flex flex-wrap gap-1.5 mb-2.5 ${isAr ? "justify-end" : ""}`}>
-                          {(isAr ? plan.featuresAr : plan.featuresEn)!.slice(0, 3).map((feat: string, fIdx: number) => (
-                            <span
-                              key={fIdx}
-                              className="font-sans text-[11px] text-[#FAF6EE]/85 px-2 py-0.5 border border-white/15 bg-white/[0.04] rounded-xs"
-                            >
+                          {(isAr ? plan.featuresAr : plan.featuresEn)!.map((feat: string, fIdx: number) => (
+                            <span key={fIdx} className="font-sans text-[10px] sm:text-[10.5px] text-[#FAF6EE]/80 px-2 py-0.5 border border-white/15 bg-white/[0.04] rounded-xs">
                               {feat}
                             </span>
                           ))}
                         </div>
                       )}
 
-                      {/* Short Description (only if distinct from model title) */}
+                      {/* 4. Full Architectural Description - Completely Visible */}
                       {(() => {
                         const rawDesc = (isAr ? plan.captionAr : plan.captionEn) || "";
                         const modelTitle = (isAr ? plan.modelAr : plan.modelEn) || "";
-                        if (!rawDesc.trim() || rawDesc.trim().toLowerCase() === modelTitle.trim().toLowerCase()) {
-                          return null;
-                        }
+                        if (!rawDesc.trim() || rawDesc.trim().toLowerCase() === modelTitle.trim().toLowerCase()) return null;
                         return (
-                          <p className="font-sans text-xs text-[#A89F91] line-clamp-2 leading-relaxed mb-3">
-                            {rawDesc}
-                          </p>
+                          <div className="my-2 p-2.5 bg-black/30 border-l-2 border-[#B8873B]/70 rtl:border-l-0 rtl:border-r-2 rounded-xs">
+                            <p className="font-sans text-xs text-[#D8D0C3] leading-relaxed break-words">
+                              {rawDesc}
+                            </p>
+                          </div>
                         );
                       })()}
                     </div>
 
-                    {/* Compact Action Buttons */}
-                    <div className={`flex items-center gap-2 pt-2.5 border-t border-white/10 ${isAr ? "flex-row-reverse" : ""}`}>
-                      <button
-                        type="button"
-                        onClick={() => setActiveFloorPlanIndex(plan.originalIndex)}
-                        className="flex-1 py-1.5 font-mono text-[10px] tracking-wider uppercase border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] transition-all text-center rounded-xs cursor-pointer font-medium"
-                      >
-                        {isAr ? "تكبير المخطط" : "Enlarge Blueprint"}
-                      </button>
+                    {/* 5. Bottom Price & Action Buttons */}
+                    <div className="pt-3 border-t border-white/10 mt-2">
+                      {(isAr ? plan.startingPriceAr : plan.startingPriceEn) && (
+                        <div className={`flex items-baseline justify-between mb-2.5 ${isAr ? "flex-row-reverse" : ""}`}>
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#A89F91]">
+                            {isAr ? "السعر" : "Price"}
+                          </span>
+                          <span className="font-sans text-lg sm:text-xl font-extrabold text-[#E2B768] tracking-tight">
+                            {isAr ? plan.startingPriceAr : plan.startingPriceEn}
+                          </span>
+                        </div>
+                      )}
 
-                      <button
-                        type="button"
-                        onClick={() => handleInquireOnLayout(plan)}
-                        className="flex-1 py-1.5 font-mono text-[10px] tracking-wider uppercase bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] font-bold transition-all text-center rounded-xs cursor-pointer shadow-sm"
-                      >
-                        {isAr ? "طلب حجز النموذج" : "Inquire Layout"}
-                      </button>
+                      <div className={`flex items-center gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
+                        <button
+                          type="button"
+                          onClick={() => setActiveFloorPlanIndex(plan.originalIndex)}
+                          className="flex-1 py-2 font-mono text-[10px] tracking-wider uppercase border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] transition-all text-center rounded-xs cursor-pointer font-medium"
+                        >
+                          {isAr ? "تكبير المخطط" : "View Blueprint"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleInquireOnLayout(plan)}
+                          className="flex-1 py-2 font-mono text-[10px] tracking-wider uppercase bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] font-bold transition-all text-center rounded-xs cursor-pointer shadow-sm"
+                        >
+                          {isAr ? "طلب حجز النموذج" : "Inquire Layout"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1250,30 +1342,35 @@ export function ProjectDetailView({
         </section>
       )}
 
-      {/* ── 5. VISUAL PAYMENT PLAN IMAGE GALLERY (PURE IMAGE GALLERY) ── */}
+      {/* ── 5. VISUAL PAYMENT PLAN IMAGE GALLERY (LAYOUT-SPECIFIC PAYMENT PLANS) ── */}
       {hasPaymentImages && (
         <section className="py-12 sm:py-16 px-4 sm:px-8 lg:px-16 border-b border-white/10 bg-[#080907]">
           <div className="max-w-6xl mx-auto">
             
             <div className={`mb-6 ${isAr ? "text-right" : ""}`}>
               <span className="font-mono text-[9.5px] tracking-[0.25em] uppercase text-[#C99A49] block mb-1 font-bold">
-                {isAr ? "معرض خطط السداد" : "Payment Plans"}
+                {isAr ? "خطط السداد لكل نموذج" : "Payment Plans by Layout"}
               </span>
-              <h2 className="font-display text-2xl sm:text-3xl text-[#FAF6EE] font-bold">
-                {isAr ? "مخططات وخطط السداد المصورة" : "Payment Plans Gallery"}
+              <h2 className="font-display text-2xl sm:text-3xl text-[#FAF6EE] font-bold mb-1.5">
+                {isAr ? "خطط السداد المخصصة لكل نموذج" : "Payment Plans for Each Layout"}
               </h2>
+              <p className="font-sans text-xs sm:text-[13px] text-[#A89F91] max-w-xl">
+                {isAr
+                  ? "جداول وهياكل دفعات مخصصة ومطابقة لكل نموذج سكني مع تفاصيل دفعات الإسكرو والأقساط."
+                  : "Tailored payment structures, installment milestones, and escrow terms customized for each unit layout."}
+              </p>
             </div>
 
             {/* Visual Payment Plan Image Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {paymentPlanImages.map((planImg, idx) => {
-                const titleText = (isAr ? planImg.titleAr : planImg.titleEn) || (isAr ? `خطة سداد 0${idx + 1}` : `Payment Plan 0${idx + 1}`);
+                const titleText = (isAr ? planImg.titleAr : planImg.titleEn) || (isAr ? `خطة سداد النموذج 0${idx + 1}` : `Layout Payment Plan 0${idx + 1}`);
 
                 return (
                   <div
                     key={idx}
                     onClick={() => setActivePaymentPlanIndex(idx)}
-                    className="border border-white/15 hover:border-[#B8873B]/60 bg-[#12140F] rounded-xs overflow-hidden group transition-all duration-300 shadow-md cursor-pointer flex flex-col"
+                    className="border border-white/15 hover:border-[#B8873B]/60 bg-gradient-to-b from-[#141711] to-[#0E100C] rounded-xs overflow-hidden group transition-all duration-300 shadow-md hover:shadow-[0_8px_30px_rgba(0,0,0,0.45)] cursor-pointer flex flex-col"
                   >
                     {/* Image Canvas with hover zoom */}
                     <div className="relative w-full h-56 sm:h-64 bg-[#181B15] p-2.5 flex items-center justify-center overflow-hidden border-b border-white/10">
@@ -1301,14 +1398,24 @@ export function ProjectDetailView({
                       </div>
                     </div>
 
-                    {/* Title Bar Only (No Summary) */}
-                    <div className={`p-3.5 bg-[#12140F] flex items-center justify-between gap-2 ${isAr ? "flex-row-reverse text-right" : ""}`}>
-                      <span className="font-sans text-xs sm:text-sm text-[#FAF6EE] font-semibold truncate flex-1">
-                        {titleText}
-                      </span>
-                      <span className="font-mono text-[9.5px] text-[#B8873B] group-hover:text-white transition-colors shrink-0 font-semibold">
-                        {isAr ? "عرض ←" : "View →"}
-                      </span>
+                    {/* Architectural Layout Payment Card Bar */}
+                    <div className={`p-4 bg-[#12140F] flex flex-col justify-between flex-1 gap-2.5 ${isAr ? "text-right" : ""}`}>
+                      <div>
+                        <span className="inline-block font-mono text-[8.5px] tracking-wider uppercase text-[#C99A49] bg-[#B8873B]/10 border border-[#B8873B]/30 px-2 py-0.5 rounded-xs mb-1.5 font-semibold">
+                          {isAr ? `خطة سداد النموذج 0${idx + 1}` : `Layout Payment Plan 0${idx + 1}`}
+                        </span>
+                        <h4 className="font-sans text-xs sm:text-sm text-[#FAF6EE] font-semibold line-clamp-2 leading-snug">
+                          {titleText}
+                        </h4>
+                      </div>
+                      <div className={`flex items-center justify-between pt-2 border-t border-white/10 ${isAr ? "flex-row-reverse" : ""}`}>
+                        <span className="font-mono text-[9px] text-[#A89F91] uppercase tracking-wider">
+                          {isAr ? "مخطط سداد تفصيلي" : "Full Payment Breakdown"}
+                        </span>
+                        <span className="font-mono text-[10px] text-[#E2B768] group-hover:text-white transition-colors font-bold flex items-center gap-1">
+                          {isAr ? "عرض الخطة ←" : "View Plan →"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
@@ -1464,135 +1571,213 @@ export function ProjectDetailView({
         </section>
       )}
 
-      {/* ── 9. DEDICATED INQUIRY VIP FORM (COMPACT & PROPORTIONAL) ─────────── */}
-      <section id="section-inquiry" className="py-16 sm:py-20 px-4 sm:px-8 lg:px-16 bg-[#080907] border-b border-white/10">
-        <div className="max-w-xl mx-auto">
-          <div className="text-center mb-7">
-            <span className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#C99A49] block mb-1.5 font-semibold">
-              {isAr ? "حجز استشارة خاصة" : "Priority Allocation"}
-            </span>
-            <h2 className="font-display text-2xl sm:text-3xl text-[#FAF6EE] mb-2">
-              {isAr ? `استفسار عن ${project.nameAr}` : `Inquire on ${project.nameEn}`}
-            </h2>
-            <p className="font-sans text-xs text-[#A89F91] max-w-sm mx-auto">
-              {isAr
-                ? "سيتواصل معك مستشار عقاري مرخص من أصاهيب لتزويدك بكافة الخيارات والأسعار."
-                : "A licensed Asaheeb investment advisor will contact you shortly with verified availability."}
-            </p>
-          </div>
+      {/* ── 9. DEDICATED INQUIRY VIP FORM (STREAMLINED 2-COLUMN LUXURY) ───── */}
+      <section id="section-inquiry" className="py-10 sm:py-14 px-4 sm:px-8 lg:px-16 bg-[#080907] border-b border-white/10">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            
+            {/* ── LEFT PART: Architectural Image & Value Proposition Text ───── */}
+            <div className={`lg:col-span-5 flex flex-col justify-between space-y-6 ${isAr ? "text-right" : ""}`}>
+              <div>
+                <span className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#C99A49] block mb-2 font-bold">
+                  {isAr ? "حجز استشارة خاصة وتخصيص مباشر" : "Priority Allocation & Advisory"}
+                </span>
+                <h2 className="font-display text-2xl sm:text-3xl text-[#FAF6EE] mb-3 leading-tight">
+                  {isAr ? `استفسار عن ${project.nameAr}` : `Inquire About ${project.nameEn}`}
+                </h2>
+                <p className="font-sans text-xs sm:text-[13px] text-[#A89F91] leading-relaxed mb-5">
+                  {isAr
+                    ? "احصل على استشارة استثمارية خاصة من فريق أصاهيب العقارية المرخص للاطلاع على أحدث المخططات، خطط السداد الدقيقة، وحجز أفضل الوحدات المتاحة مباشرة."
+                    : "Connect directly with our licensed Asaheeb portfolio advisors to access verified real-time availability, customized installment structures, and priority unit allocations."}
+                </p>
 
-          {submitted ? (
-            <div className="p-6 sm:p-8 border border-[#B8873B]/50 bg-[#B8873B]/10 text-center space-y-3 rounded-xs shadow-lg">
-              <div className="w-10 h-10 rounded-full bg-[#B8873B] text-[#080907] flex items-center justify-center text-xl mx-auto font-bold">
-                ✓
-              </div>
-              <h3 className="font-display text-xl text-[#FAF6EE]">
-                {isAr ? "تم استلام طلبكم بنجاح" : "Inquiry Received Successfully"}
-              </h3>
-              <p className="font-sans text-xs text-[#D4CDC1] max-w-sm mx-auto">
-                {isAr
-                  ? "شكراً لاهتمامكم. سيقوم مستشار أصاهيب العقاري بالتواصل معكم فوراً."
-                  : "Thank you for reaching out. An Asaheeb advisor will connect with you shortly."}
-              </p>
-              <div className="pt-2">
-                <a
-                  href={getProjectWhatsAppLink(project.nameEn, project.nameAr, isAr)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase text-[#25D366] hover:underline font-bold"
-                >
-                  {isAr ? "أو راسلنا عبر واتساب" : "Or Chat Directly on WhatsApp"}
-                </a>
+                {/* Featured Architectural Project Image Card */}
+                {images.length > 0 && (
+                  <div className="relative h-48 sm:h-56 w-full rounded-sm overflow-hidden border border-white/15 shadow-xl mb-6 group">
+                    <Image
+                      src={getOptimizedImageUrl(images[0].url, 800)}
+                      alt={isAr ? project.nameAr : project.nameEn}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                    <div className={`absolute bottom-3 left-3 right-3 flex items-center justify-between text-white ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="font-mono text-[9px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-1 border border-[#B8873B]/40 rounded-xs font-bold">
+                        {isAr ? `${project.districtAr} · ${project.cityAr}` : `${project.districtEn}, ${project.cityEn}`}
+                      </span>
+                      <span className="font-mono text-[9px] tracking-wider uppercase text-white/80 font-medium">
+                        {isAr ? "حساب ضمان وافي" : "Wafi Escrow"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* VIP Investor Guarantees & Benefits */}
+                <div className="space-y-3 p-4 bg-[#12140F] border border-white/10 rounded-sm">
+                  <h4 className="font-mono text-[9.5px] uppercase tracking-wider text-[#E2B768] font-bold">
+                    {isAr ? "مزايا الحجز والاستشارة مع أصاهيب" : "Why Inquire Through Asaheeb"}
+                  </h4>
+                  <div className="space-y-2 text-xs text-[#FAF6EE]/85 font-sans">
+                    <div className={`flex items-start gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="text-[#C99A49] text-sm leading-none shrink-0 font-bold">✓</span>
+                      <span>{isAr ? "أسعار المطور الرسمية المباشرة بدون أي عمولة أو سعي." : "Direct developer pricing with zero brokerage fees or markups."}</span>
+                    </div>
+                    <div className={`flex items-start gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="text-[#C99A49] text-sm leading-none shrink-0 font-bold">✓</span>
+                      <span>{isAr ? "أولوية تخصيص الوحدات المميزة والإطلالات الخاصة." : "Priority allocation for top-tier views and premium penthouse layouts."}</span>
+                    </div>
+                    <div className={`flex items-start gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
+                      <span className="text-[#C99A49] text-sm leading-none shrink-0 font-bold">✓</span>
+                      <span>{isAr ? "مستشار عقاري مرخص من الهيئة العامة للعقار (فال)." : "Accredited advisor certified by the General Authority for Real Estate (REGA)."}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 bg-[#12140F] p-5 sm:p-7 border border-white/15 rounded-xs shadow-lg">
-              {errorMsg && (
-                <div className="p-2.5 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-sans text-center rounded-xs">
-                  {errorMsg}
+
+            {/* ── RIGHT PART: Vertical Form Layout ───────────────────────────── */}
+            <div className="lg:col-span-7">
+              {submitted ? (
+                <div className="p-8 sm:p-10 border border-[#B8873B]/50 bg-[#12140F] text-center space-y-4 rounded-sm shadow-xl">
+                  <div className="w-14 h-14 rounded-full bg-[#B8873B] text-[#080907] flex items-center justify-center text-2xl mx-auto font-bold shadow-lg">
+                    ✓
+                  </div>
+                  <h3 className="font-display text-2xl text-[#FAF6EE]">
+                    {isAr ? "تم استلام طلبكم بنجاح" : "Inquiry Received Successfully"}
+                  </h3>
+                  <p className="font-sans text-xs sm:text-sm text-[#D4CDC1] max-w-md mx-auto leading-relaxed">
+                    {isAr
+                      ? "شكراً لاهتمامكم. سيقوم مستشار أصاهيب العقاري بالتواصل معكم فوراً لتزويدكم بكافة التفاصيل."
+                      : "Thank you for reaching out. An Asaheeb investment advisor will contact you shortly with full documentation."}
+                  </p>
+                  <div className="pt-3">
+                    <a
+                      href={getProjectWhatsAppLink(project.nameEn, project.nameAr, isAr)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 font-mono text-[10.5px] tracking-widest uppercase text-[#080907] bg-[#25D366] hover:bg-[#20bd5a] font-bold rounded-xs shadow-md transition-all"
+                    >
+                      <span>{isAr ? "متابعة المحادثة عبر واتساب" : "Continue Chat on WhatsApp"}</span>
+                    </a>
+                  </div>
                 </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="bg-[#12140F] p-6 sm:p-8 border border-white/15 rounded-sm shadow-xl space-y-4">
+                  {errorMsg && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-sans text-center rounded-xs">
+                      {errorMsg}
+                    </div>
+                  )}
+
+                  {/* Clean Vertical Form Fields */}
+                  <div>
+                    <label className={labelClass}>{isAr ? "الاسم الكامل *" : "Full Name *"}</label>
+                    <input
+                      type="text"
+                      required
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      onFocus={() => setFocused("name")}
+                      onBlur={() => setFocused(null)}
+                      placeholder={isAr ? "سلطان القحطاني" : "e.g. Abdullah Al-Otaibi"}
+                      className={inputClass("name")}
+                    />
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>{isAr ? "رقم الهاتف / الواتساب *" : "Phone / WhatsApp Number *"}</label>
+                    <PhoneInputWithCountry
+                      value={form.phone}
+                      onChange={(val) => setForm({ ...form, phone: val })}
+                      isAr={isAr}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>{isAr ? "البريد الإلكتروني" : "Email Address"}</label>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      onFocus={() => setFocused("email")}
+                      onBlur={() => setFocused(null)}
+                      placeholder="name@domain.com"
+                      className={inputClass("email")}
+                    />
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>{isAr ? "الميزانية التقريبية" : "Approximate Budget"}</label>
+                    <select
+                      value={form.budget}
+                      onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                      className="w-full bg-[#0A0C08] border border-[#B8873B]/20 px-3.5 py-2.5 text-xs font-sans text-[#FAF6EE] focus:outline-none focus:border-[#B8873B] rounded-xs"
+                    >
+                      <option value="">{isAr ? "اختر نطاق الميزانية" : "Select budget range"}</option>
+                      <option value="under_1m">{isAr ? "أقل من ١ مليون ريال" : "Under SAR 1M"}</option>
+                      <option value="1m_2m">{isAr ? "١ – ٢ مليون ريال" : "SAR 1M – 2M"}</option>
+                      <option value="2m_4m">{isAr ? "٢ – ٤ مليون ريال" : "SAR 2M – 4M"}</option>
+                      <option value="above_4m">{isAr ? "أكثر من ٤ مليون ريال" : "Above SAR 4M"}</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>{isAr ? "ملاحظات أو استفسار خاص" : "Inquiry / Requirements"}</label>
+                    <textarea
+                      rows={3}
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      onFocus={() => setFocused("message")}
+                      onBlur={() => setFocused(null)}
+                      placeholder={
+                        isAr
+                          ? "هل ترغب في معرفة المخططات أو خطط التقسيط الخاصة بنموذج معين؟"
+                          : "Interested in payment plan breakdown or specific unit layout?"
+                      }
+                      className={inputClass("message")}
+                    />
+                  </div>
+
+                  {/* Actions & Privacy */}
+                  <div className="pt-2 space-y-3">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-3.5 font-mono text-[10.5px] sm:text-[11px] tracking-[0.2em] uppercase font-bold border border-[#B8873B] bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-md rounded-xs"
+                    >
+                      {isSubmitting
+                        ? isAr ? "جاري الإرسال..." : "Submitting..."
+                        : isAr ? "إرسال طلب الاستفسار" : "Submit Priority Inquiry"}
+                    </button>
+
+                    <a
+                      href={getProjectWhatsAppLink(project.nameEn, project.nameAr, isAr)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-full flex items-center justify-center gap-2 py-3 font-mono text-[10px] sm:text-[10.5px] tracking-[0.16em] uppercase font-semibold border border-[#25D366]/40 text-[#25D366] bg-[#25D366]/10 hover:bg-[#25D366]/20 transition-all duration-300 rounded-xs ${isAr ? "flex-row-reverse" : ""}`}
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                      </svg>
+                      <span>{isAr ? "استفسار مباشر عبر واتساب" : "Direct WhatsApp Inquiry"}</span>
+                    </a>
+
+                    {/* Privacy Badge */}
+                    <div className={`flex items-center justify-center gap-1.5 text-[#A89F91] pt-1 ${isAr ? "flex-row-reverse" : ""}`}>
+                      <svg className="w-3 h-3 text-[#B8873B] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                      </svg>
+                      <span className="font-sans text-[10px]">
+                        {isAr ? "بياناتك مشفرة ومحمية بخصوصية وسرية تامة." : "Your information is strictly encrypted, confidential & never shared."}
+                      </span>
+                    </div>
+                  </div>
+                </form>
               )}
-
-              <div>
-                <label className={labelClass}>{isAr ? "الاسم الكامل *" : "Full Name *"}</label>
-                <input
-                  type="text"
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  onFocus={() => setFocused("name")}
-                  onBlur={() => setFocused(null)}
-                  placeholder={isAr ? "سلطان القحطاني" : "e.g. Abdullah Al-Otaibi"}
-                  className={inputClass("name")}
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>{isAr ? "رقم الهاتف / الواتساب *" : "Phone / WhatsApp Number *"}</label>
-                <PhoneInputWithCountry
-                  value={form.phone}
-                  onChange={(val) => setForm({ ...form, phone: val })}
-                  isAr={isAr}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>{isAr ? "البريد الإلكتروني" : "Email Address"}</label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  onFocus={() => setFocused("email")}
-                  onBlur={() => setFocused(null)}
-                  placeholder="name@domain.com"
-                  className={inputClass("email")}
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>{isAr ? "الميزانية الاستثمارية التقريبية" : "Approximate Budget"}</label>
-                <select
-                  value={form.budget}
-                  onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                  className="w-full bg-[#0A0C08] border border-[#B8873B]/20 px-3 py-2.5 text-xs font-sans text-[#FAF6EE] focus:outline-none focus:border-[#B8873B] rounded-xs"
-                >
-                  <option value="">{isAr ? "اختر نطاق الميزانية" : "Select budget range"}</option>
-                  <option value="under_1m">{isAr ? "أقل من ١ مليون ريال" : "Under SAR 1M"}</option>
-                  <option value="1m_2m">{isAr ? "١ – ٢ مليون ريال" : "SAR 1M – 2M"}</option>
-                  <option value="2m_4m">{isAr ? "٢ – ٤ مليون ريال" : "SAR 2M – 4M"}</option>
-                  <option value="above_4m">{isAr ? "أكثر من ٤ مليون ريال" : "Above SAR 4M"}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className={labelClass}>{isAr ? "ملاحظات أو استفسار خاص" : "Inquiry / Specific Requirements"}</label>
-                <textarea
-                  rows={2}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  onFocus={() => setFocused("message")}
-                  onBlur={() => setFocused(null)}
-                  placeholder={
-                    isAr
-                      ? "هل ترغب في معرفة المخططات أو خطط التقسيط؟"
-                      : "Interested in payment plan breakdown or specific floor plans?"
-                  }
-                  className={inputClass("message")}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 font-mono text-[10px] tracking-[0.2em] uppercase font-bold border border-[#B8873B] bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-sm rounded-xs"
-              >
-                {isSubmitting
-                  ? isAr ? "جاري الإرسال..." : "Submitting..."
-                  : isAr ? "إرسال طلب الاستفسار" : "Submit Priority Inquiry"}
-              </button>
-            </form>
-          )}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1663,7 +1848,11 @@ export function ProjectDetailView({
 
       {/* 1. Floor Plan Fullscreen Lightbox Modal */}
       {activeFloorPlanIndex !== null && rawFloorPlans.length > 0 && (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none">
+        <div
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={createTouchEndHandler(handleNextFloorPlan, handlePrevFloorPlan)}
+        >
           {/* Explicit Fullscreen Backdrop - clicking anywhere closes */}
           <div
             className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
@@ -1688,31 +1877,59 @@ export function ProjectDetailView({
 
           {/* Top Bar with Info */}
           <div
-            className={`relative z-10 w-full max-w-4xl flex items-center justify-between text-white/90 pt-2 ${
+            className={`relative z-10 w-full max-w-4xl flex items-start justify-between text-white/90 pt-2 gap-4 ${
               isAr ? "flex-row-reverse" : ""
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={`font-mono text-xs ${isAr ? "text-right" : ""}`}>
-              <span className="text-[#E2B768] font-bold">
-                {isAr
-                  ? `مخطط ${activeFloorPlanIndex + 1} من ${rawFloorPlans.length}`
-                  : `Layout ${activeFloorPlanIndex + 1} of ${rawFloorPlans.length}`}
-              </span>
-              <p className="font-sans text-xs text-[#FAF6EE] truncate max-w-sm mt-0.5">
+            <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
+              <div className={`flex items-center gap-2 mb-1 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+                <span className="font-mono text-[10px] text-[#E2B768] font-bold">
+                  {isAr
+                    ? `مخطط ${activeFloorPlanIndex + 1} من ${rawFloorPlans.length}`
+                    : `Layout ${activeFloorPlanIndex + 1} of ${rawFloorPlans.length}`}
+                </span>
+                {(isAr
+                  ? parsedFloorPlans[activeFloorPlanIndex]?.categoryAr
+                  : parsedFloorPlans[activeFloorPlanIndex]?.categoryEn) && (
+                  <span className="font-mono text-[9px] tracking-wider uppercase text-[#FAF6EE] bg-white/10 border border-white/20 px-2 py-0.5 rounded-xs">
+                    {isAr ? parsedFloorPlans[activeFloorPlanIndex]?.categoryAr : parsedFloorPlans[activeFloorPlanIndex]?.categoryEn}
+                  </span>
+                )}
+                {(isAr
+                  ? parsedFloorPlans[activeFloorPlanIndex]?.startingPriceAr
+                  : parsedFloorPlans[activeFloorPlanIndex]?.startingPriceEn) && (
+                  <span className="font-mono text-[9.5px] font-bold text-[#E2B768] bg-[#B8873B]/20 border border-[#B8873B]/40 px-2 py-0.5 rounded-xs">
+                    {isAr ? parsedFloorPlans[activeFloorPlanIndex]?.startingPriceAr : parsedFloorPlans[activeFloorPlanIndex]?.startingPriceEn}
+                  </span>
+                )}
+              </div>
+              <h3 className="font-display text-base sm:text-lg text-[#FAF6EE] font-bold leading-snug break-words">
                 {isAr
                   ? parsedFloorPlans[activeFloorPlanIndex]?.modelAr || rawFloorPlans[activeFloorPlanIndex]?.captionAr || project.nameAr
                   : parsedFloorPlans[activeFloorPlanIndex]?.modelEn || rawFloorPlans[activeFloorPlanIndex]?.captionEn || project.nameEn}
-              </p>
+              </h3>
+              {/* Full Detailed Description in Blueprint Lightbox */}
+              {(() => {
+                const plan = parsedFloorPlans[activeFloorPlanIndex];
+                const rawDesc = (isAr ? plan?.captionAr : plan?.captionEn) || (isAr ? rawFloorPlans[activeFloorPlanIndex]?.captionAr : rawFloorPlans[activeFloorPlanIndex]?.captionEn) || "";
+                const modelTitle = (isAr ? plan?.modelAr : plan?.modelEn) || "";
+                if (!rawDesc.trim() || rawDesc.trim().toLowerCase() === modelTitle.trim().toLowerCase()) return null;
+                return (
+                  <p className="font-sans text-xs text-[#D4CDC1] mt-1 leading-relaxed break-words">
+                    {rawDesc}
+                  </p>
+                );
+              })()}
             </div>
-            <span className="font-mono text-[9px] text-[#A89F91] tracking-widest uppercase hidden sm:inline-block pr-24 rtl:pr-0 rtl:pl-24">
-              {isAr ? "اضغط بالخارج أو زر ESC للإغلاق" : "Click outside or press ESC to close"}
+            <span className="font-mono text-[9px] text-[#A89F91] tracking-widest uppercase hidden sm:block shrink-0 pr-24 rtl:pr-0 rtl:pl-24">
+              {isAr ? "ESC للإغلاق" : "ESC to close"}
             </span>
           </div>
 
-          {/* Main Blueprint Stage */}
+          {/* Main Blueprint Stage with touch swipe */}
           <div
-            className="relative z-10 w-full max-w-4xl h-[65vh] flex items-center justify-center my-auto p-4 bg-white rounded-xs shadow-2xl border border-white/20"
+            className="relative z-10 w-full max-w-4xl h-[55vh] sm:h-[65vh] flex items-center justify-center my-3 p-4 bg-white rounded-sm shadow-2xl border border-white/20 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
@@ -1733,9 +1950,9 @@ export function ProjectDetailView({
             <button
               type="button"
               onClick={handlePrevFloorPlan}
-              className="px-3.5 py-1.5 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs"
+              className="px-4 py-2 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs font-medium"
             >
-              {isAr ? "السابق" : "Previous"}
+              ← {isAr ? "السابق" : "Prev"}
             </button>
 
             <button
@@ -1745,7 +1962,7 @@ export function ProjectDetailView({
                 const plan = parsedFloorPlans[activeFloorPlanIndex];
                 if (plan) handleInquireOnLayout(plan);
               }}
-              className="px-5 py-2 bg-[#B8873B] text-[#080907] font-mono text-[10px] tracking-wider uppercase font-bold hover:bg-[#c99a49] transition-all cursor-pointer rounded-xs shadow-md"
+              className="flex-1 max-w-xs px-5 py-2 bg-[#B8873B] text-[#080907] font-mono text-[10px] tracking-wider uppercase font-bold hover:bg-[#c99a49] transition-all cursor-pointer rounded-xs shadow-md text-center"
             >
               {isAr ? "طلب حجز هذا النموذج" : "Inquire On This Layout"}
             </button>
@@ -1753,9 +1970,9 @@ export function ProjectDetailView({
             <button
               type="button"
               onClick={handleNextFloorPlan}
-              className="px-3.5 py-1.5 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs"
+              className="px-4 py-2 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs font-medium"
             >
-              {isAr ? "التالي" : "Next"}
+              {isAr ? "التالي" : "Next"} →
             </button>
           </div>
         </div>
@@ -1763,7 +1980,11 @@ export function ProjectDetailView({
 
       {/* 2. Photo Gallery Lightbox */}
       {activeImageIndex !== null && images.length > 0 && (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none">
+        <div
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={createTouchEndHandler(handleNextImage, handlePrevImage)}
+        >
           {/* Explicit Fullscreen Backdrop - clicking anywhere closes */}
           <div
             className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
@@ -1786,61 +2007,66 @@ export function ProjectDetailView({
             <span>{isAr ? "إغلاق" : "Close"}</span>
           </button>
 
+          {/* Top info bar with full caption */}
           <div
-            className={`relative z-10 w-full max-w-5xl flex items-center justify-between text-white/90 pt-2 ${
+            className={`relative z-10 w-full max-w-5xl flex items-start justify-between text-white/90 pt-2 gap-4 ${
               isAr ? "flex-row-reverse" : ""
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={`font-mono text-xs ${isAr ? "text-right" : ""}`}>
-              <span className="text-[#E2B768] font-bold">
+            <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
+              <span className="font-mono text-[10px] text-[#E2B768] font-bold block mb-0.5">
                 {isAr
                   ? `صورة ${activeImageIndex + 1} من ${images.length}`
                   : `Photo ${activeImageIndex + 1} of ${images.length}`}
               </span>
               {images[activeImageIndex]?.captionEn && (
-                <p className="font-sans text-xs text-[#FAF6EE] truncate max-w-sm mt-0.5">
+                <p className="font-sans text-sm text-[#FAF6EE] leading-snug break-words font-medium">
                   {isAr ? images[activeImageIndex].captionAr : images[activeImageIndex].captionEn}
                 </p>
               )}
             </div>
-            <span className="font-mono text-[9px] text-[#A89F91] tracking-widest uppercase hidden sm:inline-block pr-24 rtl:pr-0 rtl:pl-24">
-              {isAr ? "اضغط بالخارج أو زر ESC للإغلاق" : "Click outside or press ESC to close"}
+            <span className="font-mono text-[9px] text-[#A89F91] tracking-widest uppercase hidden sm:block shrink-0 pr-24 rtl:pr-0 rtl:pl-24">
+              {isAr ? "ESC للإغلاق" : "ESC to close"}
             </span>
           </div>
 
           <div
-            className="relative z-10 w-full max-w-4xl h-[65vh] flex items-center justify-center my-auto"
+            className="relative z-10 w-full max-w-5xl h-[55vh] sm:h-[68vh] flex items-center justify-center my-3"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
               src={getOptimizedImageUrl(images[activeImageIndex].url, 1600)}
-              alt="Project gallery photo"
+              alt={isAr ? images[activeImageIndex]?.captionAr || project.nameAr : images[activeImageIndex]?.captionEn || project.nameEn}
               fill
               className="object-contain"
-              sizes="(max-width: 1024px) 100vw, 896px"
+              sizes="(max-width: 1024px) 100vw, 1024px"
               priority
             />
           </div>
 
           <div
-            className={`relative z-10 w-full max-w-4xl flex items-center justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}
+            className={`relative z-10 w-full max-w-5xl flex items-center justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={handlePrevImage}
-              className="px-3.5 py-1.5 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs"
+              className="px-4 py-2 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs font-medium"
             >
-              {isAr ? "السابق" : "Previous"}
+              ← {isAr ? "السابق" : "Prev"}
             </button>
+
+            <span className="font-mono text-xs text-[#A89F91]">
+              {activeImageIndex + 1} / {images.length}
+            </span>
 
             <button
               type="button"
               onClick={handleNextImage}
-              className="px-3.5 py-1.5 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs"
+              className="px-4 py-2 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs font-medium"
             >
-              {isAr ? "التالي" : "Next"}
+              {isAr ? "التالي" : "Next"} →
             </button>
           </div>
         </div>
@@ -1848,7 +2074,11 @@ export function ProjectDetailView({
 
       {/* 3. Visual Payment Plan Fullscreen Lightbox Modal */}
       {activePaymentPlanIndex !== null && paymentPlanImages.length > 0 && (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none">
+        <div
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={createTouchEndHandler(handleNextPaymentPlan, handlePrevPaymentPlan)}
+        >
           {/* Explicit Fullscreen Backdrop */}
           <div
             className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
@@ -1873,29 +2103,34 @@ export function ProjectDetailView({
 
           {/* Top Bar with Info */}
           <div
-            className={`relative z-10 w-full max-w-4xl flex items-center justify-between text-white/90 pt-2 ${
+            className={`relative z-10 w-full max-w-4xl flex items-start justify-between text-white/90 pt-2 gap-4 ${
               isAr ? "flex-row-reverse" : ""
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={`font-mono text-xs ${isAr ? "text-right" : ""}`}>
-              <span className="text-[#E2B768] font-bold">
+            <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
+              <span className="font-mono text-[10px] text-[#E2B768] font-bold uppercase tracking-wider block mb-0.5">
                 {isAr
-                  ? `مخطط السداد ${activePaymentPlanIndex + 1} من ${paymentPlanImages.length}`
-                  : `Payment Schedule ${activePaymentPlanIndex + 1} of ${paymentPlanImages.length}`}
+                  ? `خطة سداد النموذج ${activePaymentPlanIndex + 1} من ${paymentPlanImages.length}`
+                  : `Layout Payment Plan ${activePaymentPlanIndex + 1} of ${paymentPlanImages.length}`}
               </span>
-              <p className="font-sans text-xs text-[#FAF6EE] truncate max-w-sm mt-0.5 font-medium">
+              <p className="font-sans text-sm sm:text-base text-[#FAF6EE] font-semibold leading-snug break-words">
                 {isAr
                   ? paymentPlanImages[activePaymentPlanIndex]?.titleAr
                   : paymentPlanImages[activePaymentPlanIndex]?.titleEn}
               </p>
+              {paymentPlanImages[activePaymentPlanIndex]?.captionEn && (
+                <p className="font-sans text-xs text-[#D4CDC1] mt-0.5 break-words">
+                  {isAr ? paymentPlanImages[activePaymentPlanIndex].captionAr : paymentPlanImages[activePaymentPlanIndex].captionEn}
+                </p>
+              )}
             </div>
-            <span className="font-mono text-[9px] text-[#A89F91] tracking-widest uppercase hidden sm:inline-block pr-24 rtl:pr-0 rtl:pl-24">
+            <span className="font-mono text-[9px] text-[#A89F91] tracking-widest uppercase hidden sm:inline-block pr-24 rtl:pr-0 rtl:pl-24 shrink-0">
               {isAr ? "اضغط بالخارج أو زر ESC للإغلاق" : "Click outside or press ESC to close"}
             </span>
           </div>
 
-          {/* Main Visual Image Stage */}
+          {/* Main Visual Image Stage with touch swipe */}
           <div
             className="relative z-10 w-full max-w-4xl h-[65vh] flex items-center justify-center my-auto p-4 bg-white rounded-xs shadow-2xl border border-white/20"
             onClick={(e) => e.stopPropagation()}
@@ -1920,7 +2155,7 @@ export function ProjectDetailView({
               onClick={handlePrevPaymentPlan}
               className="px-4 py-2 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10.5px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs font-semibold"
             >
-              {isAr ? "← الصورة السابقة" : "← Previous Plan"}
+              {isAr ? "← الخطة السابقة" : "← Previous Plan"}
             </button>
 
             <span className="font-mono text-xs text-[#E2B768] font-bold">
@@ -1932,7 +2167,7 @@ export function ProjectDetailView({
               onClick={handleNextPaymentPlan}
               className="px-4 py-2 border border-white/20 text-[#FAF6EE] hover:border-[#B8873B] hover:text-[#B8873B] font-mono text-[10.5px] tracking-wider uppercase transition-colors cursor-pointer rounded-xs font-semibold"
             >
-              {isAr ? "الصورة التالية →" : "Next Plan →"}
+              {isAr ? "الخطة التالية →" : "Next Plan →"}
             </button>
           </div>
         </div>

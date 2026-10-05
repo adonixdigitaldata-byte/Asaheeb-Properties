@@ -7,8 +7,8 @@ import DynamicProjectDetailClient from "./ProjectDetailClient";
 
 // Revalidate every 24 hours (ISR)
 export const revalidate = 86400;
-// Disable on-demand generation for unknown slugs to prevent bot probe cache writes
-export const dynamicParams = false;
+// Allow on-demand rendering for project IDs not pre-generated at build time (e.g. new projects, dev mode)
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const projects = await getPublishedProjects();
