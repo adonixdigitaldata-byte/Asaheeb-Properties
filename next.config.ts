@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [
+    "10.34.118.247",
+    "10.*",
+    "192.168.*",
+    "172.*",
+    "*.local",
+  ],
   images: {
     loader: "custom",
     loaderFile: "./src/lib/imageLoader.ts",

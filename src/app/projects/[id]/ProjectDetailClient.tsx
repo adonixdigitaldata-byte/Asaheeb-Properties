@@ -16,6 +16,7 @@ import PhoneInputWithCountry from "@/components/ui/PhoneInputWithCountry";
 import { validatePhoneNumber } from "@/data/countriesData";
 import { ProjectPromotionalHeroBanner } from "@/components/shared/ProjectPromotionalHeroBanner";
 import { ProjectCardPriceAndOffer } from "@/components/shared/ProjectCardPriceAndOffer";
+import { ZoomableLightboxStage } from "./ZoomableLightboxStage";
 
 // ── Smart Floor Plan Parsing Helper ──────────────────────────────────────────
 interface ParsedFloorPlan {
@@ -1894,7 +1895,7 @@ export function ProjectDetailView({
       {/* 1. Floor Plan Fullscreen Lightbox Modal */}
       {activeFloorPlanIndex !== null && rawFloorPlans.length > 0 && (
         <div
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-pan-y"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-none"
           onTouchStart={handleTouchStart}
           onTouchEnd={createTouchEndHandler(handleNextFloorPlan, handlePrevFloorPlan)}
         >
@@ -2004,45 +2005,20 @@ export function ProjectDetailView({
             </span>
           </div>
 
-          {/* Main Blueprint Stage with touch swipe & interactive zoom */}
-          <div
-            className="relative z-10 w-full max-w-4xl h-[55vh] sm:h-[65vh] flex items-center justify-center my-3 p-4 bg-white rounded-sm shadow-2xl border border-white/20 overflow-hidden cursor-zoom-in"
-            onClick={(e) => {
-              e.stopPropagation();
-              const now = Date.now();
-              if (now - lastFloorPlanTapRef.current < 350) {
-                setFloorPlanZoomScale((prev) => (prev > 1 ? 1 : 2));
-                lastFloorPlanTapRef.current = 0;
-              } else {
-                lastFloorPlanTapRef.current = now;
-              }
-            }}
-          >
-            <div
-              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
-              style={{
-                transform: `scale(${floorPlanZoomScale})`,
-                cursor: floorPlanZoomScale > 1 ? "zoom-out" : "zoom-in",
-              }}
-            >
-              <Image
-                src={getOptimizedImageUrl(rawFloorPlans[activeFloorPlanIndex].url, 1600)}
-                alt="Floor plan full view"
-                fill
-                className="object-contain p-2"
-                sizes="(max-width: 1024px) 100vw, 896px"
-                priority
-              />
-            </div>
-            {/* Mobile tap hint */}
-            {floorPlanZoomScale === 1 && (
-              <div className="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
-                <span className="font-mono text-[8.5px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-0.5 rounded-full border border-[#B8873B]/40 shadow-sm">
-                  {isAr ? "انقر مرتين للتكبير" : "Double-tap to zoom"}
-                </span>
-              </div>
-            )}
-          </div>
+          {/* Main Blueprint Stage with touch pinch, pan across all edges & double-tap zoom */}
+          <ZoomableLightboxStage
+            src={getOptimizedImageUrl(rawFloorPlans[activeFloorPlanIndex].url, 1600)}
+            alt="Floor plan full view"
+            priority
+            scale={floorPlanZoomScale}
+            onScaleChange={setFloorPlanZoomScale}
+            onNext={handleNextFloorPlan}
+            onPrev={handlePrevFloorPlan}
+            isAr={isAr}
+            bgWhite={true}
+            stageClassName="max-w-4xl h-[55vh] sm:h-[65vh] my-3"
+            imageClassName="object-contain p-2"
+          />
 
           {/* Navigation Controls & Inquiry CTA */}
           <div
@@ -2111,7 +2087,7 @@ export function ProjectDetailView({
       {/* 2. Photo Gallery Lightbox */}
       {activeImageIndex !== null && images.length > 0 && (
         <div
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-pan-y"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-none"
           onTouchStart={handleTouchStart}
           onTouchEnd={createTouchEndHandler(handleNextImage, handlePrevImage)}
         >
@@ -2196,45 +2172,20 @@ export function ProjectDetailView({
             </span>
           </div>
 
-          {/* Main Stage with smooth Pinch / Double Tap Zoom and Pan */}
-          <div
-            className="relative z-10 w-full max-w-5xl h-[55vh] sm:h-[68vh] flex items-center justify-center my-3 overflow-hidden cursor-zoom-in"
-            onClick={(e) => {
-              e.stopPropagation();
-              const now = Date.now();
-              if (now - lastPhotoTapRef.current < 350) {
-                setPhotoZoomScale((prev) => (prev > 1 ? 1 : 2));
-                lastPhotoTapRef.current = 0;
-              } else {
-                lastPhotoTapRef.current = now;
-              }
-            }}
-          >
-            <div
-              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
-              style={{
-                transform: `scale(${photoZoomScale})`,
-                cursor: photoZoomScale > 1 ? "zoom-out" : "zoom-in",
-              }}
-            >
-              <Image
-                src={getOptimizedImageUrl(images[activeImageIndex].url, 1600)}
-                alt={isAr ? images[activeImageIndex]?.captionAr || project.nameAr : images[activeImageIndex]?.captionEn || project.nameEn}
-                fill
-                className="object-contain"
-                sizes="(max-width: 1024px) 100vw, 1024px"
-                priority
-              />
-            </div>
-            {/* Mobile tap hint */}
-            {photoZoomScale === 1 && (
-              <div className="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
-                <span className="font-mono text-[8.5px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-0.5 rounded-full border border-[#B8873B]/40 shadow-sm">
-                  {isAr ? "انقر مرتين للتكبير" : "Double-tap to zoom"}
-                </span>
-              </div>
-            )}
-          </div>
+          {/* Main Stage with smooth Pinch, Pan across all corners, and Double-Tap Zoom */}
+          <ZoomableLightboxStage
+            src={getOptimizedImageUrl(images[activeImageIndex].url, 1600)}
+            alt={isAr ? images[activeImageIndex]?.captionAr || project.nameAr : images[activeImageIndex]?.captionEn || project.nameEn}
+            priority
+            scale={photoZoomScale}
+            onScaleChange={setPhotoZoomScale}
+            onNext={handleNextImage}
+            onPrev={handlePrevImage}
+            isAr={isAr}
+            bgWhite={false}
+            stageClassName="max-w-5xl h-[55vh] sm:h-[68vh] my-3"
+            imageClassName="object-contain"
+          />
 
           <div
             className={`relative z-10 w-full max-w-5xl flex items-center justify-between gap-3 ${isAr ? "flex-row-reverse" : ""}`}
@@ -2294,7 +2245,7 @@ export function ProjectDetailView({
       {/* 3. Visual Payment Plan Fullscreen Lightbox Modal */}
       {activePaymentPlanIndex !== null && paymentPlanImages.length > 0 && (
         <div
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-pan-y"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between p-4 sm:p-6 select-none touch-none"
           onTouchStart={handleTouchStart}
           onTouchEnd={createTouchEndHandler(handleNextPaymentPlan, handlePrevPaymentPlan)}
         >
@@ -2384,45 +2335,20 @@ export function ProjectDetailView({
             </span>
           </div>
 
-          {/* Main Visual Image Stage with touch swipe & interactive zoom */}
-          <div
-            className="relative z-10 w-full max-w-4xl h-[65vh] flex items-center justify-center my-auto p-4 bg-white rounded-xs shadow-2xl border border-white/20 overflow-hidden cursor-zoom-in"
-            onClick={(e) => {
-              e.stopPropagation();
-              const now = Date.now();
-              if (now - lastPaymentPlanTapRef.current < 350) {
-                setPaymentPlanZoomScale((prev) => (prev > 1 ? 1 : 2));
-                lastPaymentPlanTapRef.current = 0;
-              } else {
-                lastPaymentPlanTapRef.current = now;
-              }
-            }}
-          >
-            <div
-              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
-              style={{
-                transform: `scale(${paymentPlanZoomScale})`,
-                cursor: paymentPlanZoomScale > 1 ? "zoom-out" : "zoom-in",
-              }}
-            >
-              <Image
-                src={getOptimizedImageUrl(paymentPlanImages[activePaymentPlanIndex].url, 1600)}
-                alt="Payment plan schedule diagram"
-                fill
-                className="object-contain p-2"
-                sizes="(max-width: 1024px) 100vw, 896px"
-                priority
-              />
-            </div>
-            {/* Mobile tap hint */}
-            {paymentPlanZoomScale === 1 && (
-              <div className="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
-                <span className="font-mono text-[8.5px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-0.5 rounded-full border border-[#B8873B]/40 shadow-sm">
-                  {isAr ? "انقر مرتين للتكبير" : "Double-tap to zoom"}
-                </span>
-              </div>
-            )}
-          </div>
+          {/* Main Visual Image Stage with touch pinch, pan & double-tap zoom */}
+          <ZoomableLightboxStage
+            src={getOptimizedImageUrl(paymentPlanImages[activePaymentPlanIndex].url, 1600)}
+            alt="Payment plan schedule diagram"
+            priority
+            scale={paymentPlanZoomScale}
+            onScaleChange={setPaymentPlanZoomScale}
+            onNext={handleNextPaymentPlan}
+            onPrev={handlePrevPaymentPlan}
+            isAr={isAr}
+            bgWhite={true}
+            stageClassName="max-w-4xl h-[65vh] my-auto"
+            imageClassName="object-contain p-2"
+          />
 
           {/* Navigation Controls */}
           <div

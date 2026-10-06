@@ -202,7 +202,7 @@ export default function HeroMobile() {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-80 pointer-events-none z-0"
-        src="/hero-mobile.mp4"
+        src="/hero-desktop.mp4"
       />
 
       {/* Canvas */}
