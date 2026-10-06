@@ -269,6 +269,14 @@ export function ProjectDetailView({
   const [showShareModal, setShowShareModal] = useState(false);
   const [showBrochureModal, setShowBrochureModal] = useState(false);
 
+  // Mobile Lightbox Interactive Zoom state
+  const [photoZoomScale, setPhotoZoomScale] = useState<number>(1);
+  const [floorPlanZoomScale, setFloorPlanZoomScale] = useState<number>(1);
+  const [paymentPlanZoomScale, setPaymentPlanZoomScale] = useState<number>(1);
+  const lastPhotoTapRef = useRef<number>(0);
+  const lastFloorPlanTapRef = useRef<number>(0);
+  const lastPaymentPlanTapRef = useRef<number>(0);
+
   // Floor plan filter state
   const [selectedFloorPlanTab, setSelectedFloorPlanTab] = useState<string>("ALL");
 
@@ -398,6 +406,7 @@ export function ProjectDetailView({
   const handlePrevImage = useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
+      setPhotoZoomScale(1);
       if (activeImageIndex === null || images.length === 0) return;
       setActiveImageIndex((prev) => (prev! === 0 ? images.length - 1 : prev! - 1));
     },
@@ -407,6 +416,7 @@ export function ProjectDetailView({
   const handleNextImage = useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
+      setPhotoZoomScale(1);
       if (activeImageIndex === null || images.length === 0) return;
       setActiveImageIndex((prev) => (prev! === images.length - 1 ? 0 : prev! + 1));
     },
@@ -416,6 +426,7 @@ export function ProjectDetailView({
   const handlePrevFloorPlan = useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
+      setFloorPlanZoomScale(1);
       if (activeFloorPlanIndex === null || rawFloorPlans.length === 0) return;
       setActiveFloorPlanIndex((prev) => (prev! === 0 ? rawFloorPlans.length - 1 : prev! - 1));
     },
@@ -425,6 +436,7 @@ export function ProjectDetailView({
   const handleNextFloorPlan = useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
+      setFloorPlanZoomScale(1);
       if (activeFloorPlanIndex === null || rawFloorPlans.length === 0) return;
       setActiveFloorPlanIndex((prev) => (prev! === rawFloorPlans.length - 1 ? 0 : prev! + 1));
     },
@@ -434,6 +446,7 @@ export function ProjectDetailView({
   const handlePrevPaymentPlan = useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
+      setPaymentPlanZoomScale(1);
       if (activePaymentPlanIndex === null || paymentPlanImages.length === 0) return;
       setActivePaymentPlanIndex((prev) => (prev! === 0 ? paymentPlanImages.length - 1 : prev! - 1));
     },
@@ -443,26 +456,34 @@ export function ProjectDetailView({
   const handleNextPaymentPlan = useCallback(
     (e?: React.MouseEvent) => {
       e?.stopPropagation();
+      setPaymentPlanZoomScale(1);
       if (activePaymentPlanIndex === null || paymentPlanImages.length === 0) return;
       setActivePaymentPlanIndex((prev) => (prev! === paymentPlanImages.length - 1 ? 0 : prev! + 1));
     },
     [activePaymentPlanIndex, paymentPlanImages.length]
   );
 
-  // Mobile Touch Swipe Gesture Handlers
+  // Mobile Touch Swipe & Tap Gesture Handlers
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
+  const touchStartTimeRef = useRef<number>(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartXRef.current = e.touches[0].clientX;
     touchStartYRef.current = e.touches[0].clientY;
+    touchStartTimeRef.current = Date.now();
   };
 
-  const createTouchEndHandler = (onSwipeNext: () => void, onSwipePrev: () => void) => {
+  const createTouchEndHandler = (
+    onSwipeNext: () => void,
+    onSwipePrev: () => void,
+    onTap?: () => void
+  ) => {
     return (e: React.TouchEvent) => {
       if (touchStartXRef.current === null || touchStartYRef.current === null) return;
       const deltaX = touchStartXRef.current - e.changedTouches[0].clientX;
       const deltaY = touchStartYRef.current - e.changedTouches[0].clientY;
+      const duration = Date.now() - touchStartTimeRef.current;
 
       // Minimum swipe distance: 35px; horizontal movement dominates vertical
       if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.1) {
@@ -474,6 +495,11 @@ export function ProjectDetailView({
           // Swiped right
           if (isAr) onSwipeNext();
           else onSwipePrev();
+        }
+      } else if (Math.abs(deltaX) < 15 && Math.abs(deltaY) < 15 && duration < 450) {
+        // Tap gesture detected on touchscreens
+        if (onTap) {
+          onTap();
         }
       }
       touchStartXRef.current = null;
@@ -798,11 +824,18 @@ export function ProjectDetailView({
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 mb-5">
               {/* Left Column: 1 Large Hero Featured Image */}
               <div
-                onClick={() => setActiveImageIndex(activeHeroIndex)}
+                onClick={() => {
+                  setPhotoZoomScale(1);
+                  setActiveImageIndex(activeHeroIndex);
+                }}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={createTouchEndHandler(
                   () => setActiveHeroIndex((prev) => (prev + 1) % images.length),
-                  () => setActiveHeroIndex((prev) => (prev - 1 + images.length) % images.length)
+                  () => setActiveHeroIndex((prev) => (prev - 1 + images.length) % images.length),
+                  () => {
+                    setPhotoZoomScale(1);
+                    setActiveImageIndex(activeHeroIndex);
+                  }
                 )}
                 className="lg:col-span-8 relative h-[280px] sm:h-[400px] lg:h-[480px] overflow-hidden border border-white/15 group cursor-pointer rounded-sm bg-[#10120E] shadow-xl"
               >
@@ -834,13 +867,22 @@ export function ProjectDetailView({
                       </p>
                     )}
                   </div>
-                  <span className="inline-flex items-center gap-1.5 bg-black/70 backdrop-blur-sm px-3 py-1.5 border border-[#B8873B]/50 text-[10px] tracking-wider uppercase text-[#E2B768] font-bold rounded-sm shadow-md shrink-0 group-hover:bg-[#B8873B] group-hover:text-[#080907] transition-all duration-300">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPhotoZoomScale(1);
+                      setActiveImageIndex(activeHeroIndex);
+                    }}
+                    className="inline-flex items-center gap-1.5 bg-black/80 backdrop-blur-sm px-2.5 sm:px-3 py-1.5 border border-[#B8873B]/60 hover:border-[#B8873B] text-[10px] sm:text-[10.5px] tracking-wider uppercase text-[#E2B768] font-bold rounded-sm shadow-md shrink-0 hover:bg-[#B8873B] hover:text-[#080907] transition-all duration-300 cursor-pointer z-10"
+                    aria-label={isAr ? "تكبير الصورة" : "Enlarge photo"}
+                  >
                     <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="11" cy="11" r="8" />
                       <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <span className="hidden sm:inline">{isAr ? "تكبير" : "Enlarge"}</span>
-                  </span>
+                    <span>{isAr ? "تكبير" : "Enlarge"}</span>
+                  </button>
                 </div>
               </div>
 
@@ -854,7 +896,10 @@ export function ProjectDetailView({
                   return (
                     <div
                       key={actualIdx}
-                      onClick={() => setActiveImageIndex(actualIdx)}
+                      onClick={() => {
+                        setPhotoZoomScale(1);
+                        setActiveImageIndex(actualIdx);
+                      }}
                       className="relative h-[130px] sm:h-[170px] lg:h-full overflow-hidden border border-white/15 group cursor-pointer rounded-sm bg-[#10120E] shadow-xl"
                     >
                       <Image
@@ -1856,7 +1901,10 @@ export function ProjectDetailView({
           {/* Explicit Fullscreen Backdrop - clicking anywhere closes */}
           <div
             className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
-            onClick={() => setActiveFloorPlanIndex(null)}
+            onClick={() => {
+              setFloorPlanZoomScale(1);
+              setActiveFloorPlanIndex(null);
+            }}
           />
 
           {/* Prominent Floating Close Button in Top Right with z-[10000] */}
@@ -1865,6 +1913,7 @@ export function ProjectDetailView({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              setFloorPlanZoomScale(1);
               setActiveFloorPlanIndex(null);
             }}
             className="fixed top-5 right-5 sm:top-6 sm:right-6 z-[10000] flex items-center gap-1.5 px-4 py-2 bg-black/90 hover:bg-[#B8873B] text-[#FAF6EE] hover:text-[#080907] border border-white/30 hover:border-[#B8873B] rounded-full font-mono text-[11px] tracking-wider uppercase transition-all shadow-2xl cursor-pointer font-bold group"
@@ -1903,6 +1952,34 @@ export function ProjectDetailView({
                     {isAr ? parsedFloorPlans[activeFloorPlanIndex]?.startingPriceAr : parsedFloorPlans[activeFloorPlanIndex]?.startingPriceEn}
                   </span>
                 )}
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFloorPlanZoomScale((prev) => (prev > 1 ? 1 : 2));
+                  }}
+                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-wider font-bold border transition-all cursor-pointer ${
+                    floorPlanZoomScale > 1
+                      ? "bg-[#B8873B] text-[#080907] border-[#B8873B]"
+                      : "bg-white/10 text-[#E2B768] border-[#B8873B]/50 hover:bg-white/20"
+                  }`}
+                  aria-label={floorPlanZoomScale > 1 ? "Reset zoom" : "Zoom blueprint"}
+                >
+                  <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    {floorPlanZoomScale === 1 ? (
+                      <>
+                        <line x1="11" y1="8" x2="11" y2="14" />
+                        <line x1="8" y1="11" x2="14" y2="11" />
+                      </>
+                    ) : (
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    )}
+                  </svg>
+                  <span>{floorPlanZoomScale > 1 ? (isAr ? "1x ضبط" : "1x Reset") : (isAr ? "2x تكبير" : "2x Zoom")}</span>
+                </button>
               </div>
               <h3 className="font-display text-base sm:text-lg text-[#FAF6EE] font-bold leading-snug break-words">
                 {isAr
@@ -1927,19 +2004,44 @@ export function ProjectDetailView({
             </span>
           </div>
 
-          {/* Main Blueprint Stage with touch swipe */}
+          {/* Main Blueprint Stage with touch swipe & interactive zoom */}
           <div
-            className="relative z-10 w-full max-w-4xl h-[55vh] sm:h-[65vh] flex items-center justify-center my-3 p-4 bg-white rounded-sm shadow-2xl border border-white/20 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 w-full max-w-4xl h-[55vh] sm:h-[65vh] flex items-center justify-center my-3 p-4 bg-white rounded-sm shadow-2xl border border-white/20 overflow-hidden cursor-zoom-in"
+            onClick={(e) => {
+              e.stopPropagation();
+              const now = Date.now();
+              if (now - lastFloorPlanTapRef.current < 350) {
+                setFloorPlanZoomScale((prev) => (prev > 1 ? 1 : 2));
+                lastFloorPlanTapRef.current = 0;
+              } else {
+                lastFloorPlanTapRef.current = now;
+              }
+            }}
           >
-            <Image
-              src={getOptimizedImageUrl(rawFloorPlans[activeFloorPlanIndex].url, 1600)}
-              alt="Floor plan full view"
-              fill
-              className="object-contain p-2"
-              sizes="(max-width: 1024px) 100vw, 896px"
-              priority
-            />
+            <div
+              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
+              style={{
+                transform: `scale(${floorPlanZoomScale})`,
+                cursor: floorPlanZoomScale > 1 ? "zoom-out" : "zoom-in",
+              }}
+            >
+              <Image
+                src={getOptimizedImageUrl(rawFloorPlans[activeFloorPlanIndex].url, 1600)}
+                alt="Floor plan full view"
+                fill
+                className="object-contain p-2"
+                sizes="(max-width: 1024px) 100vw, 896px"
+                priority
+              />
+            </div>
+            {/* Mobile tap hint */}
+            {floorPlanZoomScale === 1 && (
+              <div className="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
+                <span className="font-mono text-[8.5px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-0.5 rounded-full border border-[#B8873B]/40 shadow-sm">
+                  {isAr ? "انقر مرتين للتكبير" : "Double-tap to zoom"}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Navigation Controls & Inquiry CTA */}
@@ -1955,17 +2057,45 @@ export function ProjectDetailView({
               ← {isAr ? "السابق" : "Prev"}
             </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveFloorPlanIndex(null);
-                const plan = parsedFloorPlans[activeFloorPlanIndex];
-                if (plan) handleInquireOnLayout(plan);
-              }}
-              className="flex-1 max-w-xs px-5 py-2 bg-[#B8873B] text-[#080907] font-mono text-[10px] tracking-wider uppercase font-bold hover:bg-[#c99a49] transition-all cursor-pointer rounded-xs shadow-md text-center"
-            >
-              {isAr ? "طلب حجز هذا النموذج" : "Inquire On This Layout"}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setFloorPlanZoomScale((prev) => (prev > 1 ? 1 : 2))}
+                className={`px-3 py-1.5 border font-mono text-[10px] tracking-wider uppercase transition-all rounded-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md ${
+                  floorPlanZoomScale > 1
+                    ? "bg-[#B8873B] text-[#080907] border-[#B8873B]"
+                    : "bg-black/80 text-[#FAF6EE] border-white/20 hover:border-[#B8873B] hover:text-[#B8873B]"
+                }`}
+                aria-label={floorPlanZoomScale > 1 ? "Reset zoom" : "Zoom blueprint"}
+              >
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  {floorPlanZoomScale === 1 ? (
+                    <>
+                      <line x1="11" y1="8" x2="11" y2="14" />
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    </>
+                  ) : (
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  )}
+                </svg>
+                <span>{floorPlanZoomScale > 1 ? (isAr ? "1x ضبط" : "1x Reset") : (isAr ? "2x تكبير" : "2x Zoom")}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setFloorPlanZoomScale(1);
+                  setActiveFloorPlanIndex(null);
+                  const plan = parsedFloorPlans[activeFloorPlanIndex];
+                  if (plan) handleInquireOnLayout(plan);
+                }}
+                className="hidden sm:inline-block px-5 py-2 bg-[#B8873B] text-[#080907] font-mono text-[10px] tracking-wider uppercase font-bold hover:bg-[#c99a49] transition-all cursor-pointer rounded-xs shadow-md text-center"
+              >
+                {isAr ? "طلب حجز هذا النموذج" : "Inquire On This Layout"}
+              </button>
+            </div>
 
             <button
               type="button"
@@ -1988,7 +2118,10 @@ export function ProjectDetailView({
           {/* Explicit Fullscreen Backdrop - clicking anywhere closes */}
           <div
             className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
-            onClick={() => setActiveImageIndex(null)}
+            onClick={() => {
+              setPhotoZoomScale(1);
+              setActiveImageIndex(null);
+            }}
           />
 
           {/* Prominent Floating Close Button in Top Right with z-[10000] */}
@@ -1997,6 +2130,7 @@ export function ProjectDetailView({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              setPhotoZoomScale(1);
               setActiveImageIndex(null);
             }}
             className="fixed top-5 right-5 sm:top-6 sm:right-6 z-[10000] flex items-center gap-1.5 px-4 py-2 bg-black/90 hover:bg-[#B8873B] text-[#FAF6EE] hover:text-[#080907] border border-white/30 hover:border-[#B8873B] rounded-full font-mono text-[11px] tracking-wider uppercase transition-all shadow-2xl cursor-pointer font-bold group"
@@ -2007,7 +2141,7 @@ export function ProjectDetailView({
             <span>{isAr ? "إغلاق" : "Close"}</span>
           </button>
 
-          {/* Top info bar with full caption */}
+          {/* Top info bar with full caption & zoom toggle */}
           <div
             className={`relative z-10 w-full max-w-5xl flex items-start justify-between text-white/90 pt-2 gap-4 ${
               isAr ? "flex-row-reverse" : ""
@@ -2015,11 +2149,42 @@ export function ProjectDetailView({
             onClick={(e) => e.stopPropagation()}
           >
             <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
-              <span className="font-mono text-[10px] text-[#E2B768] font-bold block mb-0.5">
-                {isAr
-                  ? `صورة ${activeImageIndex + 1} من ${images.length}`
-                  : `Photo ${activeImageIndex + 1} of ${images.length}`}
-              </span>
+              <div className={`flex items-center gap-2.5 mb-1 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+                <span className="font-mono text-[10px] text-[#E2B768] font-bold block">
+                  {isAr
+                    ? `صورة ${activeImageIndex + 1} من ${images.length}`
+                    : `Photo ${activeImageIndex + 1} of ${images.length}`}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPhotoZoomScale((prev) => (prev > 1 ? 1 : 2));
+                  }}
+                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-wider font-bold border transition-all cursor-pointer ${
+                    photoZoomScale > 1
+                      ? "bg-[#B8873B] text-[#080907] border-[#B8873B]"
+                      : "bg-white/10 text-[#E2B768] border-[#B8873B]/50 hover:bg-white/20"
+                  }`}
+                  aria-label={photoZoomScale > 1 ? "Reset zoom" : "Zoom photo"}
+                >
+                  <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    {photoZoomScale === 1 ? (
+                      <>
+                        <line x1="11" y1="8" x2="11" y2="14" />
+                        <line x1="8" y1="11" x2="14" y2="11" />
+                      </>
+                    ) : (
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    )}
+                  </svg>
+                  <span>{photoZoomScale > 1 ? (isAr ? "1x ضبط" : "1x Reset") : (isAr ? "2x تكبير" : "2x Zoom")}</span>
+                </button>
+              </div>
+
               {images[activeImageIndex]?.captionEn && (
                 <p className="font-sans text-sm text-[#FAF6EE] leading-snug break-words font-medium">
                   {isAr ? images[activeImageIndex].captionAr : images[activeImageIndex].captionEn}
@@ -2031,18 +2196,44 @@ export function ProjectDetailView({
             </span>
           </div>
 
+          {/* Main Stage with smooth Pinch / Double Tap Zoom and Pan */}
           <div
-            className="relative z-10 w-full max-w-5xl h-[55vh] sm:h-[68vh] flex items-center justify-center my-3"
-            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 w-full max-w-5xl h-[55vh] sm:h-[68vh] flex items-center justify-center my-3 overflow-hidden cursor-zoom-in"
+            onClick={(e) => {
+              e.stopPropagation();
+              const now = Date.now();
+              if (now - lastPhotoTapRef.current < 350) {
+                setPhotoZoomScale((prev) => (prev > 1 ? 1 : 2));
+                lastPhotoTapRef.current = 0;
+              } else {
+                lastPhotoTapRef.current = now;
+              }
+            }}
           >
-            <Image
-              src={getOptimizedImageUrl(images[activeImageIndex].url, 1600)}
-              alt={isAr ? images[activeImageIndex]?.captionAr || project.nameAr : images[activeImageIndex]?.captionEn || project.nameEn}
-              fill
-              className="object-contain"
-              sizes="(max-width: 1024px) 100vw, 1024px"
-              priority
-            />
+            <div
+              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
+              style={{
+                transform: `scale(${photoZoomScale})`,
+                cursor: photoZoomScale > 1 ? "zoom-out" : "zoom-in",
+              }}
+            >
+              <Image
+                src={getOptimizedImageUrl(images[activeImageIndex].url, 1600)}
+                alt={isAr ? images[activeImageIndex]?.captionAr || project.nameAr : images[activeImageIndex]?.captionEn || project.nameEn}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 1024px"
+                priority
+              />
+            </div>
+            {/* Mobile tap hint */}
+            {photoZoomScale === 1 && (
+              <div className="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
+                <span className="font-mono text-[8.5px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-0.5 rounded-full border border-[#B8873B]/40 shadow-sm">
+                  {isAr ? "انقر مرتين للتكبير" : "Double-tap to zoom"}
+                </span>
+              </div>
+            )}
           </div>
 
           <div
@@ -2057,9 +2248,37 @@ export function ProjectDetailView({
               ← {isAr ? "السابق" : "Prev"}
             </button>
 
-            <span className="font-mono text-xs text-[#A89F91]">
-              {activeImageIndex + 1} / {images.length}
-            </span>
+            {/* Bottom Zoom & Count Controls */}
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setPhotoZoomScale((prev) => (prev > 1 ? 1 : 2))}
+                className={`px-3 py-1.5 border font-mono text-[10px] tracking-wider uppercase transition-all rounded-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md ${
+                  photoZoomScale > 1
+                    ? "bg-[#B8873B] text-[#080907] border-[#B8873B]"
+                    : "bg-black/80 text-[#FAF6EE] border-white/20 hover:border-[#B8873B] hover:text-[#B8873B]"
+                }`}
+                aria-label={photoZoomScale > 1 ? "Reset zoom" : "Zoom photo"}
+              >
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  {photoZoomScale === 1 ? (
+                    <>
+                      <line x1="11" y1="8" x2="11" y2="14" />
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    </>
+                  ) : (
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  )}
+                </svg>
+                <span>{photoZoomScale > 1 ? (isAr ? "1x ضبط" : "1x Reset") : (isAr ? "2x تكبير" : "2x Zoom")}</span>
+              </button>
+
+              <span className="font-mono text-xs text-[#A89F91]">
+                {activeImageIndex + 1} / {images.length}
+              </span>
+            </div>
 
             <button
               type="button"
@@ -2082,7 +2301,10 @@ export function ProjectDetailView({
           {/* Explicit Fullscreen Backdrop */}
           <div
             className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
-            onClick={() => setActivePaymentPlanIndex(null)}
+            onClick={() => {
+              setPaymentPlanZoomScale(1);
+              setActivePaymentPlanIndex(null);
+            }}
           />
 
           {/* Floating Close Button Top Right with z-[10000] */}
@@ -2091,6 +2313,7 @@ export function ProjectDetailView({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              setPaymentPlanZoomScale(1);
               setActivePaymentPlanIndex(null);
             }}
             className="fixed top-5 right-5 sm:top-6 sm:right-6 z-[10000] flex items-center gap-1.5 px-4 py-2 bg-black/90 hover:bg-[#B8873B] text-[#FAF6EE] hover:text-[#080907] border border-white/30 hover:border-[#B8873B] rounded-full font-mono text-[11px] tracking-wider uppercase transition-all shadow-2xl cursor-pointer font-bold group"
@@ -2109,11 +2332,42 @@ export function ProjectDetailView({
             onClick={(e) => e.stopPropagation()}
           >
             <div className={`flex-1 min-w-0 ${isAr ? "text-right" : ""}`}>
-              <span className="font-mono text-[10px] text-[#E2B768] font-bold uppercase tracking-wider block mb-0.5">
-                {isAr
-                  ? `خطة سداد النموذج ${activePaymentPlanIndex + 1} من ${paymentPlanImages.length}`
-                  : `Layout Payment Plan ${activePaymentPlanIndex + 1} of ${paymentPlanImages.length}`}
-              </span>
+              <div className={`flex items-center gap-2 mb-1 flex-wrap ${isAr ? "flex-row-reverse" : ""}`}>
+                <span className="font-mono text-[10px] text-[#E2B768] font-bold uppercase tracking-wider block">
+                  {isAr
+                    ? `خطة سداد النموذج ${activePaymentPlanIndex + 1} من ${paymentPlanImages.length}`
+                    : `Layout Payment Plan ${activePaymentPlanIndex + 1} of ${paymentPlanImages.length}`}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPaymentPlanZoomScale((prev) => (prev > 1 ? 1 : 2));
+                  }}
+                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono text-[9px] uppercase tracking-wider font-bold border transition-all cursor-pointer ${
+                    paymentPlanZoomScale > 1
+                      ? "bg-[#B8873B] text-[#080907] border-[#B8873B]"
+                      : "bg-white/10 text-[#E2B768] border-[#B8873B]/50 hover:bg-white/20"
+                  }`}
+                  aria-label={paymentPlanZoomScale > 1 ? "Reset zoom" : "Zoom payment plan"}
+                >
+                  <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    {paymentPlanZoomScale === 1 ? (
+                      <>
+                        <line x1="11" y1="8" x2="11" y2="14" />
+                        <line x1="8" y1="11" x2="14" y2="11" />
+                      </>
+                    ) : (
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    )}
+                  </svg>
+                  <span>{paymentPlanZoomScale > 1 ? (isAr ? "1x ضبط" : "1x Reset") : (isAr ? "2x تكبير" : "2x Zoom")}</span>
+                </button>
+              </div>
+
               <p className="font-sans text-sm sm:text-base text-[#FAF6EE] font-semibold leading-snug break-words">
                 {isAr
                   ? paymentPlanImages[activePaymentPlanIndex]?.titleAr
@@ -2130,19 +2384,44 @@ export function ProjectDetailView({
             </span>
           </div>
 
-          {/* Main Visual Image Stage with touch swipe */}
+          {/* Main Visual Image Stage with touch swipe & interactive zoom */}
           <div
-            className="relative z-10 w-full max-w-4xl h-[65vh] flex items-center justify-center my-auto p-4 bg-white rounded-xs shadow-2xl border border-white/20"
-            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 w-full max-w-4xl h-[65vh] flex items-center justify-center my-auto p-4 bg-white rounded-xs shadow-2xl border border-white/20 overflow-hidden cursor-zoom-in"
+            onClick={(e) => {
+              e.stopPropagation();
+              const now = Date.now();
+              if (now - lastPaymentPlanTapRef.current < 350) {
+                setPaymentPlanZoomScale((prev) => (prev > 1 ? 1 : 2));
+                lastPaymentPlanTapRef.current = 0;
+              } else {
+                lastPaymentPlanTapRef.current = now;
+              }
+            }}
           >
-            <Image
-              src={getOptimizedImageUrl(paymentPlanImages[activePaymentPlanIndex].url, 1600)}
-              alt="Payment plan schedule diagram"
-              fill
-              className="object-contain p-2"
-              sizes="(max-width: 1024px) 100vw, 896px"
-              priority
-            />
+            <div
+              className="relative w-full h-full flex items-center justify-center transition-transform duration-300 ease-out"
+              style={{
+                transform: `scale(${paymentPlanZoomScale})`,
+                cursor: paymentPlanZoomScale > 1 ? "zoom-out" : "zoom-in",
+              }}
+            >
+              <Image
+                src={getOptimizedImageUrl(paymentPlanImages[activePaymentPlanIndex].url, 1600)}
+                alt="Payment plan schedule diagram"
+                fill
+                className="object-contain p-2"
+                sizes="(max-width: 1024px) 100vw, 896px"
+                priority
+              />
+            </div>
+            {/* Mobile tap hint */}
+            {paymentPlanZoomScale === 1 && (
+              <div className="absolute bottom-2 inset-x-0 flex justify-center pointer-events-none sm:hidden">
+                <span className="font-mono text-[8.5px] tracking-wider uppercase bg-black/75 backdrop-blur-xs text-[#E2B768] px-2.5 py-0.5 rounded-full border border-[#B8873B]/40 shadow-sm">
+                  {isAr ? "انقر مرتين للتكبير" : "Double-tap to zoom"}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Navigation Controls */}
@@ -2158,9 +2437,36 @@ export function ProjectDetailView({
               {isAr ? "← الخطة السابقة" : "← Previous Plan"}
             </button>
 
-            <span className="font-mono text-xs text-[#E2B768] font-bold">
-              {activePaymentPlanIndex + 1} / {paymentPlanImages.length}
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPaymentPlanZoomScale((prev) => (prev > 1 ? 1 : 2))}
+                className={`px-3 py-1.5 border font-mono text-[10px] tracking-wider uppercase transition-all rounded-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-md ${
+                  paymentPlanZoomScale > 1
+                    ? "bg-[#B8873B] text-[#080907] border-[#B8873B]"
+                    : "bg-black/80 text-[#FAF6EE] border-white/20 hover:border-[#B8873B] hover:text-[#B8873B]"
+                }`}
+                aria-label={paymentPlanZoomScale > 1 ? "Reset zoom" : "Zoom payment plan"}
+              >
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  {paymentPlanZoomScale === 1 ? (
+                    <>
+                      <line x1="11" y1="8" x2="11" y2="14" />
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    </>
+                  ) : (
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  )}
+                </svg>
+                <span>{paymentPlanZoomScale > 1 ? (isAr ? "1x ضبط" : "1x Reset") : (isAr ? "2x تكبير" : "2x Zoom")}</span>
+              </button>
+
+              <span className="font-mono text-xs text-[#E2B768] font-bold">
+                {activePaymentPlanIndex + 1} / {paymentPlanImages.length}
+              </span>
+            </div>
 
             <button
               type="button"
