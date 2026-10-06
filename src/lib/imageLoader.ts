@@ -22,11 +22,15 @@ export default function imageLoader({
     const q = quality ? `q_${quality}` : "q_auto";
     const transform = `w_${width},c_limit,f_auto,${q}`;
 
-    // If already has an upload transform, replace it with the responsive width
+    // Preserve special parameters such as page number (pg_N) for multi-page documents
+    const pgMatch = src.match(/pg_\d+/);
+    const pgSuffix = pgMatch ? `,${pgMatch[0]}` : "";
+
+    // If already has an upload transform, replace it with the responsive width while preserving pg_
     if (src.includes("/image/upload/w_")) {
-      return src.replace(/\/image\/upload\/w_\d+[^/]*\//, `/image/upload/${transform}/`);
+      return src.replace(/\/image\/upload\/w_\d+[^/]*\//, `/image/upload/${transform}${pgSuffix}/`);
     }
-    return src.replace("/image/upload/", `/image/upload/${transform}/`);
+    return src.replace("/image/upload/", `/image/upload/${transform}${pgSuffix}/`);
   }
 
   // 2. Unsplash Images: Use Unsplash CDN dynamic resizing parameters
