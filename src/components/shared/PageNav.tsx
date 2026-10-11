@@ -119,7 +119,7 @@ export default function PageNav() {
           <Link href="/" className="flex items-center flex-shrink-0">
             <div className="relative h-10 sm:h-12 lg:h-14 w-40 sm:w-48 lg:w-56 xl:w-60 overflow-hidden">
               <Image
-                src="/images/asaheeb-horizontal-logo.png"
+                src="/images/asaheeb-horizontal-logo.webp"
                 alt="Asaheeb Real Estate"
                 fill
                 unoptimized

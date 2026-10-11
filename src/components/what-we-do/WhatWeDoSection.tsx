@@ -12,7 +12,7 @@ const CHAPTER_STATIC_CONFIG = [
     id: "apartments",
     index: "01",
     key: "apartments" as const,
-    image: "/images/section1/apartments.png",
+    image: "/images/section1/apartments.webp",
     alt: "Luxury Saudi residential apartment tower with golden bronze architecture",
     accent: "#7FA8B3",
     bg: "#0F1117",
@@ -22,7 +22,7 @@ const CHAPTER_STATIC_CONFIG = [
     id: "villas",
     index: "02",
     key: "villas" as const,
-    image: "/images/section1/villa.png",
+    image: "/images/section1/villa.webp",
     alt: "Modern luxury Saudi villa with reflection pool at dawn",
     accent: "#B8873B",
     bg: "#12130F",
@@ -32,7 +32,7 @@ const CHAPTER_STATIC_CONFIG = [
     id: "commercial-land",
     index: "03",
     key: "commercialLand" as const,
-    image: "/images/section1/commercial-land.png",
+    image: "/images/section1/commercial-land.webp",
     alt: "Masterplanned commercial development land in Saudi Arabia",
     accent: "#B8873B",
     bg: "#0C0D0A",
@@ -42,7 +42,7 @@ const CHAPTER_STATIC_CONFIG = [
     id: "buildings",
     index: "04",
     key: "buildings" as const,
-    image: "/images/section1/building.png",
+    image: "/images/section1/building.webp",
     alt: "Iconic commercial building with sandstone louvers in Saudi Arabia",
     accent: "#7FA8B3",
     bg: "#0F1219",
@@ -553,7 +553,7 @@ export default function WhatWeDoSection() {
 
           <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full border-[3px] border-[#B8873B] overflow-hidden bg-[#12130F] shadow-[0_0_50px_rgba(184,135,59,1)] p-1">
             <Image
-              src="/images/asaheeb_marker.png"
+              src="/images/asaheeb_marker.webp"
               alt="Asaheeb Saudi Real Estate Advisor Character"
               width={128}
               height={128}
@@ -776,7 +776,7 @@ export default function WhatWeDoSection() {
                 muted
                 playsInline
                 className="w-full h-full object-cover object-center scale-[1.02] transition-transform duration-700 group-hover:scale-105"
-                src="/images/hero_3d/villa_loop.mp4"
+                src="https://res.cloudinary.com/diwqmlpr/video/upload/f_auto,q_auto/v1791621696/villa_loop.mp4"
               />
 
               {/* Glassmorphism Inner Gradient Vignette */}

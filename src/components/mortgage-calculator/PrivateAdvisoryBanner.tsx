@@ -27,7 +27,7 @@ export default function PrivateAdvisoryBanner({
       >
         {/* Architectural Image Backdrop */}
         <Image
-          src="/images/madinah-luxury-estate.jpg"
+          src="/images/madinah-luxury-estate.webp"
           alt="Jeddah & Madinah Luxury Real Estate"
           fill
           className="object-cover object-center opacity-25 pointer-events-none"

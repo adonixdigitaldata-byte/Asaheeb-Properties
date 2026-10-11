@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Asaheeb Real Estate",
     images: [
       {
-        url: "https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.png",
+        url: "https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.webp",
         width: 1200,
         height: 675,
         alt: "Fairmont Residences Rua Al Madinah next to The Prophet's Mosque",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fairmont Residences Rua Al Madinah | Exclusive Pre-Launch",
     description: "The privilege of living next to The Prophet’s Mosque. Register your pre-launch interest.",
-    images: ["https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.png"],
+    images: ["https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.webp"],
   },
   robots: {
     index: false,
@@ -60,7 +60,7 @@ export default function FairmontResidencesPreLaunchPage() {
     "description":
       "Exclusive ultra-luxury branded residential collection directly adjacent to The Prophet's Mosque in Madinah, developed by Rua Al Madinah Holding in collaboration with Fairmont (Accor).",
     "url": "https://www.asaheebrealestate.com/new-launches/fairmont-residences-rua-al-madinah",
-    "image": "https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.png",
+    "image": "https://www.asaheebrealestate.com/images/projects/fairmont-rua-al-madinah/hero-exterior.webp",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Madinah",

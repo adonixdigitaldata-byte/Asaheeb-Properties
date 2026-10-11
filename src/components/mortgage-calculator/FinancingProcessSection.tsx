@@ -125,7 +125,7 @@ export default function FinancingProcessSection({
             }}
           >
             <Image
-              src="/images/projects/villa-jeddah.png"
+              src="/images/projects/villa-jeddah.webp"
               alt="Luxury Jeddah Obhur Villa"
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-85 group-hover:opacity-95"

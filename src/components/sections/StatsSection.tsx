@@ -95,7 +95,7 @@ export default function StatsSection() {
     >
       {/* Background image */}
       <div className="absolute inset-0">
-        <Image src="/images/bg-riyadh.png" alt="Riyadh skyline" fill className="object-cover object-center" sizes="100vw" />
+        <Image src="/images/bg-riyadh.webp" alt="Riyadh skyline" fill className="object-cover object-center" sizes="100vw" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(7,8,10,0.93) 0%, rgba(7,8,10,0.85) 50%, rgba(7,8,10,0.93) 100%)" }} />
       </div>
 

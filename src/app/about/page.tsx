@@ -238,7 +238,7 @@ export default function AboutPage() {
         {/* Hero Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/about/hero-bg.png"
+            src="/images/about/hero-bg.webp"
             alt="Saudi Arabia Modern Architectural Skyline"
             fill
             sizes="100vw"
@@ -305,7 +305,7 @@ export default function AboutPage() {
           <div className={`lg:col-span-6 relative ${isAr ? "lg:order-1" : ""}`}>
             <div className="relative w-full aspect-[4/3] rounded-sm overflow-hidden border border-[#B8873B]/30 shadow-2xl group">
               <Image
-                src="/images/about/office-story.png"
+                src="/images/about/office-story.webp"
                 alt="Asaheeb Advisory Executive Office in Riyadh"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -334,7 +334,7 @@ export default function AboutPage() {
             <div className={`lg:col-span-6 relative ${isAr ? "lg:order-2" : ""}`}>
               <div className="relative w-full aspect-[16/10] rounded-sm overflow-hidden border border-[#7FA8B3]/30 shadow-2xl group">
                 <Image
-                  src="/images/about/vision-corridor.png"
+                  src="/images/about/vision-corridor.webp"
                   alt="Saudi Arabia Vision 2030 Corridor Development"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"

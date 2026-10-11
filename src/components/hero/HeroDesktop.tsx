@@ -212,7 +212,7 @@ export default function HeroDesktop() {
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-80 pointer-events-none z-0"
-        src="/hero-desktop.mp4"
+        src="https://res.cloudinary.com/diwqmlpr/video/upload/f_auto,q_auto/v1791621618/hero-desktop.mp4"
       />
 
       {/* ── High-DPI Canvas Display ── */}

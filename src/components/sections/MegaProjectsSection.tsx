@@ -17,7 +17,7 @@ const MEGA_PROJECTS = [
     statLabelAr: "المخطط الشامل",
     badge: "HOLY CITY FLAGSHIP",
     accent: "#B8873B",
-    bg: "/images/madinah.jpg",
+    bg: "/images/madinah.webp",
     featured: true,
   },
   {
@@ -30,7 +30,7 @@ const MEGA_PROJECTS = [
     statLabelAr: "المرحلة الأولى",
     badge: "ENTERTAINMENT",
     accent: "#B8873B",
-    bg: "/images/bg-riyadh.png",
+    bg: "/images/bg-riyadh.webp",
     featured: false,
   },
   {
@@ -43,7 +43,7 @@ const MEGA_PROJECTS = [
     statLabelAr: "جزيرة",
     badge: "TOURISM",
     accent: "#7FA8B3",
-    bg: "/images/projects/apartments-corniche.png",
+    bg: "/images/projects/apartments-corniche.webp",
     featured: false,
   },
   {
@@ -56,7 +56,7 @@ const MEGA_PROJECTS = [
     statLabelAr: "استثمار",
     badge: "HERITAGE",
     accent: "#B8873B",
-    bg: "/images/projects/villa-diriyah.png",
+    bg: "/images/projects/villa-diriyah.webp",
     featured: false,
   },
   {
@@ -69,7 +69,7 @@ const MEGA_PROJECTS = [
     statLabelAr: "هدف",
     badge: "RESIDENTIAL",
     accent: "#7FA8B3",
-    bg: "/images/projects/apartments-riyadh.png",
+    bg: "/images/projects/apartments-riyadh.webp",
     featured: false,
   },
 ];

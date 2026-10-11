@@ -47,5 +47,9 @@ export default function imageLoader({
   }
 
   // 3. Local static assets (/images/...) or external images
-  return src;
+  // Append width parameter to satisfy Next.js custom loader contract without routing through Vercel proxy
+  if (src.startsWith("/")) {
+    return `${src}?w=${width}`;
+  }
+  return src.includes("?") ? `${src}&w=${width}` : `${src}?w=${width}`;
 }

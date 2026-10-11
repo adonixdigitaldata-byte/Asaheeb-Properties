@@ -64,7 +64,7 @@ export default function TurningPointSection() {
       {/* Background Image with Parallax */}
       <div className="turning-point-img absolute inset-0 scale-110">
         <Image
-          src="/images/bg-riyadh.png"
+          src="/images/bg-riyadh.webp"
           alt="Riyadh skyline transformation"
           fill
           className="object-cover object-center"

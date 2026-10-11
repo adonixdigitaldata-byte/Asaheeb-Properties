@@ -19,7 +19,7 @@ const GOV_LOGOS = [
   {
     name: "Vision 2030",
     nameAr: "رؤية 2030",
-    src: "/images/vision-2030.jpg",
+    src: "/images/vision-2030.webp",
     isStandaloneCard: false,
   },
   {
@@ -31,13 +31,13 @@ const GOV_LOGOS = [
   {
     name: "Wafi Program",
     nameAr: "برنامج وافي",
-    src: "/images/Wafi%20logo.jpg",
+    src: "/images/wafi-logo.webp",
     isStandaloneCard: false,
   },
   {
     name: "FAL Real Estate License",
     nameAr: "رخصة فال العقارية",
-    src: "/images/Fal.png",
+    src: "/images/Fal.webp",
     isStandaloneCard: true,
   },
 ];
@@ -92,7 +92,7 @@ export default function PageFooter() {
             <div className={`flex flex-col gap-2 mb-4 ${isAr ? "items-end text-right" : "items-start"}`}>
               <div className="relative w-52 sm:w-64 lg:w-72 h-14 sm:h-16 lg:h-20 overflow-hidden">
                 <Image
-                  src="/images/asaheeb-horizontal-logo.png"
+                  src="/images/asaheeb-horizontal-logo.webp"
                   alt="Asaheeb Real Estate"
                   fill
                   unoptimized
