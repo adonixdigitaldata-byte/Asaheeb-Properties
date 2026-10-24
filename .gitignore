@@ -46,3 +46,7 @@ next-env.d.ts
 # reference folder (internal docs, not for deployment)
 /reference/
 
+# internal workflows & database migrations
+n8n_property_ai_agent_workflow.json
+supabase/add_foreign_eligibility_migration.sql
+supabase/ai_agent_pilot_migration.sql

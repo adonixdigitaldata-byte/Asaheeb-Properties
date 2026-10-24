@@ -118,6 +118,15 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     brochureSizeAr: p.brochure_size_ar || p.brochure_size_en,
     discountOffer: p.discount_offer || p.discountOffer || null,
     discount_offer: p.discount_offer || p.discountOffer || null,
+    ai_agent_enabled: Boolean(p.ai_agent_enabled),
+    ai_agent_name_en: p.ai_agent_name_en,
+    ai_agent_name_ar: p.ai_agent_name_ar,
+    ai_agent_welcome_en: p.ai_agent_welcome_en,
+    ai_agent_welcome_ar: p.ai_agent_welcome_ar,
+    ai_agent_custom_instructions: p.ai_agent_custom_instructions,
+    foreign_eligibility: p.foreign_eligibility || (p.city_en?.toLowerCase().includes("medina") || p.city_en?.toLowerCase().includes("madinah") ? "ELIGIBLE_MUSLIMS_ONLY" : "ELIGIBLE"),
+    foreign_eligibility_en: p.foreign_eligibility_en || "Available for foreign nationals and expatriates with Iqama or Premium Residency via official licensing.",
+    foreign_eligibility_ar: p.foreign_eligibility_ar || "متاح للتملك لغير السعوديين والمقيمين أو حاملي الإقامة المميزة بموجب تراخيص الهيئة العامة للعقار.",
   };
 }
 

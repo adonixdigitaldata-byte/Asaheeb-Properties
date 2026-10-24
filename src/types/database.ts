@@ -127,6 +127,15 @@ export interface Project {
   brochure_size_ar?: string;
   discount_offer?: ProjectDiscountOffer | null;
   discountOffer?: ProjectDiscountOffer | null;
+  ai_agent_enabled?: boolean;
+  ai_agent_name_en?: string;
+  ai_agent_name_ar?: string;
+  ai_agent_welcome_en?: string;
+  ai_agent_welcome_ar?: string;
+  ai_agent_custom_instructions?: string;
+  foreign_eligibility?: "ELIGIBLE" | "ELIGIBLE_MUSLIMS_ONLY" | "NOT_ELIGIBLE" | "REQUIRES_PREMIUM_RESIDENCY" | string;
+  foreign_eligibility_en?: string;
+  foreign_eligibility_ar?: string;
   is_published: boolean;
   sort_order: number;
   created_at?: string;
@@ -245,6 +254,15 @@ export interface ProjectDetail {
   brochureSizeAr?: string;
   discountOffer?: ProjectDiscountOffer | null;
   discount_offer?: ProjectDiscountOffer | null;
+  ai_agent_enabled?: boolean;
+  ai_agent_name_en?: string;
+  ai_agent_name_ar?: string;
+  ai_agent_welcome_en?: string;
+  ai_agent_welcome_ar?: string;
+  ai_agent_custom_instructions?: string;
+  foreign_eligibility?: "ELIGIBLE" | "ELIGIBLE_MUSLIMS_ONLY" | "NOT_ELIGIBLE" | "REQUIRES_PREMIUM_RESIDENCY" | string;
+  foreign_eligibility_en?: string;
+  foreign_eligibility_ar?: string;
 }
 
 export interface PostMetadata {

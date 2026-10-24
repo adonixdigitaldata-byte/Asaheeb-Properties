@@ -126,6 +126,66 @@ const PAYMENT_OPTIONS = [
   { key: "cash-installments", en: "Cash + Installments", ar: "كاش + أقساط" },
 ];
 
+export const FOREIGN_STATUS_OPTIONS = [
+  { key: "all", en: "All Foreign Statuses", ar: "جميع حالات التملك" },
+  { key: "ELIGIBLE", en: "100% Foreign Freehold", ar: "تملك حر لغير السعوديين" },
+  { key: "ELIGIBLE_MUSLIMS_ONLY", en: "Muslims Only (Holy Cities)", ar: "متاح للمسلمين (المدينة المنورة)" },
+  { key: "REQUIRES_PREMIUM_RESIDENCY", en: "Requires Premium Residency", ar: "يتطلب إقامة مميزة" },
+];
+
+export const PRICE_RANGE_OPTIONS = [
+  { key: "all", en: "All Budgets", ar: "جميع الميزانيات", min: 0, max: Infinity },
+  { key: "under-350k", en: "Under SAR 350,000", ar: "أقل من 350 ألف ر.س", min: 0, max: 350000 },
+  { key: "350k-600k", en: "SAR 350,000 – 600,000", ar: "350 ألف – 600 ألف ر.س", min: 350000, max: 600000 },
+  { key: "600k-1.5m", en: "SAR 600,000 – 1.5M", ar: "600 ألف – 1.5 مليون ر.س", min: 600000, max: 1500000 },
+  { key: "above-1.5m", en: "Above SAR 1.5M", ar: "أكثر من 1.5 مليون ر.س", min: 1500000, max: Infinity },
+];
+
+function parseNumericPriceString(str: string): number | null {
+  if (!str) return null;
+  const westernized = str.replace(/[٠-٩]/g, (d) => "0123456789"["٠١٢٣٤٥٦٧٨٩".indexOf(d)]);
+
+  const millionMatch = westernized.match(/(\d+(?:\.\d+)?)\s*(?:m|million|مليون)/i);
+  if (millionMatch) {
+    return Math.round(parseFloat(millionMatch[1]) * 1000000);
+  }
+
+  const kMatch = westernized.match(/(\d+(?:\.\d+)?)\s*(?:k|thousand|ألف)/i);
+  if (kMatch) {
+    return Math.round(parseFloat(kMatch[1]) * 1000);
+  }
+
+  const cleaned = westernized.replace(/,/g, "");
+  const numMatch = cleaned.match(/\b(\d{4,10})\b/);
+  if (numMatch) {
+    return parseInt(numMatch[1], 10);
+  }
+
+  return null;
+}
+
+export function extractProjectNumericPrice(project: ProjectDetail): number | null {
+  const offer = (project as any)?.discountOffer || (project as any)?.discount_offer;
+  const isOfferActive = offer?.is_active && (!offer?.valid_until || new Date(offer.valid_until) >= new Date());
+
+  const candidates = [
+    isOfferActive ? offer?.discounted_price_en : null,
+    isOfferActive ? offer?.discounted_price_ar : null,
+    project.startingPriceEn,
+    (project as any)?.starting_price_en,
+    project.startingPriceAr,
+    (project as any)?.starting_price_ar,
+    project.priceRangeEn,
+    (project as any)?.price_range_en,
+  ].filter(Boolean) as string[];
+
+  for (const raw of candidates) {
+    const val = parseNumericPriceString(raw);
+    if (val !== null && val > 0) return val;
+  }
+  return null;
+}
+
 const CONTENT = {
   en: {
     badge: "Curated Investment Portfolio",
@@ -136,6 +196,8 @@ const CONTENT = {
     filterCityLabel: "Location",
     filterStatusLabel: "Development Status",
     filterPaymentLabel: "Payment Terms",
+    filterPriceLabel: "Price Range & Budget",
+    filterForeignLabel: "Foreign Buyer Eligibility",
     clearAll: "Reset Filters",
     noResults: "No properties match your current search criteria.",
     inquireBtn: "Enquire Now",
@@ -152,6 +214,8 @@ const CONTENT = {
     filterCityLabel: "المدينة والموقع",
     filterStatusLabel: "حالة المشروع",
     filterPaymentLabel: "خطة السداد",
+    filterPriceLabel: "نطاق الأسعار والميزانية",
+    filterForeignLabel: "أهلية تملك الأجانب والمقيمين",
     clearAll: "إعادة ضبط الفلاتر",
     noResults: "لا توجد مشاريع مطابقة لخيارات البحث المحددة.",
     inquireBtn: "استفسر الآن",
@@ -275,8 +339,47 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
 
         <div className={`p-6 flex-1 flex flex-col justify-between h-[195px] ${isAr ? "text-right" : ""}`}>
           <div>
-            <div className="font-mono text-[9.5px] tracking-[0.25em] uppercase mb-1.5 font-medium text-[#B8873B] truncate">
-              {isAr ? project.districtAr : project.districtEn}
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <div className="font-mono text-[9.5px] tracking-[0.25em] uppercase font-medium text-[#B8873B] truncate">
+                {isAr ? project.districtAr : project.districtEn}
+              </div>
+              {project.foreign_eligibility && (
+                <span
+                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-mono tracking-wider uppercase shrink-0 ${
+                    project.foreign_eligibility === "ELIGIBLE"
+                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                      : project.foreign_eligibility === "ELIGIBLE_MUSLIMS_ONLY"
+                      ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                      : project.foreign_eligibility === "REQUIRES_PREMIUM_RESIDENCY"
+                      ? "bg-blue-500/15 text-blue-300 border border-blue-500/30"
+                      : "bg-white/10 text-gray-400 border border-white/10"
+                  }`}
+                  title={isAr ? project.foreign_eligibility_ar : project.foreign_eligibility_en}
+                >
+                  <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  <span>
+                    {isAr
+                      ? project.foreign_eligibility === "ELIGIBLE"
+                        ? "تملك أجنبي"
+                        : project.foreign_eligibility === "ELIGIBLE_MUSLIMS_ONLY"
+                        ? "للمسلمين"
+                        : project.foreign_eligibility === "REQUIRES_PREMIUM_RESIDENCY"
+                        ? "إقامة مميزة"
+                        : "سعوديين فقط"
+                      : project.foreign_eligibility === "ELIGIBLE"
+                      ? "Foreign Freehold"
+                      : project.foreign_eligibility === "ELIGIBLE_MUSLIMS_ONLY"
+                      ? "Muslim Freehold"
+                      : project.foreign_eligibility === "REQUIRES_PREMIUM_RESIDENCY"
+                      ? "Premium Residency"
+                      : "Saudi Only"}
+                  </span>
+                </span>
+              )}
             </div>
             <h3 className="font-display text-2xl text-[#E8DFCE] mb-1.5 tracking-tight group-hover:text-[#B8873B] transition-colors line-clamp-1 h-7">
               {isAr ? project.nameAr : project.nameEn}
@@ -396,6 +499,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeStatus, setActiveStatus] = useState("all");
   const [activePayment, setActivePayment] = useState("all");
+  const [activeForeignStatus, setActiveForeignStatus] = useState("all");
+  const [activePriceRange, setActivePriceRange] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -404,6 +509,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const [draftCategory, setDraftCategory] = useState("all");
   const [draftStatus, setDraftStatus] = useState("all");
   const [draftPayment, setDraftPayment] = useState("all");
+  const [draftForeignStatus, setDraftForeignStatus] = useState("all");
+  const [draftPriceRange, setDraftPriceRange] = useState("all");
 
   const heroRef = useRef<HTMLDivElement>(null);
   const filterSectionRef = useRef<HTMLDivElement>(null);
@@ -423,7 +530,9 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     (activePropertyType !== "all" ? 1 : 0) +
     (activeCategory !== "all" ? 1 : 0) +
     (activeStatus !== "all" ? 1 : 0) +
-    (activePayment !== "all" ? 1 : 0);
+    (activePayment !== "all" ? 1 : 0) +
+    (activeForeignStatus !== "all" ? 1 : 0) +
+    (activePriceRange !== "all" ? 1 : 0);
 
   const isFiltered = searchQuery.trim() !== "" || activeFiltersCount > 0;
 
@@ -433,6 +542,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     setDraftCategory(activeCategory);
     setDraftStatus(activeStatus);
     setDraftPayment(activePayment);
+    setDraftForeignStatus(activeForeignStatus);
+    setDraftPriceRange(activePriceRange);
     setShowFilterModal(true);
   };
 
@@ -442,6 +553,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     setActiveCategory(draftCategory);
     setActiveStatus(draftStatus);
     setActivePayment(draftPayment);
+    setActiveForeignStatus(draftForeignStatus);
+    setActivePriceRange(draftPriceRange);
     setCurrentPage(1);
     setShowFilterModal(false);
   };
@@ -453,15 +566,27 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
     setActiveCategory("all");
     setActiveStatus("all");
     setActivePayment("all");
+    setActiveForeignStatus("all");
+    setActivePriceRange("all");
     setDraftPropertyType("all");
     setDraftCategory("all");
     setDraftStatus("all");
     setDraftPayment("all");
+    setDraftForeignStatus("all");
+    setDraftPriceRange("all");
     setCurrentPage(1);
   };
 
   // Helper filter logic reusable for both page and draft count
-  const calculateFiltered = (pType: string, cat: string, status: string, payment: string, query: string) => {
+  const calculateFiltered = (
+    pType: string,
+    cat: string,
+    status: string,
+    payment: string,
+    foreignStatus: string,
+    priceRange: string,
+    query: string
+  ) => {
     return projectsList.filter((p) => {
       // 1. Search Query
       if (query.trim() !== "") {
@@ -530,12 +655,45 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         }
       }
 
+      // 6. Foreign Buyer Eligibility
+      if (foreignStatus !== "all") {
+        const pForeign = p.foreign_eligibility || (p.cityEn?.toLowerCase().includes("medina") || p.cityEn?.toLowerCase().includes("madinah") ? "ELIGIBLE_MUSLIMS_ONLY" : "ELIGIBLE");
+        if (pForeign !== foreignStatus) return false;
+      }
+
+      // 7. Price Range
+      if (priceRange !== "all") {
+        const numericPrice = extractProjectNumericPrice(p);
+        if (numericPrice === null) return false;
+
+        const option = PRICE_RANGE_OPTIONS.find((opt) => opt.key === priceRange);
+        if (option) {
+          if (numericPrice < option.min || numericPrice > option.max) return false;
+        }
+      }
+
       return true;
     });
   };
 
-  const filtered = calculateFiltered(activePropertyType, activeCategory, activeStatus, activePayment, searchQuery);
-  const draftFilteredCount = calculateFiltered(draftPropertyType, draftCategory, draftStatus, draftPayment, searchQuery).length;
+  const filtered = calculateFiltered(
+    activePropertyType,
+    activeCategory,
+    activeStatus,
+    activePayment,
+    activeForeignStatus,
+    activePriceRange,
+    searchQuery
+  );
+  const draftFilteredCount = calculateFiltered(
+    draftPropertyType,
+    draftCategory,
+    draftStatus,
+    draftPayment,
+    draftForeignStatus,
+    draftPriceRange,
+    searchQuery
+  ).length;
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -564,6 +722,18 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const handlePaymentChange = (key: string) => {
     setActivePayment(key);
     setDraftPayment(key);
+    setCurrentPage(1);
+  };
+
+  const handleForeignStatusChange = (key: string) => {
+    setActiveForeignStatus(key);
+    setDraftForeignStatus(key);
+    setCurrentPage(1);
+  };
+
+  const handlePriceRangeChange = (key: string) => {
+    setActivePriceRange(key);
+    setDraftPriceRange(key);
     setCurrentPage(1);
   };
 
@@ -603,7 +773,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
         );
       }
     }
-  }, [searchQuery, activePropertyType, activeCategory, activeStatus, activePayment, currentPage]);
+  }, [searchQuery, activePropertyType, activeCategory, activeStatus, activePayment, activeForeignStatus, activePriceRange, currentPage]);
 
   return (
     <main className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0" dir={isAr ? "rtl" : "ltr"}>
@@ -746,6 +916,26 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                     <button onClick={() => handlePaymentChange("all")} className="text-[#8C8477] hover:text-[#B8873B] cursor-pointer">✕</button>
                   </span>
                 )}
+                {activePriceRange !== "all" && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 bg-[#171914] border border-[#B8873B]/50 text-[#E8DFCE] rounded-xs shadow-sm">
+                    <svg className="w-3 h-3 text-[#B8873B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                    <span>{PRICE_RANGE_OPTIONS.find((pr) => pr.key === activePriceRange)?.[isAr ? "ar" : "en"]}</span>
+                    <button onClick={() => handlePriceRangeChange("all")} className="text-[#8C8477] hover:text-[#B8873B] cursor-pointer">✕</button>
+                  </span>
+                )}
+                {activeForeignStatus !== "all" && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 bg-[#171914] border border-emerald-500/40 text-emerald-300 rounded-xs shadow-sm">
+                    <svg className="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    <span>{FOREIGN_STATUS_OPTIONS.find((fs) => fs.key === activeForeignStatus)?.[isAr ? "ar" : "en"]}</span>
+                    <button onClick={() => handleForeignStatusChange("all")} className="text-[#8C8477] hover:text-[#B8873B] cursor-pointer">✕</button>
+                  </span>
+                )}
                 <button
                   onClick={resetAllFilters}
                   className="font-mono text-[9.5px] uppercase tracking-wider text-[#B8873B] hover:underline cursor-pointer px-1 py-0.5 ml-1"
@@ -870,7 +1060,65 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                 </div>
               </div>
 
-              {/* Category 4: Payment Terms */}
+              {/* Category 4: Price Range */}
+              <div className={`pt-6 space-y-3 ${isAr ? "text-right" : ""}`}>
+                <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
+                  {c.filterPriceLabel}
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {PRICE_RANGE_OPTIONS.map((pr) => {
+                    const isSelected = draftPriceRange === pr.key;
+                    return (
+                      <button
+                        key={pr.key}
+                        onClick={() => setDraftPriceRange(pr.key)}
+                        className={`p-3 border text-center font-mono text-[10px] tracking-wider uppercase transition-all duration-200 cursor-pointer rounded-xs flex items-center justify-center gap-2 ${
+                          isSelected
+                            ? "border-[#B8873B] bg-[#B8873B] text-[#12130F] font-bold shadow-[0_0_15px_rgba(184,135,59,0.25)]"
+                            : "border-white/10 bg-[#171914] text-[#8C8477] hover:border-white/25 hover:text-[#C5BCAD]"
+                        }`}
+                      >
+                        <svg className={`w-3.5 h-3.5 ${isSelected ? "text-[#12130F]" : "text-[#B8873B]"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                        <span>{isAr ? pr.ar : pr.en}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Category 5: Foreign Buyer Eligibility */}
+              <div className={`pt-6 space-y-3 ${isAr ? "text-right" : ""}`}>
+                <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
+                  {c.filterForeignLabel}
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {FOREIGN_STATUS_OPTIONS.map((fs) => {
+                    const isSelected = draftForeignStatus === fs.key;
+                    return (
+                      <button
+                        key={fs.key}
+                        onClick={() => setDraftForeignStatus(fs.key)}
+                        className={`p-3 border text-center font-mono text-[10px] tracking-wider uppercase transition-all duration-200 cursor-pointer rounded-xs flex items-center justify-center gap-2 ${
+                          isSelected
+                            ? "border-[#B8873B] bg-[#B8873B] text-[#12130F] font-bold shadow-[0_0_15px_rgba(184,135,59,0.25)]"
+                            : "border-white/10 bg-[#171914] text-[#8C8477] hover:border-white/25 hover:text-[#C5BCAD]"
+                        }`}
+                      >
+                        <svg className={`w-3.5 h-3.5 ${isSelected ? "text-[#12130F]" : "text-emerald-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="2" y1="12" x2="22" y2="12" />
+                          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        </svg>
+                        <span>{isAr ? fs.ar : fs.en}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Category 6: Payment Terms */}
               <div className={`pt-6 space-y-3 ${isAr ? "text-right" : ""}`}>
                 <label className="block font-mono text-[10.5px] tracking-[0.22em] uppercase text-[#C5BCAD] font-semibold">
                   {c.filterPaymentLabel}
@@ -905,6 +1153,8 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                   setDraftCategory("all");
                   setDraftStatus("all");
                   setDraftPayment("all");
+                  setDraftForeignStatus("all");
+                  setDraftPriceRange("all");
                 }}
                 className="px-4 py-2.5 border border-white/15 text-[#8C8477] hover:text-[#E8DFCE] hover:border-white/30 font-mono text-[10.5px] tracking-wider uppercase rounded-xs cursor-pointer transition-colors"
               >
