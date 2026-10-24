@@ -556,7 +556,7 @@ export default function PropertyAIChatWidget({
                 </div>
                 <p className="text-[10px] text-gray-300 truncate">
                   {developerName ? `${developerName} · ` : ""}
-                  {isAr ? "مستشار سحاب العقاري المعتمد" : "Asaheeb Property Specialist"}
+                  {isAr ? "مستشار أصاهيب العقاري المعتمد" : "Asaheeb Real Estate Specialist"}
                 </p>
               </div>
             </div>
@@ -942,8 +942,8 @@ export default function PropertyAIChatWidget({
           {/* Legal Footer */}
           <div className="py-1.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] bg-[#05070B] text-center text-[9px] text-gray-500 font-mono shrink-0">
             {isAr
-              ? "سحاب العقارية · رخصة فال 1200000000 · وافي معتمد"
-              : "Asaheeb Properties · Fal Licensed · Wafi Certified"}
+              ? "أصاهيب العقارية · رخصة فال 1200000000 · وافي معتمد"
+              : "Asaheeb Real Estate · Fal Licensed · Wafi Certified"}
           </div>
         </div>
       )}
