@@ -204,14 +204,14 @@ export default function FaqClient() {
 
           <p className="font-sans text-xs sm:text-sm md:text-base text-[#C5BCAD] max-w-3xl mx-auto leading-relaxed mb-8 px-2">
             {isAr
-              ? "مرجع متكامل يضم 157 إجابة معتمدة حول أنظمة الهيئة العامة للعقار (رخصة فال)، ضريبة التصرفات العقارية (5%)، رسم تملك غير السعوديين (2%)، وحاسبة التكلفة الإجمالية في جدة والرياض ومكة والمدينة."
-              : "An authoritative 157-question legal and financial repository covering REGA regulations, 5% RETT, 2% Non-Saudi conveyance fees, SAR 4M Premium Residency, and verified acquisition procedures in Jeddah & Riyadh."}
+              ? "مرجع متكامل يضم 193 إجابة معتمدة حول أنظمة الهيئة العامة للعقار (رخصة فال)، ضريبة التصرفات العقارية (5%)، رسم تملك غير السعوديين (2%)، وحاسبة التكلفة الإجمالية في جدة والرياض ومكة والمدينة."
+              : "An authoritative 193-question legal and financial repository covering REGA regulations, 5% RETT, 2% Non-Saudi conveyance fees, SAR 4M Premium Residency, and verified acquisition procedures in Jeddah & Riyadh."}
           </p>
 
           {/* Quick Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
             <div className="p-3 rounded-xl border border-white/10 bg-[#141611]/80 text-center">
-              <span className="font-display text-lg sm:text-xl text-[#B8873B] font-bold block">157</span>
+              <span className="font-display text-lg sm:text-xl text-[#B8873B] font-bold block">193</span>
               <span className="text-[10px] sm:text-[11px] font-mono text-[#8C8477] uppercase">{isAr ? "سؤال وجواب معتمد" : "Verified Q&As"}</span>
             </div>
             <div className="p-3 rounded-xl border border-white/10 bg-[#141611]/80 text-center">
@@ -228,14 +228,40 @@ export default function FaqClient() {
             </div>
           </div>
 
-          {/* Quick jump to Digital ID 3D Handbook */}
-          <div className="mt-8 flex items-center justify-center">
+          {/* Quick jump navigation */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#faq-list"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-[#B8873B] bg-[#B8873B] text-[#0B0C09] hover:bg-[#c99544] font-mono text-[11px] sm:text-xs tracking-wider uppercase font-bold transition-all shadow-[0_4px_20px_rgba(184,135,59,0.2)] hover:shadow-[0_6px_25px_rgba(184,135,59,0.35)] cursor-pointer"
+            >
+              <span>{isAr ? "استعراض 193 سؤالاً معتمداً" : "Browse 193 Verified FAQs"}</span>
+              <svg
+                className="w-3.5 h-3.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M19 12l-7 7-7-7" />
+              </svg>
+            </a>
+
+            <a
+              href="#eligibility-calculator"
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30 text-[#E8DFCE] font-mono text-[11px] sm:text-xs tracking-wider uppercase font-semibold transition-all cursor-pointer"
+            >
+              <span>{isAr ? "فحص الأهلية والحاسبة" : "Eligibility & Cost Calculator"}</span>
+            </a>
+
             <a
               href="#digital-id-handbook"
-              className="inline-flex items-center justify-center gap-2.5 sm:gap-3 px-5 sm:px-6 py-2.5 rounded-full border border-[#B8873B]/40 bg-[#B8873B]/10 hover:bg-[#B8873B]/20 hover:border-[#B8873B] text-[#E2B768] hover:text-[#FAF6EE] font-mono text-[11px] sm:text-xs tracking-wider uppercase font-semibold transition-all shadow-[0_4px_20px_rgba(184,135,59,0.12)] hover:shadow-[0_6px_25px_rgba(184,135,59,0.25)] group cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full border border-[#B8873B]/40 bg-[#B8873B]/10 hover:bg-[#B8873B]/20 hover:border-[#B8873B] text-[#E2B768] hover:text-[#FAF6EE] font-mono text-[11px] sm:text-xs tracking-wider uppercase font-semibold transition-all shadow-[0_4px_20px_rgba(184,135,59,0.12)] group cursor-pointer"
             >
               <svg
-                className="w-4 h-4 text-[#B8873B] shrink-0"
+                className="w-3.5 h-3.5 text-[#B8873B] shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -247,317 +273,14 @@ export default function FaqClient() {
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
-              <span className="leading-tight sm:leading-none text-center">
-                {isAr ? "دليل الهوية الرقمية وأبشر 2026 · كتاب تفاعلي" : "Interactive 3D Handbook: Saudi Digital ID & Banking"}
-              </span>
-              <svg
-                className="w-3.5 h-3.5 text-[#B8873B]/70 group-hover:text-[#E2B768] group-hover:translate-y-0.5 transition-transform shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 5v14M19 12l-7 7-7-7" />
-              </svg>
+              <span>{isAr ? "دليل الهوية الرقمية 3D" : "Digital ID 3D Guide"}</span>
             </a>
           </div>
         </div>
       </section>
 
-      {/* ── 1. INTERACTIVE SCREENER & CALCULATOR (AT TOP) ─────────── */}
-      <section className="py-12 sm:py-16 px-4 sm:px-8 lg:px-20 border-b border-white/10 bg-[#0E100C]">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-          
-          {/* Eligibility Checker */}
-          <div className="p-5 sm:p-8 rounded-2xl border border-white/10 bg-[#141611] relative flex flex-col justify-between shadow-2xl">
-            <div>
-              <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                <div className="w-8 h-8 rounded-lg bg-[#B8873B]/20 border border-[#B8873B]/40 flex items-center justify-center text-[#B8873B] font-mono text-xs sm:text-sm font-semibold shrink-0">
-                  01
-                </div>
-                <div>
-                  <h2 className="font-display text-lg sm:text-xl text-[#E8DFCE]">
-                    {isAr ? "أداة فحص الأهلية للتملك الفوري" : "Instant Eligibility Screener"}
-                  </h2>
-                  <p className="text-[11px] sm:text-xs font-mono text-[#8C8477]">
-                    {isAr ? "فحص الأهلية للمواطنين والمقيمين وغير المقيمين" : "Verify compliance for Saudis, Expats & Non-Residents"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                {/* Residency Type including Saudi Citizen */}
-                <div>
-                  <label className="block text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#8C8477] mb-2">
-                    {isAr ? "صفة المشتري" : "Buyer Category"}
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] sm:text-xs font-sans">
-                    {[
-                      { val: "saudi_gcc", labelEn: "Saudi / GCC", labelAr: "مواطن سعودي/خليجي" },
-                      { val: "iqama", labelEn: "Iqama Resident", labelAr: "مقيم بإقامة" },
-                      { val: "non_resident", labelEn: "Non-Resident", labelAr: "أجنبي غير مقيم" },
-                      { val: "premium_residency", labelEn: "Premium Res.", labelAr: "إقامة مميزة" }
-                    ].map((item) => (
-                      <button
-                        key={item.val}
-                        type="button"
-                        onClick={() => {
-                          setEligResidency(item.val as any);
-                          if (item.val === "saudi_gcc") {
-                            setBuyerType("saudi_gcc");
-                          } else if (item.val === "non_resident") {
-                            setBuyerType("non_resident");
-                          } else {
-                            setBuyerType("expat_resident");
-                          }
-                        }}
-                        className={`p-2 sm:p-2.5 rounded-lg border text-center transition-all ${
-                          eligResidency === item.val
-                            ? "border-[#B8873B] bg-[#B8873B]/20 text-[#E8DFCE] font-bold shadow-sm"
-                            : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
-                        }`}
-                      >
-                        {isAr ? item.labelAr : item.labelEn}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Target City */}
-                <div>
-                  <label className="block text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#8C8477] mb-2">
-                    {isAr ? "المدينة المستهدفة" : "Target City"}
-                  </label>
-                  <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-sans">
-                    {[
-                      { val: "jeddah", labelEn: "Jeddah", labelAr: "جدة" },
-                      { val: "riyadh", labelEn: "Riyadh", labelAr: "الرياض" },
-                      { val: "makkah", labelEn: "Makkah", labelAr: "مكة" },
-                      { val: "madinah", labelEn: "Madinah", labelAr: "المدينة" }
-                    ].map((item) => (
-                      <button
-                        key={item.val}
-                        type="button"
-                        onClick={() => setEligCity(item.val as any)}
-                        className={`p-2 sm:p-2.5 rounded-lg border text-center transition-all ${
-                          eligCity === item.val
-                            ? "border-[#B8873B] bg-[#B8873B]/20 text-[#E8DFCE] font-bold"
-                            : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
-                        }`}
-                      >
-                        {isAr ? item.labelAr : item.labelEn}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Holy Cities Requirement for Non-Saudis */}
-                {eligResidency !== "saudi_gcc" && (eligCity === "makkah" || eligCity === "madinah") && (
-                  <div className="p-3 rounded-xl border border-[#B8873B]/40 bg-[#B8873B]/10">
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B8873B] mb-2">
-                      {isAr ? "الاشتراط الديني لمكة والمدينة" : "Holy Cities Religious Requirement"}
-                    </label>
-                    <div className="grid grid-cols-2 gap-2 text-xs font-sans">
-                      {[
-                        { val: "muslim", labelEn: "Muslim Natural Person", labelAr: "شخص طبيعي مسلم" },
-                        { val: "non_muslim", labelEn: "Non-Muslim", labelAr: "غير مسلم" }
-                      ].map((item) => (
-                        <button
-                          key={item.val}
-                          type="button"
-                          onClick={() => setEligReligion(item.val as any)}
-                          className={`p-2 rounded-lg border text-center transition-all ${
-                            eligReligion === item.val
-                              ? "border-[#B8873B] bg-[#B8873B]/25 text-[#E8DFCE] font-bold"
-                              : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
-                          }`}
-                        >
-                          {isAr ? item.labelAr : item.labelEn}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Result Box */}
-            <div
-              className={`p-4 rounded-xl border ${
-                eligibilityResult.status === "eligible"
-                  ? "border-emerald-500/30 bg-emerald-950/20"
-                  : "border-amber-500/30 bg-amber-950/20"
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className={`text-sm sm:text-base ${eligibilityResult.status === "eligible" ? "text-emerald-400" : "text-amber-400"}`}>
-                  {eligibilityResult.status === "eligible" ? "✓" : "⚠"}
-                </span>
-                <span className="font-display text-xs sm:text-sm text-[#E8DFCE] font-bold">
-                  {isAr ? eligibilityResult.titleAr : eligibilityResult.titleEn}
-                </span>
-              </div>
-              <p className="text-[11px] sm:text-xs text-[#C5BCAD] leading-relaxed">
-                {isAr ? eligibilityResult.descAr : eligibilityResult.descEn}
-              </p>
-            </div>
-          </div>
-
-          {/* Total Acquisition Cost Calculator */}
-          <div className="p-5 sm:p-8 rounded-2xl border border-white/10 bg-[#141611] relative flex flex-col justify-between shadow-2xl">
-            <div>
-              <div className="flex items-center gap-3 mb-5 sm:mb-6">
-                <div className="w-8 h-8 rounded-lg bg-[#B8873B]/20 border border-[#B8873B]/40 flex items-center justify-center text-[#B8873B] font-mono text-xs sm:text-sm font-semibold shrink-0">
-                  02
-                </div>
-                <div>
-                  <h2 className="font-display text-lg sm:text-xl text-[#E8DFCE]">
-                    {isAr ? "حاسبة التكلفة الإجمالية لصفقة العقار" : "Total Acquisition Cost Calculator"}
-                  </h2>
-                  <p className="text-[11px] sm:text-xs font-mono text-[#8C8477]">
-                    {isAr ? "شاملة ضريبة التصرفات 5% ورسم التملك 2%" : "Compute full price including 5% RETT & 2% Non-Saudi Fee"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Buyer Category Filter inside Calculator */}
-              <div className="mb-4">
-                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#8C8477] mb-2">
-                  {isAr ? "فئة المشتري المطبقة" : "Applied Buyer Category"}
-                </label>
-                <div className="grid grid-cols-3 gap-2 text-[11px] sm:text-xs font-sans">
-                  {[
-                    { val: "saudi_gcc", labelEn: "🇸🇦 Saudi / GCC", labelAr: "🇸🇦 مواطن سعودي/خليجي" },
-                    { val: "expat_resident", labelEn: "🌍 Expat Resident", labelAr: "🌍 مقيم بإقامة" },
-                    { val: "non_resident", labelEn: "🌐 Non-Resident", labelAr: "🌐 أجنبي غير مقيم" }
-                  ].map((item) => (
-                    <button
-                      key={item.val}
-                      type="button"
-                      onClick={() => setBuyerType(item.val as any)}
-                      className={`p-2 rounded-lg border text-center transition-all ${
-                        buyerType === item.val
-                          ? "border-[#B8873B] bg-[#B8873B]/20 text-[#E8DFCE] font-bold"
-                          : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
-                      }`}
-                    >
-                      {isAr ? item.labelAr : item.labelEn}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Slider with Smooth Gold Track Fill */}
-              <div className="mb-5">
-                <div className="flex justify-between items-center mb-2">
-                  <label className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#8C8477]">
-                    {isAr ? "سعر العقار المستهدف (ريال)" : "Property Price (SAR)"}
-                  </label>
-                  <span className="font-mono text-xs sm:text-sm font-bold text-[#B8873B]">
-                    SAR {propertyPrice.toLocaleString()}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min={SLIDER_MIN}
-                  max={SLIDER_MAX}
-                  step={50000}
-                  value={propertyPrice}
-                  onChange={(e) => setPropertyPrice(Number(e.target.value))}
-                  style={{
-                    background: isAr
-                      ? `linear-gradient(to left, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
-                      : `linear-gradient(to right, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
-                  }}
-                  className="w-full h-2.5 rounded-lg appearance-none cursor-pointer accent-[#E8DFCE]"
-                />
-                <div className="flex justify-between text-[10px] font-mono text-[#8C8477] mt-1.5">
-                  {isAr ? (
-                    <>
-                      <span>300 ألف</span>
-                      <span>4 مليون (الإقامة)</span>
-                      <span>10 مليون</span>
-                      <span>+15 مليون</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>300K</span>
-                      <span>4M (Residency)</span>
-                      <span>10M</span>
-                      <span>15M+</span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Cost Breakdown */}
-              <div className="space-y-2 text-[11px] sm:text-xs border-t border-white/10 pt-3.5 mb-5">
-                <div className="flex justify-between text-[#C5BCAD]">
-                  <span>{isAr ? "سعر العقار الأساسي" : "Base Property Price"}</span>
-                  <span className="font-mono font-medium text-[#E8DFCE]">SAR {propertyPrice.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-[#C5BCAD]">
-                  <span>{isAr ? "ضريبة التصرفات العقارية (5% RETT)" : "Transaction Tax (5% RETT)"}</span>
-                  <span className="font-mono text-[#B8873B]">SAR {rettAmount.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-[#C5BCAD]">
-                  <span className="flex items-center gap-1.5">
-                    {isAr ? "رسم تملك غير السعوديين (2% REGA)" : "Non-Saudi Ownership Fee (2% REGA)"}
-                    {buyerType === "saudi_gcc" && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-500/30">
-                        {isAr ? "معفى للمواطن" : "Exempt"}
-                      </span>
-                    )}
-                  </span>
-                  <span className="font-mono text-[#B8873B]">
-                    {buyerType === "saudi_gcc" ? "SAR 0" : `SAR ${nonSaudiFeeAmount.toLocaleString()}`}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#C5BCAD]">
-                  <span>{isAr ? "عمولة الوساطة المعتمدة (2.5% FAL)" : "Standard Brokerage (2.5% FAL)"}</span>
-                  <span className="font-mono text-[#C5BCAD]">SAR {brokerageAmount.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-[#8C8477]">
-                  <span>{isAr ? "رسوم التوثيق والسجل العقاري التقديرية" : "Estimated Registration & Admin"}</span>
-                  <span className="font-mono">SAR {adminEst.toLocaleString()}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Total Box */}
-            <div className="p-3.5 sm:p-4 rounded-xl border border-[#B8873B]/40 bg-[#B8873B]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <span className="text-[10px] sm:text-[11px] font-mono text-[#8C8477] uppercase tracking-wider block">
-                  {isAr ? "إجمالي التكلفة التقديرية للاستحواذ" : "Total Estimated Acquisition Cost"}
-                </span>
-                <span className="font-display text-lg sm:text-xl md:text-2xl text-[#E8DFCE] font-bold">
-                  SAR {totalAcquisitionCost.toLocaleString()}
-                </span>
-              </div>
-              <a
-                href={getWhatsAppLink(
-                  `Hello Asaheeb Real Estate, I am evaluating a property transaction of SAR ${propertyPrice.toLocaleString()} (${buyerType === "saudi_gcc" ? "Saudi Citizen" : "Expat Buyer"}). Please advise on curated opportunities.`
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2.5 bg-[#B8873B] text-[#0B0C09] font-mono text-xs font-semibold uppercase tracking-wider rounded-lg hover:bg-[#c99544] transition-all text-center whitespace-nowrap"
-              >
-                {isAr ? "استشر مستشارنا" : "Discuss Deal"}
-              </a>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ── 1.5 OFFICIAL SAUDI DIGITAL ID & BANKING 3D BOOKLET ─────── */}
-      <DigitalIdBooklet isAr={isAr} />
-
-      {/* ── 2. FAQ QUESTIONS LIST & DIRECT SEARCH ─────────────────── */}
-      <section className="py-12 sm:py-16 px-4 sm:px-8 lg:px-20" ref={faqListTopRef}>
+      {/* ── 1. FAQ QUESTIONS LIST & DIRECT SEARCH (AT TOP) ───────── */}
+      <section id="faq-list" className="py-12 sm:py-16 px-4 sm:px-8 lg:px-20 border-b border-white/10" ref={faqListTopRef}>
         <div className="max-w-4xl mx-auto">
           
           {/* Integrated Search & Filter Container */}
@@ -586,8 +309,8 @@ export default function FaqClient() {
                 }}
                 placeholder={
                   isAr
-                    ? "ابحث مباشرة في 157 سؤالاً (مثال: ضريبة التصرفات 5%، تملك الأجانب في جدة، الإقامة المميزة...)"
-                    : "Search all 157 questions directly (e.g. 5% RETT, foreign ownership in Jeddah, SAR 4M residency...)"
+                    ? "ابحث مباشرة في 193 سؤالاً (مثال: ضريبة التصرفات 5%، تملك الأجانب في جدة، الإقامة المميزة...)"
+                    : "Search all 193 questions directly (e.g. 5% RETT, foreign ownership in Jeddah, SAR 4M residency...)"
                 }
                 className="w-full bg-[#1A1C16] border border-white/15 focus:border-[#B8873B] rounded-xl pl-11 sm:pl-12 pr-10 py-3 sm:py-3.5 text-xs sm:text-sm text-[#E8DFCE] placeholder-[#8C8477] outline-none transition-all"
               />
@@ -801,7 +524,305 @@ export default function FaqClient() {
         </div>
       </section>
 
-      {/* ── 3. 10-STEP BUYER JOURNEY SECTION (DOWNWARD) ─────────────── */}
+      {/* ── 2. INTERACTIVE SCREENER & CALCULATOR (BELOW FAQS) ──────── */}
+      <section id="eligibility-calculator" className="py-12 sm:py-16 px-4 sm:px-8 lg:px-20 border-b border-white/10 bg-[#0E100C]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+            <span className="font-mono text-xs tracking-[0.25em] uppercase text-[#B8873B] block mb-2">
+              {isAr ? "أدوات التقييم الذاتي والاستثمار" : "Investor Evaluation Tools"}
+            </span>
+            <h2 className="font-display text-xl sm:text-3xl text-[#E8DFCE]">
+              {isAr ? "فحص الأهلية الفوري وحاسبة التكلفة الإجمالية" : "Instant Eligibility Screener & Total Cost Calculator"}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            {/* Eligibility Checker */}
+            <div className="p-5 sm:p-8 rounded-2xl border border-white/10 bg-[#141611] relative flex flex-col justify-between shadow-2xl">
+              <div>
+                <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                  <div className="w-8 h-8 rounded-lg bg-[#B8873B]/20 border border-[#B8873B]/40 flex items-center justify-center text-[#B8873B] font-mono text-xs sm:text-sm font-semibold shrink-0">
+                    01
+                  </div>
+                  <div>
+                    <h2 className="font-display text-lg sm:text-xl text-[#E8DFCE]">
+                      {isAr ? "أداة فحص الأهلية للتملك الفوري" : "Instant Eligibility Screener"}
+                    </h2>
+                    <p className="text-[11px] sm:text-xs font-mono text-[#8C8477]">
+                      {isAr ? "فحص الأهلية للمواطنين والمقيمين وغير المقيمين" : "Verify compliance for Saudis, Expats & Non-Residents"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  {/* Residency Type including Saudi Citizen */}
+                  <div>
+                    <label className="block text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#8C8477] mb-2">
+                      {isAr ? "صفة المشتري" : "Buyer Category"}
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] sm:text-xs font-sans">
+                      {[
+                        { val: "saudi_gcc", labelEn: "Saudi / GCC", labelAr: "مواطن سعودي/خليجي" },
+                        { val: "iqama", labelEn: "Iqama Resident", labelAr: "مقيم بإقامة" },
+                        { val: "non_resident", labelEn: "Non-Resident", labelAr: "أجنبي غير مقيم" },
+                        { val: "premium_residency", labelEn: "Premium Res.", labelAr: "إقامة مميزة" }
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          onClick={() => {
+                            setEligResidency(item.val as any);
+                            if (item.val === "saudi_gcc") {
+                              setBuyerType("saudi_gcc");
+                            } else if (item.val === "non_resident") {
+                              setBuyerType("non_resident");
+                            } else {
+                              setBuyerType("expat_resident");
+                            }
+                          }}
+                          className={`p-2 sm:p-2.5 rounded-lg border text-center transition-all ${
+                            eligResidency === item.val
+                              ? "border-[#B8873B] bg-[#B8873B]/20 text-[#E8DFCE] font-bold shadow-sm"
+                              : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
+                          }`}
+                        >
+                          {isAr ? item.labelAr : item.labelEn}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Target City */}
+                  <div>
+                    <label className="block text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#8C8477] mb-2">
+                      {isAr ? "المدينة المستهدفة" : "Target City"}
+                    </label>
+                    <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-sans">
+                      {[
+                        { val: "jeddah", labelEn: "Jeddah", labelAr: "جدة" },
+                        { val: "riyadh", labelEn: "Riyadh", labelAr: "الرياض" },
+                        { val: "makkah", labelEn: "Makkah", labelAr: "مكة" },
+                        { val: "madinah", labelEn: "Madinah", labelAr: "المدينة" }
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          onClick={() => setEligCity(item.val as any)}
+                          className={`p-2 sm:p-2.5 rounded-lg border text-center transition-all ${
+                            eligCity === item.val
+                              ? "border-[#B8873B] bg-[#B8873B]/20 text-[#E8DFCE] font-bold"
+                              : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
+                          }`}
+                        >
+                          {isAr ? item.labelAr : item.labelEn}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Holy Cities Requirement for Non-Saudis */}
+                  {eligResidency !== "saudi_gcc" && (eligCity === "makkah" || eligCity === "madinah") && (
+                    <div className="p-3 rounded-xl border border-[#B8873B]/40 bg-[#B8873B]/10">
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#B8873B] mb-2">
+                        {isAr ? "الاشتراط الديني لمكة والمدينة" : "Holy Cities Religious Requirement"}
+                      </label>
+                      <div className="grid grid-cols-2 gap-2 text-xs font-sans">
+                        {[
+                          { val: "muslim", labelEn: "Muslim Natural Person", labelAr: "شخص طبيعي مسلم" },
+                          { val: "non_muslim", labelEn: "Non-Muslim", labelAr: "غير مسلم" }
+                        ].map((item) => (
+                          <button
+                            key={item.val}
+                            type="button"
+                            onClick={() => setEligReligion(item.val as any)}
+                            className={`p-2 rounded-lg border text-center transition-all ${
+                              eligReligion === item.val
+                                ? "border-[#B8873B] bg-[#B8873B]/25 text-[#E8DFCE] font-bold"
+                                : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
+                            }`}
+                          >
+                            {isAr ? item.labelAr : item.labelEn}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Result Box */}
+              <div
+                className={`p-4 rounded-xl border ${
+                  eligibilityResult.status === "eligible"
+                    ? "border-emerald-500/30 bg-emerald-950/20"
+                    : "border-amber-500/30 bg-amber-950/20"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className={`text-sm sm:text-base ${eligibilityResult.status === "eligible" ? "text-emerald-400" : "text-amber-400"}`}>
+                    {eligibilityResult.status === "eligible" ? "✓" : "⚠"}
+                  </span>
+                  <span className="font-display text-xs sm:text-sm text-[#E8DFCE] font-bold">
+                    {isAr ? eligibilityResult.titleAr : eligibilityResult.titleEn}
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-[#C5BCAD] leading-relaxed">
+                  {isAr ? eligibilityResult.descAr : eligibilityResult.descEn}
+                </p>
+              </div>
+            </div>
+
+            {/* Total Acquisition Cost Calculator */}
+            <div className="p-5 sm:p-8 rounded-2xl border border-white/10 bg-[#141611] relative flex flex-col justify-between shadow-2xl">
+              <div>
+                <div className="flex items-center gap-3 mb-5 sm:mb-6">
+                  <div className="w-8 h-8 rounded-lg bg-[#B8873B]/20 border border-[#B8873B]/40 flex items-center justify-center text-[#B8873B] font-mono text-xs sm:text-sm font-semibold shrink-0">
+                    02
+                  </div>
+                  <div>
+                    <h2 className="font-display text-lg sm:text-xl text-[#E8DFCE]">
+                      {isAr ? "حاسبة التكلفة الإجمالية لصفقة العقار" : "Total Acquisition Cost Calculator"}
+                    </h2>
+                    <p className="text-[11px] sm:text-xs font-mono text-[#8C8477]">
+                      {isAr ? "شاملة ضريبة التصرفات 5% ورسم التملك 2%" : "Compute full price including 5% RETT & 2% Non-Saudi Fee"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Buyer Category Filter inside Calculator */}
+                <div className="mb-4">
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#8C8477] mb-2">
+                    {isAr ? "فئة المشتري المطبقة" : "Applied Buyer Category"}
+                  </label>
+                  <div className="grid grid-cols-3 gap-2 text-[11px] sm:text-xs font-sans">
+                    {[
+                      { val: "saudi_gcc", labelEn: "🇸🇦 Saudi / GCC", labelAr: "🇸🇦 مواطن سعودي/خليجي" },
+                      { val: "expat_resident", labelEn: "🌍 Expat Resident", labelAr: "🌍 مقيم بإقامة" },
+                      { val: "non_resident", labelEn: "🌐 Non-Resident", labelAr: "🌐 أجنبي غير مقيم" }
+                    ].map((item) => (
+                      <button
+                        key={item.val}
+                        type="button"
+                        onClick={() => setBuyerType(item.val as any)}
+                        className={`p-2 rounded-lg border text-center transition-all ${
+                          buyerType === item.val
+                            ? "border-[#B8873B] bg-[#B8873B]/20 text-[#E8DFCE] font-bold"
+                            : "border-white/10 bg-white/5 text-[#C5BCAD] hover:border-white/20"
+                        }`}
+                      >
+                        {isAr ? item.labelAr : item.labelEn}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price Slider with Smooth Gold Track Fill */}
+                <div className="mb-5">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#8C8477]">
+                      {isAr ? "سعر العقار المستهدف (ريال)" : "Property Price (SAR)"}
+                    </label>
+                    <span className="font-mono text-xs sm:text-sm font-bold text-[#B8873B]">
+                      SAR {propertyPrice.toLocaleString()}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={SLIDER_MIN}
+                    max={SLIDER_MAX}
+                    step={50000}
+                    value={propertyPrice}
+                    onChange={(e) => setPropertyPrice(Number(e.target.value))}
+                    style={{
+                      background: isAr
+                        ? `linear-gradient(to left, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
+                        : `linear-gradient(to right, #B8873B 0%, #B8873B ${sliderPercent}%, rgba(255, 255, 255, 0.12) ${sliderPercent}%, rgba(255, 255, 255, 0.12) 100%)`
+                    }}
+                    className="w-full h-2.5 rounded-lg appearance-none cursor-pointer accent-[#E8DFCE]"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-[#8C8477] mt-1.5">
+                    {isAr ? (
+                      <>
+                        <span>300 ألف</span>
+                        <span>4 مليون (الإقامة)</span>
+                        <span>10 مليون</span>
+                        <span>+15 مليون</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>300K</span>
+                        <span>4M (Residency)</span>
+                        <span>10M</span>
+                        <span>15M+</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Cost Breakdown */}
+                <div className="space-y-2 text-[11px] sm:text-xs border-t border-white/10 pt-3.5 mb-5">
+                  <div className="flex justify-between text-[#C5BCAD]">
+                    <span>{isAr ? "سعر العقار الأساسي" : "Base Property Price"}</span>
+                    <span className="font-mono font-medium text-[#E8DFCE]">SAR {propertyPrice.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-[#C5BCAD]">
+                    <span>{isAr ? "ضريبة التصرفات العقارية (5% RETT)" : "Transaction Tax (5% RETT)"}</span>
+                    <span className="font-mono text-[#B8873B]">SAR {rettAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-[#C5BCAD]">
+                    <span className="flex items-center gap-1.5">
+                      {isAr ? "رسم تملك غير السعوديين (2% REGA)" : "Non-Saudi Ownership Fee (2% REGA)"}
+                      {buyerType === "saudi_gcc" && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-500/30">
+                          {isAr ? "معفى للمواطن" : "Exempt"}
+                        </span>
+                      )}
+                    </span>
+                    <span className="font-mono text-[#B8873B]">
+                      {buyerType === "saudi_gcc" ? "SAR 0" : `SAR ${nonSaudiFeeAmount.toLocaleString()}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[#C5BCAD]">
+                    <span>{isAr ? "عمولة الوساطة المعتمدة (2.5% FAL)" : "Standard Brokerage (2.5% FAL)"}</span>
+                    <span className="font-mono text-[#C5BCAD]">SAR {brokerageAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-[#8C8477]">
+                    <span>{isAr ? "رسوم التوثيق والسجل العقاري التقديرية" : "Estimated Registration & Admin"}</span>
+                    <span className="font-mono">SAR {adminEst.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Box */}
+              <div className="p-3.5 sm:p-4 rounded-xl border border-[#B8873B]/40 bg-[#B8873B]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <span className="text-[10px] sm:text-[11px] font-mono text-[#8C8477] uppercase tracking-wider block">
+                    {isAr ? "إجمالي التكلفة التقديرية للاستحواذ" : "Total Estimated Acquisition Cost"}
+                  </span>
+                  <span className="font-display text-lg sm:text-xl md:text-2xl text-[#E8DFCE] font-bold">
+                    SAR {totalAcquisitionCost.toLocaleString()}
+                  </span>
+                </div>
+                <a
+                  href={getWhatsAppLink(
+                    `Hello Asaheeb Real Estate, I am evaluating a property transaction of SAR ${propertyPrice.toLocaleString()} (${buyerType === "saudi_gcc" ? "Saudi Citizen" : "Expat Buyer"}). Please advise on curated opportunities.`
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 bg-[#B8873B] text-[#0B0C09] font-mono text-xs font-semibold uppercase tracking-wider rounded-lg hover:bg-[#c99544] transition-all text-center whitespace-nowrap"
+                >
+                  {isAr ? "استشر مستشارنا" : "Discuss Deal"}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. OFFICIAL SAUDI DIGITAL ID & BANKING 3D BOOKLET ──────── */}
+      <DigitalIdBooklet isAr={isAr} />
+
+      {/* ── 4. 10-STEP BUYER JOURNEY SECTION ───────────────────────── */}
       <section className="py-16 sm:py-20 px-4 sm:px-8 lg:px-20 border-t border-b border-white/10 bg-[#0E100C]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
@@ -841,7 +862,7 @@ export default function FaqClient() {
         </div>
       </section>
 
-      {/* ── 4. ADVISORY CTA BANNER ─────────────────────────────────── */}
+      {/* ── 5. ADVISORY CTA BANNER ─────────────────────────────────── */}
       <section className="py-14 sm:py-20 px-4 sm:px-8 lg:px-20 text-center relative">
         <div className="max-w-4xl mx-auto p-6 sm:p-12 md:p-14 rounded-3xl border border-[#B8873B]/40 bg-gradient-to-b from-[#B8873B]/15 via-[#141611] to-[#0B0C09] shadow-2xl relative overflow-hidden">
           <h2 className="font-display text-xl sm:text-3xl md:text-4xl text-[#E8DFCE] mb-3 sm:mb-4">

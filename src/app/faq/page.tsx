@@ -3,9 +3,9 @@ import FaqClient from "./FaqClient";
 import { FAQ_DATA } from "@/data/faqData";
 
 export const metadata: Metadata = {
-  title: "Saudi Expat Real Estate Guide & 157 FAQs — Asaheeb Real Estate",
+  title: "Saudi Expat Real Estate Guide & 193 FAQs — Asaheeb Real Estate",
   description:
-    "Comprehensive guide and 157 verified FAQs on buying property in Saudi Arabia for expats and foreign investors. REGA regulations, 5% RETT tax, 2% ownership fee, and SAR 4M Premium Residency in Jeddah and Riyadh.",
+    "Comprehensive guide and 193 verified FAQs on buying property in Saudi Arabia for expats and foreign investors. Official REGA Saudi Properties regulations, 5% RETT tax, 2% ownership fee, and SAR 4M Premium Residency in Jeddah and Riyadh.",
   keywords: [
     "can foreigners buy property in Saudi Arabia",
     "expat buying property Saudi Arabia",
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     "رخصة فال وساطة عقارية جدة الرياض"
   ],
   openGraph: {
-    title: "Saudi Expat Real Estate Guide & 157 FAQs — Asaheeb Real Estate",
+    title: "Saudi Expat Real Estate Guide & 193 FAQs — Asaheeb Real Estate",
     description:
-      "Authoritative answers to 157 questions on foreign and expat property ownership, REGA FAL licensing, and Vision 2030 investment in Saudi Arabia.",
+      "Authoritative answers to 193 questions on foreign and expat property ownership, official REGA Saudi Properties regulations, FAL licensing, and Vision 2030 investment in Saudi Arabia.",
     url: "https://www.asaheebrealestate.com/faq",
     siteName: "Asaheeb Real Estate",
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saudi Expat Real Estate Guide & 157 FAQs — Asaheeb Real Estate",
+    title: "Saudi Expat Real Estate Guide & 193 FAQs — Asaheeb Real Estate",
     description: "Complete guide on buying property in Saudi Arabia as an expat or foreign investor.",
     images: ["https://www.asaheebrealestate.com/images/og-image.jpg"],
   },

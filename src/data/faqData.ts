@@ -3,7 +3,7 @@ export interface FaqItem {
   sectionCode: string;
   sectionNameEn: string;
   sectionNameAr: string;
-  category: "basics" | "locations" | "rules" | "companies" | "residency" | "pricing" | "taxes" | "finance" | "offplan" | "legal" | "process" | "ownership" | "rental" | "investment" | "management";
+  category: "official_rega" | "basics" | "locations" | "rules" | "companies" | "residency" | "pricing" | "taxes" | "finance" | "offplan" | "legal" | "process" | "ownership" | "rental" | "investment" | "management";
   questionEn: string;
   questionAr: string;
   answerEn: string;
@@ -13,7 +13,8 @@ export interface FaqItem {
 }
 
 export const FAQ_CATEGORIES = [
-  { key: "all", labelEn: "All Topics (157)", labelAr: "جميع الموضوعات (157)" },
+  { key: "all", labelEn: "All Topics (193)", labelAr: "جميع الموضوعات (193)" },
+  { key: "official_rega", labelEn: "Official Saudi Portal (REGA)", labelAr: "الأسئلة الرسمية لمنصة عقارات السعودية" },
   { key: "basics", labelEn: "Basic Eligibility", labelAr: "الأهلية الأساسية" },
   { key: "locations", labelEn: "Where to Buy (Jeddah, Riyadh, Holy Cities)", labelAr: "نطاقات الشراء (جدة، الرياض، مكة، المدينة)" },
   { key: "rules", labelEn: "One-Property & Quota Rules", labelAr: "قاعدة العقار الواحد والحصص" },
@@ -32,9 +33,479 @@ export const FAQ_CATEGORIES = [
 ];
 
 export const FAQ_DATA: FaqItem[] = [
-  // A. Basic Questions (1-8)
+  // Official REGA Guidelines & Saudi Properties Portal (1-36)
   {
     id: 1,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "When can the transfer of property ownership to a non-Saudi individual or company be initiated, and what is the applicable transfer process?",
+    questionAr: "متى يمكن البدء بنقل ملكية العقار لفرد أو شركة غير سعودية، وما هي آلية وإجراءات الإفراغ المعتمدة؟",
+    answerEn: "Property title transfer can be initiated once all statutory requirements are satisfied and approved through the Saudi Properties Portal, or by visiting a Real Estate Registry branch. Users can verify their compliance through the Ownership Eligibility Inquiry Service on the portal.",
+    answerAr: "يمكن إتمام نقل الملكية العقارية فور استيفاء كامل المتطلبات النظامية واستكمال إجراءات التملك المعتمدة عبر منصة العقارات السعودية أو بمراجعة أحد فروع السجل العقاري. ويمكن التحقق من الأهلية مسبقاً عبر خدمة الاستعلام عن أهلية التملك على المنصة.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — REGA"
+  },
+  {
+    id: 2,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can real estate be owned using a passport, or is a digital identity required?",
+    questionAr: "هل يمكن تملك العقار بجواز السفر فقط، أم يلزم إصدار هوية رقمية معتمدة؟",
+    answerEn: "Individuals outside Saudi Arabia must obtain an official Saudi digital identity to own property. To view issuance steps, visit the Saudi Properties Portal under 'How to Get Started' and select 'Non-Resident'. In contrast, Saudi residents can own real estate directly using their valid Iqama residency number.",
+    answerAr: "يلزم الأفراد المقيمين خارج المملكة إصدار هوية رقمية موثقة لتملك العقارات عبر زيارة منصة العقارات السعودية (صفحة 'كيف أبدأ' واختيار مسار 'غير المقيم'). أما المقيمون داخل المملكة، فيمكنهم التملك مباشرة بموجب رقم الإقامة الساري.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa/how-to-get-started",
+    sourceLabel: "Saudi Properties Portal — Digital ID Guide"
+  },
+  {
+    id: 3,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can a non-Saudi invest in a property they own in Saudi Arabia, whether inside or outside the Kingdom, and what is the procedure?",
+    questionAr: "هل يحق لغير السعودي استثمار العقار المملوك له داخل المملكة سواء كان داخلها أو خارجها، وما هي الإجراءات المطلوبة؟",
+    answerEn: "Yes, non-Saudi individuals and companies may invest in properties they own in Saudi Arabia in compliance with Ministry of Investment regulations. Note: Residential property owned by a resident within the urban boundaries of Riyadh and Jeddah is legally restricted to personal housing and cannot be leased or invested.",
+    answerAr: "نعم، يجوز لغير السعودي (سواء كان فرداً أو شركة، مقيماً أو غير مقيم) استثمار عقاراته المملوكة نظامياً وفقاً للأنظمة واللوائح الصادرة عن وزارة الاستثمار. ويُستثنى من ذلك العقار السكني المملوك للمقيم داخل النطاق العمراني لمدينتي الرياض وجدة، حيث يقتصر حقه على السكن الخاص ولا يجوز استثماره.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Investment Rules"
+  },
+  {
+    id: 4,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What is the Real Estate Registry (RER), and how is property title registered?",
+    questionAr: "ما هو السجل العقاري، وكيف يتم تقديم طلبات تسجيل وتوثيق ملكية العقار؟",
+    answerEn: "The Real Estate Registry is the official centralized system for registering property ownership and rights in the Kingdom. Property title registration applications can be completed online via the official Real Estate Registry platform.",
+    answerAr: "السجل العقاري هو النظام المركزي الرسمي المعتمد لتسجيل وتوثيق الملكيات والحقوق العينية العقارية في المملكة العربية السعودية. ويمكن تقديم ومتابعة طلبات التسجيل العيني إلكترونياً عبر البوابة الرسمية للسجل العقاري (rer.sa).",
+    sourceUrl: "https://rer.sa",
+    sourceLabel: "Real Estate Registry (RER)"
+  },
+  {
+    id: 5,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can a visit visa holder own real estate in Saudi Arabia?",
+    questionAr: "هل يحق لحامل تأشيرة الزيارة تملك العقارات في المملكة العربية السعودية؟",
+    answerEn: "Owning real estate requires either valid legal residency (Iqama) in Saudi Arabia or the issuance of an approved digital identity for non-residents outside Saudi Arabia through official channels.",
+    answerAr: "يتطلب تملك العقار إما إقامة نظامية سارية داخل المملكة، أو إصدار هوية رقمية موثقة لغير المقيمين خارج المملكة عبر القنوات والمنصات الحكومية المعتمدة.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — REGA"
+  },
+  {
+    id: 6,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "How can an individual or company apply for a Saudi digital identity from abroad?",
+    questionAr: "كيف يمكن للأفراد والشركات من خارج السعودية التقديم لإصدار الهوية الرقمية؟",
+    answerEn: "Individuals and companies outside Saudi Arabia can issue a digital identity by following the verified onboarding steps on the Saudi Properties Portal 'How to Get Started' journey.",
+    answerAr: "يمكن للأفراد والكيانات والشركات خارج المملكة إصدار وتوثيق الهوية الرقمية باتباع خطوات رحلة التملك الموضحة في صفحة 'كيف أبدأ' عبر منصة العقارات السعودية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa/how-to-get-started",
+    sourceLabel: "Saudi Properties Portal — Digital ID Guide"
+  },
+  {
+    id: 7,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What is the Nafath platform and how is it used in property transactions?",
+    questionAr: "ما هي منصة النفاذ الوطني الموحد (نفاذ) وما دورها في التعاملات العقارية؟",
+    answerEn: "Nafath is the Kingdom's unified, secure digital identity and single sign-on authentication service, allowing individuals and investors to securely access government platforms, verify identity, and authorize property transactions.",
+    answerAr: "نفاذ هي الخدمة الوطنية الموحدة للوصول الرقمي الآمن والموثوق التي تتيح للأفراد والمستثمرين الدخول إلى الخدمات الحكومية والقطاع الخاص وتوثيق الهوية واعتماد المعاملات العقارية الرسمية.",
+    sourceUrl: "https://www.iam.gov.sa",
+    sourceLabel: "Nafath National Single Sign-On"
+  },
+  {
+    id: 8,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What is Absher and why is it essential for real estate in Saudi Arabia?",
+    questionAr: "ما هي منصة أبشر ولماذا تُعد أساسية في الإجراءات العقارية؟",
+    answerEn: "Absher is the official digital portal of the Saudi Ministry of Interior, providing automated, verified civil and identity services to citizens, residents, and visitors, essential for two-factor authentication, digital POA, and property registrations.",
+    answerAr: "أبشر هي المنصة الرقمية الرسمية لوزارة الداخلية السعودية، وتُقدم خدمات حكومية مؤتمتة وموثوقة للمواطنين والمقيمين والزوار، وتُعد ركيزة أساسية للتحقق الثنائي وإصدار الوكالات وتوثيق المعاملات العقارية.",
+    sourceUrl: "https://www.absher.sa",
+    sourceLabel: "Absher Portal — Ministry of Interior"
+  },
+  {
+    id: 9,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "How can developers obtain an off-plan sales and lease license in Saudi Arabia?",
+    questionAr: "كيف يمكن لمطوري العقارات الحصول على ترخيص البيع والتأجير على الخارطة (وافي)؟",
+    answerEn: "Off-plan sales and lease licenses are issued through the Wafi platform by the Ministry of Municipal and Rural Affairs and Housing / REGA. Developers can apply online or contact the unified authority support line at 199011.",
+    answerAr: "يمكن للمطورين العقاريين استخراج ترخيص البيع والتأجير على الخارطة عبر منصة 'وافي' التابعة للهيئة ووزارة البلديات والإسكان، أو عبر التواصل مع الرقم الموحد 199011 للاطلاع على المعايير وحسابات الضمان المعتمدة.",
+    sourceUrl: "https://wafi.housing.gov.sa",
+    sourceLabel: "Wafi — Ministry of Housing & REGA"
+  },
+  {
+    id: 10,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What is the Real Estate Transaction Tax (RETT) in Saudi Arabia and how is it paid?",
+    questionAr: "ما هي ضريبة التصرفات العقارية (RETT) في السعودية وكيف يتم سدادها؟",
+    answerEn: "The Real Estate Transaction Tax (RETT) is a mandatory 5% tax imposed on the sale or transfer of real estate in accordance with Zakat, Tax and Customs Authority (ZATCA) regulations, payable prior to deed conveyance.",
+    answerAr: "ضريبة التصرفات العقارية هي ضريبة إلزامية بنسبة 5% تُفرض على قيمة التصرف في العقار وفق لوائح هيئة الزكاة والضريبة والجمارك (زاتكا)، وتُسدد عبر فاتورة سداد إلكترونية قبل إتمام نقل الملكية.",
+    sourceUrl: "https://zatca.gov.sa",
+    sourceLabel: "ZATCA — Real Estate Transaction Tax"
+  },
+  {
+    id: 11,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What is the updated Non-Saudi Real Estate Ownership Law?",
+    questionAr: "ما هو النظام المحدث لتملك غير السعوديين للعقار واستثماره في المملكة؟",
+    answerEn: "The updated Non-Saudi Real Estate Ownership Law regulates property ownership by foreign individuals, companies, and diplomatic entities in Saudi Arabia, establishing transparent guidelines that align with Saudi economic goals, Vision 2030, and national regulations.",
+    answerAr: "النظام المحدث لتملك غير السعوديين للعقار ينظم ضوابط تملك واكتساب الحقوق العينية العقارية للأجانب (أفراداً وشركات وكيانات)، ويحدد معايير واضحة تضمن توافق التملك مع المصالح الاقتصادية والأهداف التنموية لرؤية 2030 والاعتبارات الدينية والاجتماعية.",
+    sourceUrl: "https://rega.gov.sa",
+    sourceLabel: "Real Estate General Authority (REGA)"
+  },
+  {
+    id: 12,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "How can reliable and verified information about Saudi property laws and executive regulations be obtained?",
+    questionAr: "كيف يمكن الحصول على معلومات رسمية وموثوقة حول نظام تملك الأجانب ولوائحه التنفيذية؟",
+    answerEn: "Official, verified information about property laws and regulations is available through the Saudi Properties Portal, the Real Estate General Authority (REGA) website, and verified official government channels.",
+    answerAr: "يمكن الحصول على المعلومات واللوائح المعتمدة حصرياً عبر منصة العقارات السعودية، أو البوابة الرسمية للهيئة العامة للعقار (rega.gov.sa)، ومنصات الإعلان الحكومية الرسمية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — REGA"
+  },
+  {
+    id: 13,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What are the Geographical Zones under Saudi non-Saudi real estate ownership regulations?",
+    questionAr: "ما هي النطاقات الجغرافية المعتمدة لتملك غير السعوديين للعقارات؟",
+    answerEn: "Geographical zones are legally designated areas across the Kingdom of Saudi Arabia where non-Saudis are permitted to acquire freehold ownership or real property rights, as approved by REGA and competent authorities.",
+    answerAr: "النطاقات الجغرافية هي مناطق محددة ومعتمدة نظامياً داخل أراضي المملكة العربية السعودية يُسمح لغير السعوديين بتملك العقارات فيها أو اكتساب الحقوق العينية عليها وفقاً لقرارات مجلس الوزراء والهيئة العامة للعقار.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Geographical Zones"
+  },
+  {
+    id: 14,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What is the Saudi Properties Portal, and what services does it offer?",
+    questionAr: "ما هي منصة العقارات السعودية، وما هي الخدمات التي تقدمها للمستثمرين؟",
+    answerEn: "The Saudi Properties Portal is the official digital government platform implementing regulations for non-Saudi real estate ownership, providing eligibility screening, digital identity onboarding, project listings, and transfer procedures for residents, non-residents, and international companies.",
+    answerAr: "منصة العقارات السعودية هي المنصة الرقمية الحكومية المعنية بتطبيق أحكام نظام تملك غير السعوديين للعقار، وتُقدم خدمات فحص الأهلية الفوري، إصدار الهوية الرقمية لغير المقيمين، استعراض المشاريع المؤهلة، وإتمام عمليات الشراء والتوثيق.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — REGA"
+  },
+  {
+    id: 15,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "How can a real estate developer list their projects on the Saudi Properties Portal for non-Saudi buyers?",
+    questionAr: "كيف يمكن للمطور العقاري إضافة مشاريعه إلى المشاريع المتاحة لتملك غير السعوديين على منصة العقارات السعودية؟",
+    answerEn: "To list projects, the developer must hold a valid commercial registration, real estate developer license, valid REGA broker/developer listing, and be registered in the Authority's Developers Registry. Approved projects can then be integrated directly through the portal.",
+    answerAr: "لإضافة المشاريع، يلزم أن يكون المطور مسجلاً رسمياً ومدرجاً في سجل المطورين العقاريين لدى الهيئة، وحاصلاً على سجل تجاري وترخيص عقاري ساري وترخيص بيع على الخارطة، ثم التقديم عبر منصة العقارات السعودية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Developer Portal"
+  },
+  {
+    id: 16,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Which regulation takes precedence if the Non-Saudi Real Estate Ownership Law overlaps with Premium Residency or GCC ownership laws?",
+    questionAr: "أي نظام يقدم في حال تعارض أو تداخل نظام تملك غير السعوديين مع أنظمة الإقامة المميزة أو تملك مواطني دول الخليج؟",
+    answerEn: "The Non-Saudi Real Estate Ownership Law does not override regulations that grant more favorable rights to buyers, such as the Saudi Premium Residency Law or GCC Citizens' Property Ownership Regulations, which maintain their respective expanded privileges.",
+    answerAr: "لا يخل نظام تملك غير السعوديين للعقار بالأنظمة واللوائح الأخرى التي تمنح حقوق تملك أكثر ميزة وتفضيلاً، مثل نظام الإقامة المميزة أو تنظيم تملك مواطني دول مجلس التعاون الخليجي للعقار.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Legal Hierarchy"
+  },
+  {
+    id: 17,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Do the updated requirements apply retroactively to properties owned before the new law took effect?",
+    questionAr: "هل تطبق الشروط والضوابط المحدثة بأثر رجعي على العقارات المملوكة قبل نفاذ النظام؟",
+    answerEn: "No. The application of the updated Non-Saudi Real Estate Ownership Law does not prejudice or adversely affect any property rights lawfully acquired prior to its effective enforcement.",
+    answerAr: "لا تسري أحكام النظام المحدث بأثر رجعي، ولا تؤثر على أي حقوق ملكية أو حقوق عينية اكتُسبت بصورة نظامية صحيحة قبل نفاذ هذا النظام ولائحته.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Acquired Rights"
+  },
+  {
+    id: 18,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What are the official communication channels for inquiries and support on the Saudi Properties Portal?",
+    questionAr: "ما هي قنوات التواصل والدعم الفني الرسمية الخاصة بمنصة العقارات السعودية؟",
+    answerEn: "Investors can reach official support through the 'Contact Us' page on the Saudi Properties Portal, by phone at +966 920017183, or via their official X customer care account @saudiprop_cares.",
+    answerAr: "يمكن التواصل مع الدعم الفني عبر خدمة 'اتصل بنا' على منصة العقارات السعودية، أو بالاتصال على الرقم الموحد 920017183 966+، أو عبر حساب العناية بالمستفيدين في منصة X (@saudiprop_cares).",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Support Channels"
+  },
+  {
+    id: 19,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What are the statutory government fees for selling real estate to non-Saudis?",
+    questionAr: "ما هو المقابل المالي ورسم بيع العقارات لغير السعوديين؟",
+    answerEn: "A 2% fee of the property value applies when selling real estate to non-Saudis in Riyadh, Jeddah, Makkah, and Madinah (including Premium Residency holders). For GCC citizens, this 2% fee applies only to properties in Makkah and Madinah.",
+    answerAr: "يُفرض رسم بنسبة 2% من قيمة العقار عند البيع لغير السعوديين في مدن الرياض وجدة ومكة المكرمة والمدينة المنورة (بما في ذلك حاملو الإقامة المميزة). أما بالنسبة لمواطني دول الخليج، فيُطبق هذا الرسم حصراً عند تملك العقارات في مكة والمدينة.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Conveyance Fees"
+  },
+  {
+    id: 20,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "How can I verify my eligibility to buy real estate in Saudi Arabia?",
+    questionAr: "كيف يمكنني التحقق الفوري من أهليتي النظامية لتملك العقار في السعودية؟",
+    answerEn: "Property ownership eligibility can be verified instantly online through the official Ownership Eligibility Inquiry Service on the Saudi Properties Portal (saudiproperties.rega.gov.sa/ownership-eligibility-inquiry-service).",
+    answerAr: "يمكن التحقق الفوري من أهلية التملك إلكترونياً عبر خدمة 'الاستعلام عن أهلية التملك' المتاحة على منصة العقارات السعودية الرسمية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa/ownership-eligibility-inquiry-service",
+    sourceLabel: "REGA — Ownership Eligibility Inquiry Service"
+  },
+  {
+    id: 21,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Is property ownership affected if the foreign owner permanently leaves Saudi Arabia?",
+    questionAr: "هل تتأثر ملكية العقار في حال مغادرة المالك للمملكة العربية السعودية بشكل نهائي (خروج نهائي)؟",
+    answerEn: "No. Property ownership rights remain valid and protected under Saudi law, regardless of whether the owner remains a resident or becomes a non-resident residing abroad.",
+    answerAr: "لا تتأثر ملكية العقار نهائياً وتظل محفوظة ومحمية نظامياً، سواء كان المالك مقيماً داخل المملكة أو أصبح غير مقيم يقيم خارجها.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Property Rights"
+  },
+  {
+    id: 22,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Does owning real estate in Saudi Arabia exempt the foreign owner from visa requirements?",
+    questionAr: "هل يُعفي تملك العقار في السعودية مالكه الأجنبي من متطلبات واشتراطات التأشيرة؟",
+    answerEn: "No, standard property ownership does not automatically exempt owners from entry visa requirements. Visa entry and issuance remain governed by competent Saudi immigration authorities, unless applying under the Real Estate Owner Premium Residency track.",
+    answerAr: "لا، تملك العقار بحد ذاته لا يعفي المالك من اشتراطات التأشيرة، ويخضع الدخول للأنظمة المعتمدة لدى الجهات المختصة، ما لم يكن المشتري مؤهلاً لبرنامج الإقامة المميزة لمالكي العقارات (عقار بقيمة 4 ملايين ريال فأكثر).",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Visa Inquiries"
+  },
+  {
+    id: 23,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Does a future modification to a geographical zone affect existing property ownership?",
+    questionAr: "هل يؤثر أي تعديل مستقبلي على النطاق الجغرافي على العقار المملوك سابقاً؟",
+    answerEn: "Any subsequent regulatory amendment or re-zoning of a geographical zone does not affect property rights that were lawfully acquired prior to that modification.",
+    answerAr: "أي تعديل يطرأ مستقبلاً على النطاقات الجغرافية المعتمدة لا يمس أو يؤثر على حقوق الملكية التي تم اكتسابها بصورة نظامية صحيحة قبل إجراء ذلك التعديل.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Zoning Stability"
+  },
+  {
+    id: 24,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Do I need to be physically present in Saudi Arabia to complete property ownership procedures?",
+    questionAr: "هل يلزم التواجد الفعلي والشخصي داخل المملكة لإتمام إجراءات تملك العقار؟",
+    answerEn: "No, physical presence in Saudi Arabia is not required. All eligibility screening, identity verification, contract execution, and title conveyances can be completed electronically through approved digital platforms.",
+    answerAr: "لا يُشترط التواجد الفعلي داخل المملكة، حيث يمكن استكمال كافة إجراءات التحقق والتوثيق والتعاقد والإفراغ العقاري إلكترونياً وبشكل كامل عبر المنصات الرقمية المعتمدة.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Remote Conveyance"
+  },
+  {
+    id: 25,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Is it permitted to mortgage a property owned by a non-Saudi in Saudi Arabia?",
+    questionAr: "هل يجوز رهن العقار المملوك لغير السعودي في المملكة؟",
+    answerEn: "Yes, properties owned by non-Saudis may be mortgaged to regulated financial institutions and banks in accordance with the Registered Real Estate Mortgage Law and SAMA regulations.",
+    answerAr: "نعم، يجوز رهن العقار المملوك لغير السعودي لصالح البنوك وجهات التمويل المعتمدة وفقاً لأحكام نظام الرهن العقاري المسجل وضوابط البنك المركزي السعودي.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Mortgage Laws"
+  },
+  {
+    id: 26,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can an international buyer purchase Saudi property through a foreign broker in their country without engaging a licensed Saudi broker?",
+    questionAr: "هل يمكن لمشتري خارج المملكة شراء عقار عبر وسيط في بلده دون التعامل مع وسيط عقاري مرخص في السعودية؟",
+    answerEn: "To complete property transactions in Saudi Arabia, buyers must engage a REGA-licensed real estate broker within the Kingdom. If appointing a representative to execute the purchase, foreign powers of attorney must be formally attested by Saudi embassies and the Ministry of Justice.",
+    answerAr: "يلزم لإتمام شراء العقار داخل المملكة التعامل مع وسيط عقاري مرخص وحاصل على رخصة فال من الهيئة العامة للعقار. أما توكيل ممثل لإتمام الشراء فجائز نظاماً بشرط تصديق الوكالة الخارجية أصولاً من الممثليات السعودية ووزارة العدل.",
+    sourceUrl: "https://eservicesredp.rega.gov.sa/e-services/inquiry-about-the-real-estate-broker/form",
+    sourceLabel: "REGA — Broker Verification Portal"
+  },
+  {
+    id: 27,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "At what stages of real estate development can non-Saudis own property?",
+    questionAr: "في أي مراحل التطوير العقاري يحق لغير السعودي تملك العقار؟",
+    answerEn: "Non-Saudis can own real estate at any stage of development—including off-plan, under construction, and completed assets—provided the project is located within approved geographical zones and has required REGA Wafi licenses.",
+    answerAr: "يحق لغير السعوديين تملك العقار في مختلف مراحل التطوير العقاري (عقارات على الخارطة، قيد الإنشاء، أو أصول مكتملة البناء)، شريطة أن يكون المشروع ضمن النطاقات الجغرافية المعتمدة وحاصلاً على التراخيص النظامية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Off-Plan Onboarding"
+  },
+  {
+    id: 28,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What types of real estate are eligible for non-Saudi ownership?",
+    questionAr: "ما هي أنواع العقارات المسموح لغير السعوديين بتملكها؟",
+    answerEn: "Permitted property types include residential apartments, luxury villas, commercial buildings, industrial spaces, and mixed-use land parcels in designated approved geographical zones published on the Saudi Properties Portal.",
+    answerAr: "تشمل العقارات المتاحة للتملك الوحدات السكنية (شقق وفلل)، الأصول التجارية، الأراضي الاستثمارية، والعقارات الصناعية ضمن النطاقات الجغرافية المعتمدة والمعلنة عبر منصة العقارات السعودية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Property Types"
+  },
+  {
+    id: 29,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "What penalties apply for violating the Non-Saudi Real Estate Ownership Law?",
+    questionAr: "ما هي العقوبات والغرامات المقررة عند مخالفة نظام تملك غير السعوديين للعقار؟",
+    answerEn: "Penalties for statutory violations may include formal warnings, monetary fines of up to 5% of the real property right's value (capped at SAR 10,000,000), or compulsory public sale of the real property right, without prejudice to harsher penalties under relevant laws.",
+    answerAr: "تشمل العقوبات النظامية الإنذار، أو فرض غرامة مالية تصل إلى 5% من قيمة الحق العيني محل المخالفة وبحد أقصى 10,000,000 ريال، أو البيع الجبري للحق العيني على العقار، مع عدم الإخلال بأي عقوبة أشد ينص عليها نظام آخر.",
+    sourceUrl: "https://rega.gov.sa",
+    sourceLabel: "Real Estate General Authority (REGA)"
+  },
+  {
+    id: 30,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Do non-Saudis residing outside Saudi Arabia need a Saudi bank account to buy real estate in the Kingdom?",
+    questionAr: "هل يلزم غير المقيمين خارج المملكة فتح حساب بنكي سعودي لتملك العقارات؟",
+    answerEn: "Yes, non-Saudi buyers residing abroad must have a verified Saudi bank account to settle transaction consideration, taxes, and official conveyance fees via SADAD or certified electronic bank drafts.",
+    answerAr: "نعم، يلزم المشترين غير المقيمين وجود حساب مصرفي سعودي مفعل وموثق لإتمام التحويلات المالية وسداد قيمة العقار وضريبة التصرفات العقارية عبر نظام سداد المعتمد.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Banking Requirements"
+  },
+  {
+    id: 31,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can an individual (resident or non-resident) or company own multiple properties inside and outside geographical zones?",
+    questionAr: "هل يحق للفرد (مقيماً أو غير مقيم) أو الشركة تملك أكثر من عقار، وما هي مصفوفة الأهلية المعتمدة؟",
+    answerEn: "Eligibility to own one or multiple properties (including plots or residential units) depends on applicant status, city, and zonings specified in REGA's official Non-Saudi Ownership Matrix.",
+    answerAr: "تعتمد أهلية تملك عقار واحد أو عدة عقارات (سواء كانت أراضي أو وحدات سكنية وتجارية) على صفة المشتري والنطاق الجغرافي المحدد في مصفوفة ضوابط التملك الصادرة عن الهيئة العامة للعقار.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa/assets/files/ownership_matrix.pdf",
+    sourceLabel: "REGA — Official Non-Saudi Ownership Matrix"
+  },
+  {
+    id: 32,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can a foreign property owner living outside Saudi Arabia authorize another person to invest in their property in the Kingdom?",
+    questionAr: "هل يحق لمالك العقار غير السعودي المقيم بالخارج توكيل شخص آخر لاستثمار عقاره في السعودية؟",
+    answerEn: "Yes, foreign property owners can authorize an agent or asset manager to lease or manage investments in their property, provided the power of attorney is officially attested by the competent authorities and authenticated through Najiz.",
+    answerAr: "نعم، يجوز لمالك العقار بالخارج توكيل شخص أو جهة لإدارة واستثمار عقاره، شريطة أن تكون الوكالة مصدقة أصولاً من الممثليات ووزارة العدل وتوثيقها عبر منصة ناجز.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Power of Attorney"
+  },
+  {
+    id: 33,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can a non-Saudi gift a property to someone who does not meet regulatory ownership requirements?",
+    questionAr: "هل يجوز لغير السعودي التبرع أو إهداء عقار لشخص لا تنطبق عليه شروط وأهلية التملك؟",
+    answerEn: "No. Gifting or transferring title without consideration to an individual or entity that does not meet statutory ownership eligibility requirements is legally prohibited.",
+    answerAr: "لا، لا يجوز نقل ملكية العقار بالهبة أو التنازل أو الإهداء لأي شخص أو كيان لا يستوفي شروط وأهلية التملك المقررة نظاماً.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Conveyance Restrictions"
+  },
+  {
+    id: 34,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Can two or more individuals apply for joint ownership of a property in Saudi Arabia?",
+    questionAr: "هل يحق لشخصين أو أكثر التقديم على ملكية مشتركة لعقار، سواء كانوا غير سعوديين أو مشتركين مع مواطن سعودي؟",
+    answerEn: "Yes, joint property ownership is fully permitted under Saudi law, provided all co-purchasers meet approved eligibility requirements and each party's ownership percentage is explicitly stated in the deed.",
+    answerAr: "نعم، تجوز الملكية العقارية المشتركة نظاماً، شريطة استيفاء الأطراف للاشتراطات المعتمدة وتحديد النسبة المئوية لملكية كل شريك بدقة في الصك العقاري.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Joint Ownership"
+  },
+  {
+    id: 35,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "How do property ownership requirements differ in Makkah and Madinah compared to other Saudi regions?",
+    questionAr: "ما هي الفروقات والاشتراطات الخاصة بتملك العقارات في مكة المكرمة والمدينة المنورة مقارنة بباقي المدن؟",
+    answerEn: "Ownership in Makkah and Madinah is restricted to approved zones and governed by strict categories: Individuals must be Muslim natural persons; Unlisted companies must be Saudi-established with non-Saudi partners; Listed companies and funds must comply with Capital Market Authority (CMA) and REGA directives.",
+    answerAr: "يقتصر التملك في مكة والمدينة على النطاقات المعتمدة ويخضع لضوابط دقيقة: الأفراد يُشترط أن يكون الفرد مسلماً؛ الشركات غير المدرجة يلزم تأسيسها وفق نظام الشركات السعودي؛ والشركات المدرجة وصناديق الاستثمار تلتزم بضوابط هيئة السوق المالية والتنسيق مع هيئة العقار.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Holy Cities Regulations"
+  },
+  {
+    id: 36,
+    sectionCode: "OFFICIAL",
+    sectionNameEn: "Official Saudi Properties Portal & REGA Guidelines",
+    sectionNameAr: "الأسئلة المعتمدة لمنصة العقارات السعودية والهيئة العامة للعقار",
+    category: "official_rega",
+    questionEn: "Is having an active Saudi contact phone number mandatory for residents and non-resident property buyers?",
+    questionAr: "هل يُعد وجود رقم اتصال سعودي فعال شرطاً إلزامياً للمقيمين وغير المقيمين لتملك العقار؟",
+    answerEn: "Yes, an active, registered Saudi contact number is mandatory for account creation, verification codes, and official notification delivery during property acquisition.",
+    answerAr: "نعم، يُعد توفير رقم اتصال محلي سعودي موثق شرطاً إلزامياً للمقيمين وغير المقيمين لاستقبال رموز التحقق وتوثيق الطلبات وإشعارات نقل الملكية الرسمية.",
+    sourceUrl: "https://saudiproperties.rega.gov.sa",
+    sourceLabel: "Saudi Properties Portal — Verification Rules"
+  },
+
+  // Investment, Financing & Legal Advisory (37-193)
+  {
+    id: 37,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -47,7 +518,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Law of Non-Saudi Ownership"
   },
   {
-    id: 2,
+    id: 38,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -60,7 +531,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Platform Announcement"
   },
   {
-    id: 3,
+    id: 39,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -73,7 +544,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Portal"
   },
   {
-    id: 4,
+    id: 40,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -84,7 +555,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "ليس بالضرورة. المقيمون يستخدمون الإقامة، بينما غير المقيمين لديهم مسار مخصص يعتمد على التوثيق الرقمي عبر الممثليات السعودية."
   },
   {
-    id: 5,
+    id: 41,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -95,7 +566,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بشرط أن يكون العقار ضمن النطاقات الجغرافية المعتمدة لتملك غير السعوديين واستيفاء متطلبات تسجيل غير المقيمين."
   },
   {
-    id: 6,
+    id: 42,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -108,7 +579,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 7,
+    id: 43,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -121,7 +592,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 8,
+    id: 44,
     sectionCode: "A",
     sectionNameEn: "Basic Questions",
     sectionNameAr: "أسئلة أساسية حول التملك",
@@ -131,10 +602,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "The rules can differ depending on whether they are acquiring property independently or as dependents. The implementing regulations treat a non-Saudi resident's spouse and non-Saudi children as dependents for the single residential property entitlement outside designated zones.",
     answerAr: "تخضع التابعية لضوابط المسكن العائلي الواحد خارج النطاقات الحرة، بينما يحق للشخص البالغ ذو الصفة المستقلة والإقامة النظامية التقديم بصورة منفردة."
   },
-
-  // B. Where Can Foreigners Buy? (9-21)
   {
-    id: 9,
+    id: 45,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -147,7 +616,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "Saudi Properties Portal"
   },
   {
-    id: 10,
+    id: 46,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -158,7 +627,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تتوفر مناطق سكنية واستثمارية مميزة في جدة (مثل الشاطئ، أبحر، الحمراء، والكورنيش) مؤهلة للتملك وفق النسب المعتمدة."
   },
   {
-    id: 11,
+    id: 47,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -169,7 +638,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تشمل النطاقات المعتمدة أحياء ومخططات رئيسية في شمال وشرق الرياض للملكية التامة والاستثمار."
   },
   {
-    id: 12,
+    id: 48,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -182,7 +651,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 13,
+    id: 49,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -195,7 +664,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 14,
+    id: 50,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -206,7 +675,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يحق لغير المسلمين تملك العقارات المؤهلة في مدينة جدة ضمن النطاقات الجغرافية المعتمدة."
   },
   {
-    id: 15,
+    id: 51,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -217,7 +686,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يحق للمستثمرين والمقيمين غير المسلمين تملك العقارات السكنية والتجارية في نطاقات الرياض المعتمدة."
   },
   {
-    id: 16,
+    id: 52,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -230,7 +699,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 17,
+    id: 53,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -241,7 +710,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم في بعض النطاقات المعتمدة ووفق اشتراطات التطوير المحددة، مع وجوب التحقق من قطعة الأرض عبر المنصة الرسمية."
   },
   {
-    id: 18,
+    id: 54,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -252,7 +721,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يحق للأفراد والشركات تملك العقارات التجارية (مكاتب، معارض، مستودعات، أراضٍ تجارية) في المناطق المخصصة."
   },
   {
-    id: 19,
+    id: 55,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -263,7 +732,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، المكاتب الإدارية في الأبراج التجارية ومجمعات الأعمال المعتمدة متاحة للتملك."
   },
   {
-    id: 20,
+    id: 56,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -274,7 +743,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، وفق تراخيص وزارة الاستثمار والضوابط المعتمدة للمناطق اللوجستية والصناعية."
   },
   {
-    id: 21,
+    id: 57,
     sectionCode: "B",
     sectionNameEn: "Where Can Foreigners Buy?",
     sectionNameAr: "أين يمكن للأجانب التملك في السعودية؟",
@@ -284,10 +753,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Potentially, subject to geographical and property-specific quota requirements.",
     answerAr: "نعم، يمكن شراء المباني الكاملة والمجمعات، وغالباً ما يتم ذلك عبر مسارات الاستثمار المؤسسي أو الشركات."
   },
-
-  // C. The "One Property" Question (22-26)
   {
-    id: 22,
+    id: 58,
     sectionCode: "C",
     sectionNameEn: "The One-Property Rule",
     sectionNameAr: "قاعدة العقار الواحد وتملك المحافظ",
@@ -300,7 +767,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 23,
+    id: 59,
     sectionCode: "C",
     sectionNameEn: "The One-Property Rule",
     sectionNameAr: "قاعدة العقار الواحد وتملك المحافظ",
@@ -311,7 +778,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عند اختيار عقارات تقع في النطاقات الاستثمارية المفتوحة المعتمدة لتعدد الملكيات."
   },
   {
-    id: 24,
+    id: 60,
     sectionCode: "C",
     sectionNameEn: "The One-Property Rule",
     sectionNameAr: "قاعدة العقار الواحد وتملك المحافظ",
@@ -322,7 +789,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يمكن تملك وحدات متعددة ضمن المشاريع والمخططات المعتمدة في جدة."
   },
   {
-    id: 25,
+    id: 61,
     sectionCode: "C",
     sectionNameEn: "The One-Property Rule",
     sectionNameAr: "قاعدة العقار الواحد وتملك المحافظ",
@@ -333,7 +800,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يقوم المستثمرون ببناء محافظ استثمارية مدرة للعوائد في المواقع الاستراتيجية بتوجيه استشاري من شركة صهيب العقارية."
   },
   {
-    id: 26,
+    id: 62,
     sectionCode: "C",
     sectionNameEn: "The One-Property Rule",
     sectionNameAr: "قاعدة العقار الواحد وتملك المحافظ",
@@ -345,10 +812,8 @@ export const FAQ_DATA: FaqItem[] = [
     sourceUrl: "https://rega.gov.sa/en/regulations-and-by-laws/rules/law-of-real-estate-ownership-and-investment-by-non-saudis/",
     sourceLabel: "REGA Regulations"
   },
-
-  // D. Buying Through a Company (27-30)
   {
-    id: 27,
+    id: 63,
     sectionCode: "D",
     sectionNameEn: "Buying Through a Company",
     sectionNameAr: "التملك عبر الشركات والكيانات",
@@ -361,7 +826,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 28,
+    id: 64,
     sectionCode: "D",
     sectionNameEn: "Buying Through a Company",
     sectionNameAr: "التملك عبر الشركات والكيانات",
@@ -372,7 +837,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يتطلب ذلك التسجيل لدى وزارة الاستثمار والإفصاح عن الملاك المستفيدين وتعيين ممثل نظامي وفتح حساب بنكي سعودي."
   },
   {
-    id: 29,
+    id: 65,
     sectionCode: "D",
     sectionNameEn: "Buying Through a Company",
     sectionNameAr: "التملك عبر الشركات والكيانات",
@@ -383,7 +848,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا، يمكن للأفراد التملك مباشرة بأسمائهم الشخصية دون الحاجة لتأسيس كيان تجاري."
   },
   {
-    id: 30,
+    id: 66,
     sectionCode: "D",
     sectionNameEn: "Buying Through a Company",
     sectionNameAr: "التملك عبر الشركات والكيانات",
@@ -393,10 +858,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Potentially, depending on company structure, MISA license, and the intended business purpose of the property.",
     answerAr: "نعم، بحسب الهيكل القانوني للشركة وتراخيص الاستثمار والغرض الاستثماري للعقار."
   },
-
-  // E. Premium Residency (31-36)
   {
-    id: 31,
+    id: 67,
     sectionCode: "E",
     sectionNameEn: "Premium Residency",
     sectionNameAr: "الإقامة المميزة (مسار ملاك العقار)",
@@ -409,7 +872,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "Premium Residency Center FAQ"
   },
   {
-    id: 32,
+    id: 68,
     sectionCode: "E",
     sectionNameEn: "Premium Residency",
     sectionNameAr: "الإقامة المميزة (مسار ملاك العقار)",
@@ -420,7 +883,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا، يحق للمقيمين العاديين ولغير المقيمين الشراء عبر النظام العام لتملك غير السعوديين."
   },
   {
-    id: 33,
+    id: 69,
     sectionCode: "E",
     sectionNameEn: "Premium Residency",
     sectionNameAr: "الإقامة المميزة (مسار ملاك العقار)",
@@ -431,7 +894,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عبر مسار 'إقامة مالك عقار'، يمنح تملك عقار مؤهل الإقامة المميزة لمالكه وأسرته وفق الشروط المعتمدة."
   },
   {
-    id: 34,
+    id: 70,
     sectionCode: "E",
     sectionNameEn: "Premium Residency",
     sectionNameAr: "الإقامة المميزة (مسار ملاك العقار)",
@@ -444,7 +907,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "Premium Residency Center"
   },
   {
-    id: 35,
+    id: 71,
     sectionCode: "E",
     sectionNameEn: "Premium Residency",
     sectionNameAr: "الإقامة المميزة (مسار ملاك العقار)",
@@ -455,7 +918,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تشترط اللائحة الحالية عقارات سكنية قائمة ومكتملة، ولا تنطبق على الأراضي الفضاء غير المطورة."
   },
   {
-    id: 36,
+    id: 72,
     sectionCode: "E",
     sectionNameEn: "Premium Residency",
     sectionNameAr: "الإقامة المميزة (مسار ملاك العقار)",
@@ -465,10 +928,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Yes, potentially, under the Real Estate Owner Residency's specific off-plan criteria from licensed master developers.",
     answerAr: "نعم، للمشاريع السكنية المرخصة على الخارطة من مطورين معتمدين والمستوفية لاشتراطات مركز الإقامة المميزة."
   },
-
-  // F. Property Prices (37-41)
   {
-    id: 37,
+    id: 73,
     sectionCode: "F",
     sectionNameEn: "Property Prices",
     sectionNameAr: "أسعار العقارات والميزانيات",
@@ -479,7 +940,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا يوجد حد أدنى إلزامي لسعر العقار في النظام العام للتملك؛ وتبدأ الشقق المؤهلة من حوالي 300,000 ريال بحسب المدينة والمشروع."
   },
   {
-    id: 38,
+    id: 74,
     sectionCode: "F",
     sectionNameEn: "Property Prices",
     sectionNameAr: "أسعار العقارات والميزانيات",
@@ -490,7 +951,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، إذا كان العقار المحدد مؤهلاً نظامياً في النطاق المعتمد ويستوفي الشروط."
   },
   {
-    id: 39,
+    id: 75,
     sectionCode: "F",
     sectionNameEn: "Property Prices",
     sectionNameAr: "أسعار العقارات والميزانيات",
@@ -501,7 +962,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تتوفر شقق سكنية ضمن هذه الفئة السعرية في عدة مخططات صاعدة."
   },
   {
-    id: 40,
+    id: 76,
     sectionCode: "F",
     sectionNameEn: "Property Prices",
     sectionNameAr: "أسعار العقارات والميزانيات",
@@ -512,7 +973,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يوفر هذا النطاق السعري خيارات واسعة من الشقق الفاخرة والمجمعات السكنية المتكاملة."
   },
   {
-    id: 41,
+    id: 77,
     sectionCode: "F",
     sectionNameEn: "Property Prices",
     sectionNameAr: "أسعار العقارات والميزانيات",
@@ -522,10 +983,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "There is no general rule that a foreigner must pay a higher purchase price simply because they are foreign. However, specific non-Saudi ownership fees apply upon conveyance.",
     answerAr: "لا، سعر العقار واحد للجميع في السوق. الفارق الوحيد هو رسم تملك غير السعوديين النظامي البالغ 2% عند الإفراغ."
   },
-
-  // G. Government Fees & Taxes (42-48)
   {
-    id: 42,
+    id: 78,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -538,7 +997,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "ZATCA RETT Regulation"
   },
   {
-    id: 43,
+    id: 79,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -549,7 +1008,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نظامياً يسجل البائع كمسؤول عن السداد لدى هيئة الزكاة، وغالباً ما ينص عقد المبايعة على آلية تحمله أو تقاسمه بالاتفاق."
   },
   {
-    id: 44,
+    id: 80,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -562,7 +1021,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "ZATCA VAT FAQs"
   },
   {
-    id: 45,
+    id: 81,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -575,7 +1034,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "ZATCA Leasing Rules"
   },
   {
-    id: 46,
+    id: 82,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -588,7 +1047,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 47,
+    id: 83,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -601,7 +1060,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Implementing Regulations"
   },
   {
-    id: 48,
+    id: 84,
     sectionCode: "G",
     sectionNameEn: "Government Fees & Taxes",
     sectionNameAr: "الضرائب والرسوم الحكومية (التصرفات ورسم 2%)",
@@ -611,10 +1070,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "No. These are separate charges: RETT is generally 5% (ZATCA), while the non-Saudi ownership fee is 2% (REGA). They should not be combined as one tax.",
     answerAr: "لا، هما رسومان منفصلان: 5% ضريبة تصرفات عقارية لهيئة الزكاة + 2% رسم تملك غير السعوديين لهيئة العقار."
   },
-
-  // H. Financing & Mortgages (49-56)
   {
-    id: 49,
+    id: 85,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -625,7 +1082,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تقدم البنوك السعودية برامج تمويل عقاري للمقيمين وفق شروط الراتب وجهة العمل والسجل الائتماني."
   },
   {
-    id: 50,
+    id: 86,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -636,7 +1093,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بحسب جهة التمويل والراتب وتقرير سمة الائتماني وسريان الإقامة ومطابقة العقار للشروط."
   },
   {
-    id: 51,
+    id: 87,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -647,7 +1104,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تمويل غير المقيمين محدود ويتم غالباً عبر الخدمات المصرفية الخاصة أو خطط السداد المباشرة مع المطورين."
   },
   {
-    id: 52,
+    id: 88,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -658,7 +1115,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، إذا كانت برامج البنك التمويلية تتيح ذلك وتنطبق عليك شروط المنح."
   },
   {
-    id: 53,
+    id: 89,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -671,7 +1128,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 54,
+    id: 90,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -682,7 +1139,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بتحويل المبالغ إلى حسابك البنكي داخل المملكة أو إلى حساب الضمان المعتمد للتسوية بالريال السعودي."
   },
   {
-    id: 55,
+    id: 91,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -693,7 +1150,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تسجل العقود وتتم التسويات بالريال السعودي، ويتم التحويل من الدولار بسعر الصرف الرسمي الثابت (1 دولار = 3.75 ريال)."
   },
   {
-    id: 56,
+    id: 92,
     sectionCode: "H",
     sectionNameEn: "Financing & Mortgages",
     sectionNameAr: "التمويل العقاري والبنوك",
@@ -703,10 +1160,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "No. Regulated electronic banking channels (SAR denominated) are mandatory for property conveyancing under Saudi law.",
     answerAr: "لا، تشترط الأنظمة السعودية قنوات الدفع الإلكتروني المصرفية الرسمية المعتمدة فقط."
   },
-
-  // I. Off-Plan Property (57-62)
   {
-    id: 57,
+    id: 93,
     sectionCode: "I",
     sectionNameEn: "Off-Plan Property",
     sectionNameAr: "البيع على الخارطة وبرنامج وافي",
@@ -717,7 +1172,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، الشراء على الخارطة متاح للأجانب في المشاريع المرخصة نظامياً عبر برنامج وافي."
   },
   {
-    id: 58,
+    id: 94,
     sectionCode: "I",
     sectionNameEn: "Off-Plan Property",
     sectionNameAr: "البيع على الخارطة وبرنامج وافي",
@@ -728,7 +1183,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عند الشراء من مشاريع مرخصة من برنامج 'وافي' الحكومي الذي يلزم بحسابات ضمان بنكية ومتابعة هندسية دقيقة."
   },
   {
-    id: 59,
+    id: 95,
     sectionCode: "I",
     sectionNameEn: "Off-Plan Property",
     sectionNameAr: "البيع على الخارطة وبرنامج وافي",
@@ -739,7 +1194,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "من خلال التحقق من رقم ترخيص وافي وسجل المطور العقاري ورقم حساب الضمان البنكي عبر منصة وافي / هيئة العقار."
   },
   {
-    id: 60,
+    id: 96,
     sectionCode: "I",
     sectionNameEn: "Off-Plan Property",
     sectionNameAr: "البيع على الخارطة وبرنامج وافي",
@@ -750,7 +1205,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تنظم عقود وافي الموحدة غرامات التأخير وحقوق المشترين وآليات التعويض وتدخل الجهات المنظمة لضمان استكمال المشروع."
   },
   {
-    id: 61,
+    id: 97,
     sectionCode: "I",
     sectionNameEn: "Off-Plan Property",
     sectionNameAr: "البيع على الخارطة وبرنامج وافي",
@@ -761,7 +1216,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، وفق اشتراطات التنازل لدى المطور العقاري والضوابط المنظمة من الهيئة."
   },
   {
-    id: 62,
+    id: 98,
     sectionCode: "I",
     sectionNameEn: "Off-Plan Property",
     sectionNameAr: "البيع على الخارطة وبرنامج وافي",
@@ -771,10 +1226,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Yes, where the project is approved for non-Saudi buyers and the developer holds an active REGA FAL license.",
     answerAr: "نعم، عندما يكون المشروع مرخصاً ومؤهلاً لتملك غير السعوديين ويحمل المطور التراخيص النظامية."
   },
-
-  // J. Due Diligence (63-70)
   {
-    id: 63,
+    id: 99,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -785,7 +1238,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يتم التحقق الفوري عبر منصة البورصة العقارية / ناجز أو السجل العقاري للتأكد من سريان الصك وعدم وجود رهون أو قيود."
   },
   {
-    id: 64,
+    id: 100,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -796,7 +1249,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "عبر الاستعلام الإلكتروني برقم الصك وهوية المالك في منصة ناجز أو السجل العقاري."
   },
   {
-    id: 65,
+    id: 101,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -807,7 +1260,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بشرط فك الرهن أو سداده عبر آليات نقل المديونية والإفراغ المعتمدة لدى وزارة العدل والبنوك."
   },
   {
-    id: 66,
+    id: 102,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -818,7 +1271,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "توضح الصكوك الإلكترونية في السجل العقاري أي قيود أو رهون أو حجوزات مسجلة على العقار بصورة شفافة."
   },
   {
-    id: 67,
+    id: 103,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -829,7 +1282,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "1. الصك الإلكتروني المحدث. 2. شهادة إتمام البناء. 3. ترخيص فال العقاري للإعلان. 4. براءة ذمة من جمعية الملاك / الخدمات. 5. المخطط الهندسي المعتمد."
   },
   {
-    id: 68,
+    id: 104,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -840,7 +1293,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "في الاستثمارات الكبرى، توفر صهيب العقارية مراجعة قانونية وتقارير معتمدة لضمان سلامة كافة بنود الصفقة."
   },
   {
-    id: 69,
+    id: 105,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -851,7 +1304,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، ينصح بالفحص الفني المعتمد للمباني الجاهزة للتأكد من جودة الأعمال الإنشائية والكهربائية والسباكة."
   },
   {
-    id: 70,
+    id: 106,
     sectionCode: "J",
     sectionNameEn: "Due Diligence",
     sectionNameAr: "الفحص النافي للجهالة والتحقق",
@@ -861,10 +1314,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Absolutely—inspect previous completed developments, delivery track record, and official REGA developer ratings.",
     answerAr: "بالتأكيد، من خلال مراجعة المشاريع السابقة المسلمة، الالتزام بمواعيد التسليم، وتصنيف المطور لدى هيئة العقار."
   },
-
-  // K. Buying Process (71-76)
   {
-    id: 71,
+    id: 107,
     sectionCode: "K",
     sectionNameEn: "Buying Process",
     sectionNameAr: "إجراءات الشراء الرسمية",
@@ -875,7 +1326,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "1. فحص الأهلية ← 2. اختيار العقار المؤهل ← 3. فحص البائع والمشروع ← 4. التحقق من الصك ← 5. توقيع عقد الوساطة ← 6. تسجيل الصفقة وسداد الضرائب ← 7. الدفع الإلكتروني ← 8. الإفراغ الإلكتروني ← 9. إصدار الصك."
   },
   {
-    id: 72,
+    id: 108,
     sectionCode: "K",
     sectionNameEn: "Buying Process",
     sectionNameAr: "إجراءات الشراء الرسمية",
@@ -888,7 +1339,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "Saudi Properties Portal"
   },
   {
-    id: 73,
+    id: 109,
     sectionCode: "K",
     sectionNameEn: "Buying Process",
     sectionNameAr: "إجراءات الشراء الرسمية",
@@ -899,7 +1350,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عبر الدخول برقم الإقامة الموثق عبر النفاذ الوطني / المنصة العقارية."
   },
   {
-    id: 74,
+    id: 110,
     sectionCode: "K",
     sectionNameEn: "Buying Process",
     sectionNameAr: "إجراءات الشراء الرسمية",
@@ -910,7 +1361,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تبدأ الإجراءات بالحصول على توثيق الهوية الرقمية عبر سفارة أو ممثلية المملكة بالخارج قبل استكمال الطلب إلكترونياً."
   },
   {
-    id: 75,
+    id: 111,
     sectionCode: "K",
     sectionNameEn: "Buying Process",
     sectionNameAr: "إجراءات الشراء الرسمية",
@@ -921,7 +1372,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بموجب وكالة شرعية إلكترونية معتمدة تخول الوكيل بإتمام إجراءات الشراء والإفراغ."
   },
   {
-    id: 76,
+    id: 112,
     sectionCode: "K",
     sectionNameEn: "Buying Process",
     sectionNameAr: "إجراءات الشراء الرسمية",
@@ -931,10 +1382,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Potentially, using an authorized legal Power of Attorney with clearly defined scope and limits.",
     answerAr: "نعم، عبر وكالة محددة الصلاحيات والشروط لدى كاتب العدل أو السفارة."
   },
-
-  // L. Ownership & Title (77-81)
   {
-    id: 77,
+    id: 113,
     sectionCode: "L",
     sectionNameEn: "Ownership & Title",
     sectionNameAr: "الملكية والصكوك العقارية",
@@ -947,7 +1396,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA Regulations"
   },
   {
-    id: 78,
+    id: 114,
     sectionCode: "L",
     sectionNameEn: "Ownership & Title",
     sectionNameAr: "الملكية والصكوك العقارية",
@@ -958,7 +1407,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم في النطاقات المعتمدة للملكية التامة (Freehold)، أو حق انتفاع طويل الأجل وفق تصنيف المنطقة."
   },
   {
-    id: 79,
+    id: 115,
     sectionCode: "L",
     sectionNameEn: "Ownership & Title",
     sectionNameAr: "الملكية والصكوك العقارية",
@@ -969,7 +1418,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "الملكية التامة تعني تملك العقار وحقوقه بصورة دائمة وغير مقيدة بمدة زمنية وفق الأنظمة السعودية."
   },
   {
-    id: 80,
+    id: 116,
     sectionCode: "L",
     sectionNameEn: "Ownership & Title",
     sectionNameAr: "الملكية والصكوك العقارية",
@@ -980,7 +1429,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "حق الانتفاع هو حق عيني مسجل يمنح المستفيد استغلال العقار وتأجيره والانتفاع به لمدد محددة تصل إلى 99 عاماً."
   },
   {
-    id: 81,
+    id: 117,
     sectionCode: "L",
     sectionNameEn: "Ownership & Title",
     sectionNameAr: "الملكية والصكوك العقارية",
@@ -992,10 +1441,8 @@ export const FAQ_DATA: FaqItem[] = [
     sourceUrl: "https://rega.gov.sa/en/regulations-and-by-laws/rules/law-of-real-estate-ownership-and-investment-by-non-saudis/",
     sourceLabel: "REGA Regulations"
   },
-
-  // M. Leaving Saudi Arabia (82-86)
   {
-    id: 82,
+    id: 118,
     sectionCode: "M",
     sectionNameEn: "Leaving Saudi Arabia",
     sectionNameAr: "مغادرة المملكة وانتهاء الإقامة",
@@ -1006,7 +1453,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحتفظ بملكيتك التامة والنظامية للصك العقاري؛ فالخروج النهائي لا يسقط الملكية ولا يؤثر في حقك في تأجيره أو الاحتفاظ به أو بيعه."
   },
   {
-    id: 83,
+    id: 119,
     sectionCode: "M",
     sectionNameEn: "Leaving Saudi Arabia",
     sectionNameAr: "مغادرة المملكة وانتهاء الإقامة",
@@ -1017,7 +1464,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تظل الملكية مسجلة باسمك في السجل العقاري."
   },
   {
-    id: 84,
+    id: 120,
     sectionCode: "M",
     sectionNameEn: "Leaving Saudi Arabia",
     sectionNameAr: "مغادرة المملكة وانتهاء الإقامة",
@@ -1028,7 +1475,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عبر البورصة العقارية أو تفويض وكيل شرعي أو وسيط مرخص."
   },
   {
-    id: 85,
+    id: 121,
     sectionCode: "M",
     sectionNameEn: "Leaving Saudi Arabia",
     sectionNameAr: "مغادرة المملكة وانتهاء الإقامة",
@@ -1039,7 +1486,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بتوثيق عقود الإيجار عبر منصة إيجار الإلكترونية أو توكيل شركة إدارة أملاك."
   },
   {
-    id: 86,
+    id: 122,
     sectionCode: "M",
     sectionNameEn: "Leaving Saudi Arabia",
     sectionNameAr: "مغادرة المملكة وانتهاء الإقامة",
@@ -1049,10 +1496,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Yes, you can appoint REGA-licensed property managers like Asaheeb Real Estate to manage leasing, maintenance, and rent collection.",
     answerAr: "نعم، عبر توكيل شركة إدارة أملاك مرخصة مثل صهيب العقارية لإبرام عقود منصة إيجار وتحصيل الإيرادات والصيانة."
   },
-
-  // N. Renting Out the Property (87-92)
   {
-    id: 87,
+    id: 123,
     sectionCode: "N",
     sectionNameEn: "Renting Out Property",
     sectionNameAr: "التأجير والاستثمار ومنصة إيجار",
@@ -1063,7 +1508,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يحق للمالك تأجير عقاره بعقود سنوية أو ربع سنوية أو شهرية نظامية."
   },
   {
-    id: 88,
+    id: 124,
     sectionCode: "N",
     sectionNameEn: "Renting Out Property",
     sectionNameAr: "التأجير والاستثمار ومنصة إيجار",
@@ -1074,7 +1519,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بعقود موحدة تسجل على شبكة إيجار وتجدد تلقائياً أو سنوياً."
   },
   {
-    id: 89,
+    id: 125,
     sectionCode: "N",
     sectionNameEn: "Renting Out Property",
     sectionNameAr: "التأجير والاستثمار ومنصة إيجار",
@@ -1085,7 +1530,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تتيح منصة إيجار دورات سداد شهرية وربع سنوية ونصف سنوية وسنوية."
   },
   {
-    id: 90,
+    id: 126,
     sectionCode: "N",
     sectionNameEn: "Renting Out Property",
     sectionNameAr: "التأجير والاستثمار ومنصة إيجار",
@@ -1096,7 +1541,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يتطلب التأجير السياحي القصير ترخيصاً من وزارة السياحة وموافقة لوائح جمعية الملاك في المبنى."
   },
   {
-    id: 91,
+    id: 127,
     sectionCode: "N",
     sectionNameEn: "Renting Out Property",
     sectionNameAr: "التأجير والاستثمار ومنصة إيجار",
@@ -1107,7 +1552,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عبر عقد إيجار موثق بهوية المستأجر السارية."
   },
   {
-    id: 92,
+    id: 128,
     sectionCode: "N",
     sectionNameEn: "Renting Out Property",
     sectionNameAr: "التأجير والاستثمار ومنصة إيجار",
@@ -1117,10 +1562,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Through Saudi Arabia's mandatory unified Ejar system via a licensed real estate broker.",
     answerAr: "عبر شبكة إيجار الموحدة التابعة لوزارة الإسكان من خلال وسيط عقاري مرخص."
   },
-
-  // O. Investment Questions (93-98)
   {
-    id: 93,
+    id: 129,
     sectionCode: "O",
     sectionNameEn: "Investment Questions",
     sectionNameAr: "عوائد الاستثمار واستراتيجيات السوق",
@@ -1131,7 +1574,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تشهد السوق السعودية نمواً قوياً مدعوماً برؤية 2030 وتوسع المقرات العالمية والطلب السكني والسياحي المتزايد."
   },
   {
-    id: 94,
+    id: 130,
     sectionCode: "O",
     sectionNameEn: "Investment Questions",
     sectionNameAr: "عوائد الاستثمار واستراتيجيات السوق",
@@ -1142,7 +1585,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحقق الشقق السكنية المميزة في جدة والرياض عوائد إجمالية تتراوح بين 6.5% إلى 9.0%، بينما تحقق الأصول التجارية ما بين 7.5% إلى 10.5%."
   },
   {
-    id: 95,
+    id: 131,
     sectionCode: "O",
     sectionNameEn: "Investment Questions",
     sectionNameAr: "عوائد الاستثمار واستراتيجيات السوق",
@@ -1153,7 +1596,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "العائد الصافي (%) = [(الإيراد الإيجاري السنوي − المصاريف والرسوم والصيانة) ÷ إجمالي تكلفة الشراء] × 100."
   },
   {
-    id: 96,
+    id: 132,
     sectionCode: "O",
     sectionNameEn: "Investment Questions",
     sectionNameAr: "عوائد الاستثمار واستراتيجيات السوق",
@@ -1164,7 +1607,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "رسوم إدارة الأملاك، رسوم الخدمات والصيانة لجمعية الملاك، وفترات الشغور والتأمين."
   },
   {
-    id: 97,
+    id: 133,
     sectionCode: "O",
     sectionNameEn: "Investment Questions",
     sectionNameAr: "عوائد الاستثمار واستراتيجيات السوق",
@@ -1175,7 +1618,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "بحسب استراتيجيتك: مناطق الأعمال والمقرات (شمال الرياض) تقدم نمواً رأسمالياً أعلى، بينما المناطق الساحلية والسياحية (جدة) تقدم تدفقاً نقدياً إيجارياً مرتفعاً."
   },
   {
-    id: 98,
+    id: 134,
     sectionCode: "O",
     sectionNameEn: "Investment Questions",
     sectionNameAr: "عوائد الاستثمار واستراتيجيات السوق",
@@ -1185,10 +1628,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Compare Riyadh (business hub, corporate influx), Jeddah (tourism, coastal lifestyle), and Madinah (year-round religious hospitality) based on your target asset class.",
     answerAr: "تتصدر الرياض في التوسع التجاري والمقرات، وتتميز جدة بالعقارات الساحلية الفاخرة والعائد السياحي، والمدينة بالطلب الفندقي المستمر."
   },
-
-  // P. Selling the Property (99-105)
   {
-    id: 99,
+    id: 135,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1199,7 +1640,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يحق للمالك بيع عقاره والتصرف فيه عبر البورصة العقارية والسجل العقاري."
   },
   {
-    id: 100,
+    id: 136,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1210,7 +1651,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، يحق البيع للمواطنين والخليجيين ولغير السعوديين المؤهلين."
   },
   {
-    id: 101,
+    id: 137,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1221,7 +1662,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بشرط مطابقة المشتري الأجنبي لشروط وأهلية التملك في ذلك النطاق."
   },
   {
-    id: 102,
+    id: 138,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1232,7 +1673,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تطبق ضريبة التصرفات العقارية 5% على الصفقة عند الإفراغ."
   },
   {
-    id: 103,
+    id: 139,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1243,7 +1684,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، وتقدم هيئة الزكاة إعفاءات لضريبة التصرفات في حالات الهبة بين الأقارب من الدرجة الأولى وفق الضوابط."
   },
   {
-    id: 104,
+    id: 140,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1254,7 +1695,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عبر توثيق عقد الهبة لدى كاتب العدل مع استيفاء شروط الإعفاء الضريبي."
   },
   {
-    id: 105,
+    id: 141,
     sectionCode: "P",
     sectionNameEn: "Selling Property",
     sectionNameAr: "إعادة البيع والتخارج من الاستثمار",
@@ -1264,10 +1705,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Potentially, subject to applicable inheritance, gifting, and adult ownership rules.",
     answerAr: "نعم، وفق ضوابط الهبة للأقارب من الدرجة الأولى والتسجيل في السجل العقاري."
   },
-
-  // Q. Inheritance (106-110)
   {
-    id: 106,
+    id: 142,
     sectionCode: "Q",
     sectionNameEn: "Inheritance",
     sectionNameAr: "الميراث ونقل التركات",
@@ -1278,7 +1717,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يعد العقار جزءاً من التركة، ويتقدم الورثة الشرعيون بطلب حصر الإرث لدى المحاكم السعودية لتوثيق وتعديل ملكية الصك أو تسييله."
   },
   {
-    id: 107,
+    id: 143,
     sectionCode: "Q",
     sectionNameEn: "Inheritance",
     sectionNameAr: "الميراث ونقل التركات",
@@ -1289,7 +1728,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تنتقل الملكية للورثة الشرعيين وفق صك حصر الورثة المعتمد وقرارات المحكمة المختصة."
   },
   {
-    id: 108,
+    id: 144,
     sectionCode: "Q",
     sectionNameEn: "Inheritance",
     sectionNameAr: "الميراث ونقل التركات",
@@ -1300,7 +1739,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تراعى الضوابط النظامية والدينية (في مكة والمدينة) وتصديق الوثائق والوكالات الصادرة من الخارج."
   },
   {
-    id: 109,
+    id: 145,
     sectionCode: "Q",
     sectionNameEn: "Inheritance",
     sectionNameAr: "الميراث ونقل التركات",
@@ -1311,7 +1750,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، ينصح بتوثيق الوصايا والتخطيط للتركة مع مستشار قانوني لضمان سلاسة انتقال الأصول للورثة."
   },
   {
-    id: 110,
+    id: 146,
     sectionCode: "Q",
     sectionNameEn: "Inheritance",
     sectionNameAr: "الميراث ونقل التركات",
@@ -1321,10 +1760,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "The court or estate executor arranges an orderly sale of the property through the electronic Real Estate Registry and distributes liquidation proceeds to the heirs.",
     answerAr: "يتم تسييل وبيع العقار عبر المزاد أو البيع المباشر المعتمد وتوزيع المبالغ النقدية على الورثة بحسب حصصهم."
   },
-
-  // R. Service Charges (111-114)
   {
-    id: 111,
+    id: 147,
     sectionCode: "R",
     sectionNameEn: "Service Charges & Maintenance",
     sectionNameAr: "رسوم الخدمات وجمعيات الملاك (مُلاّك)",
@@ -1335,7 +1772,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تغطي الرسوم صيانة المصاعد، النظافة، الأمن، المسابح والنوادي، وتنظم رسمياً عبر برنامج 'مُلاّك' التابع للهيئة العامة للعقار."
   },
   {
-    id: 112,
+    id: 148,
     sectionCode: "R",
     sectionNameEn: "Service Charges & Maintenance",
     sectionNameAr: "رسوم الخدمات وجمعيات الملاك (مُلاّك)",
@@ -1346,7 +1783,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يتحملها المالك عادة، ما لم ينص عقد الإيجار على خلاف ذلك للمصاريف التشغيلية."
   },
   {
-    id: 113,
+    id: 149,
     sectionCode: "R",
     sectionNameEn: "Service Charges & Maintenance",
     sectionNameAr: "رسوم الخدمات وجمعيات الملاك (مُلاّك)",
@@ -1357,7 +1794,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تتراوح عادة بين 30 إلى 80 ريال للمتر المربع سنوياً بحسب مستوى الخدمات والمسابح والنوادي والحراسة."
   },
   {
-    id: 114,
+    id: 150,
     sectionCode: "R",
     sectionNameEn: "Service Charges & Maintenance",
     sectionNameAr: "رسوم الخدمات وجمعيات الملاك (مُلاّك)",
@@ -1367,11 +1804,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Yes. Always obtain an official Mullak clearance certificate ensuring the seller has zero outstanding HOA dues.",
     answerAr: "نعم، تأكد من الحصول على شهادة براءة ذمة وسداد كامل مستحقات جمعية الملاك السابقة."
   },
-
-  // S. Hidden Costs & Total Acquisition (Integrated into 115)
-  // T. Real Estate Agent Questions (115-119)
   {
-    id: 115,
+    id: 151,
     sectionCode: "T",
     sectionNameEn: "Real Estate Brokerage & FAL Licensing",
     sectionNameAr: "تراخيص الوساطة العقارية (رخصة فال)",
@@ -1384,7 +1818,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "REGA FAL FAQ"
   },
   {
-    id: 116,
+    id: 152,
     sectionCode: "T",
     sectionNameEn: "Real Estate Brokerage & FAL Licensing",
     sectionNameAr: "تراخيص الوساطة العقارية (رخصة فال)",
@@ -1395,7 +1829,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تأكد من حمل المنشأة لرخصة فال للوساطة والتسويق العقاري من الهيئة العامة للعقار. وتعمل صهيب العقارية وفق أعلى معايير الترخيص والامتثال."
   },
   {
-    id: 117,
+    id: 153,
     sectionCode: "T",
     sectionNameEn: "Real Estate Brokerage & FAL Licensing",
     sectionNameAr: "تراخيص الوساطة العقارية (رخصة فال)",
@@ -1406,7 +1840,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحدد اللائحة عمولة الوساطة العقارية بنسبة 2.5% من قيمة الصفقة كحد أقصى ما لم يتم الاتفاق على غير ذلك في عقد الوساطة."
   },
   {
-    id: 118,
+    id: 154,
     sectionCode: "T",
     sectionNameEn: "Real Estate Brokerage & FAL Licensing",
     sectionNameAr: "تراخيص الوساطة العقارية (رخصة فال)",
@@ -1417,7 +1851,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يوضح ذلك بدقة في عقد الوساطة الإلكتروني المبرم بين الأطراف وفق الضوابط."
   },
   {
-    id: 119,
+    id: 155,
     sectionCode: "T",
     sectionNameEn: "Real Estate Brokerage & FAL Licensing",
     sectionNameAr: "تراخيص الوساطة العقارية (رخصة فال)",
@@ -1427,10 +1861,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Only when you understand the duration, marketing commitments, and fee terms established under standard REGA contracts.",
     answerAr: "عند وضوح التزامات التسويق ومدة العقد ونسبة العمولة في العقد المعتمد."
   },
-
-  // U. Developer Questions (120-125)
   {
-    id: 120,
+    id: 156,
     sectionCode: "U",
     sectionNameEn: "Developer Verification",
     sectionNameAr: "التحقق من المطور العقاري",
@@ -1441,7 +1873,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحقق دائماً من السجل التجاري للمطور وملاءته المالية ومحفظة أعماله."
   },
   {
-    id: 121,
+    id: 157,
     sectionCode: "U",
     sectionNameEn: "Developer Verification",
     sectionNameAr: "التحقق من المطور العقاري",
@@ -1452,7 +1884,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "اطلع على المشاريع المنفذة على أرض الواقع وجودة التشطيبات ورضا الملاك السابقين."
   },
   {
-    id: 122,
+    id: 158,
     sectionCode: "U",
     sectionNameEn: "Developer Verification",
     sectionNameAr: "التحقق من المطور العقاري",
@@ -1463,7 +1895,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "اطلب سجل الالتزام بمواعيد التسليم وتقارير نسب الإنجاز المعتمدة."
   },
   {
-    id: 123,
+    id: 159,
     sectionCode: "U",
     sectionNameEn: "Developer Verification",
     sectionNameAr: "التحقق من المطور العقاري",
@@ -1474,7 +1906,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحقق من رخصة المطور وسريانها في منصة وافي الرسمية."
   },
   {
-    id: 124,
+    id: 160,
     sectionCode: "U",
     sectionNameEn: "Developer Verification",
     sectionNameAr: "التحقق من المطور العقاري",
@@ -1485,7 +1917,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تأكد من وجود رقم ترخيص البيع على الخارطة الصادر من وافي في الإعلانات والعقود."
   },
   {
-    id: 125,
+    id: 161,
     sectionCode: "U",
     sectionNameEn: "Developer Verification",
     sectionNameAr: "التحقق من المطور العقاري",
@@ -1495,10 +1927,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Yes, Wafi requires a dedicated bank escrow account where buyer funds are safeguarded and released only as construction progresses.",
     answerAr: "نعم، يلزم وافي المطور بفتح حساب ضمان بنكي معتمد تشرف عليه جهة هندسية ومحاسبية مستقلة."
   },
-
-  // V. Questions Before Signing (126-132)
   {
-    id: 126,
+    id: 162,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1509,7 +1939,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم في كثير من الأحيان، بحسب رغبة البائع أو العروض الترويجية لدى المطور."
   },
   {
-    id: 127,
+    id: 163,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1520,7 +1950,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يقدم المطورون عادة جداول سداد مرنة مرتبطة بمراحل الإنجاز الإنشائي."
   },
   {
-    id: 128,
+    id: 164,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1531,7 +1961,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بموجب اتفاقية حجز رسمية تحدد مهلة الإفراغ وشروط العربون."
   },
   {
-    id: 129,
+    id: 165,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1542,7 +1972,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تأكد من شروط استرداد العربون المكتوبة في عقد الحجز قبل السداد."
   },
   {
-    id: 130,
+    id: 166,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1553,7 +1983,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يجب تضمين شرط التمويل في الاتفاقية المبدئية لاسترداد العربون في حال عدم الموافقة البنكية."
   },
   {
-    id: 131,
+    id: 167,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1564,7 +1994,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تنظم عقود الوساطة الموحدة الشروط الجزائية وإعادة المبالغ للمشتري في حال نكول البائع."
   },
   {
-    id: 132,
+    id: 168,
     sectionCode: "V",
     sectionNameEn: "Questions Before Signing",
     sectionNameAr: "أسئلة حاسمة قبل توقيع العقد",
@@ -1574,10 +2004,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Understand cancellation and forfeiture rules before placing funds into escrow.",
     answerAr: "اطلع على شروط إلغاء الحجز وما يترتب عليها من استقطاعات قبل سداد أي مبلغ."
   },
-
-  // W. Questions Expats Often Forget (133-148)
   {
-    id: 133,
+    id: 169,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1588,7 +2016,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحقق من الرقم المرجعي للعقار على منصة العقارات السعودية قبل دفع أي مبالغ."
   },
   {
-    id: 134,
+    id: 170,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1599,7 +2027,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا تعتمد على اسم المدينة فقط، بل تحقق من الحي والمخطط الدقيق المعتمد."
   },
   {
-    id: 135,
+    id: 171,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1610,7 +2038,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "اطلب دائماً احتساب التكلفة الإجمالية: السعر + ضريبة 5% + رسم 2% + السعي + رسوم التوثيق."
   },
   {
-    id: 136,
+    id: 172,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1621,7 +2049,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "اطلب شهادة براءة ذمة مالية من جمعية الملاك قبل الإفراغ النهائي."
   },
   {
-    id: 137,
+    id: 173,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1632,7 +2060,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تأكد من تصفية حسابات عداد الكهرباء وشركة المياه الوطنية ونقل الحساب باسمك."
   },
   {
-    id: 138,
+    id: 174,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1643,7 +2071,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تحقق من خلو الصك من أي رهن أو حجز عبر منصة ناجز / البورصة العقارية."
   },
   {
-    id: 139,
+    id: 175,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1654,7 +2082,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "الاستعلام الإلكتروني عن الصك يظهر أي قيود أو أوامر قضائية مسجلة."
   },
   {
-    id: 140,
+    id: 176,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1665,7 +2093,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "راجع لوائح المجمع العقاري وشروط المطور لأي مدد احتفاظ مشروطة."
   },
   {
-    id: 141,
+    id: 177,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1676,7 +2104,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "التعديلات الداخلية تتطلب موافقة جمعية الملاك ورخصة ترميم من منصة بلدي للأعمال الإنشائية."
   },
   {
-    id: 142,
+    id: 178,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1687,7 +2115,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا، الاستخدام مقيد بنوع الصك والمخطط التنظيمي للبلدية ولا يحول إلا بموافقات رسمية."
   },
   {
-    id: 143,
+    id: 179,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1698,7 +2126,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "للأنشطة المهنية والعمل الحر المسموح بها نظاماً وفق اشتراطات وزارة التجارة."
   },
   {
-    id: 144,
+    id: 180,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1709,7 +2137,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، إذا كان العقار يستوفي اشتراطات الفرز الهندسي والبلدي الصادرة من منصة بلدي."
   },
   {
-    id: 145,
+    id: 181,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1720,7 +2148,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "يلزم ترخيص بناء رسمي من البلدية ومخططات هندسية معتمدة تراعي كود البناء السعودي."
   },
   {
-    id: 146,
+    id: 182,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1731,7 +2159,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بموافقة جمعية الملاك واعتماد شركة الكهرباء واشتراطات السلامة."
   },
   {
-    id: 147,
+    id: 183,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1742,7 +2170,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، بالتنسيق مع إدارة المبنى والتأكد من الطاقة الكهربائية والالتزام بالمواصفات القياسية."
   },
   {
-    id: 148,
+    id: 184,
     sectionCode: "W",
     sectionNameEn: "Questions Expats Often Forget",
     sectionNameAr: "أسئلة يغفل عنها المشترون غالباً",
@@ -1752,10 +2180,8 @@ export const FAQ_DATA: FaqItem[] = [
     answerEn: "Yes. Lawful ownership does not mandate continuous occupancy, provided service charges are paid.",
     answerAr: "نعم، الملكية تامة ولا تلزم بالسكن الدائم شريطة الالتزام بسداد رسوم الخدمات والصيانة."
   },
-
-  // X. Digital Buying (149-152)
   {
-    id: 149,
+    id: 185,
     sectionCode: "X",
     sectionNameEn: "Digital Buying Journey",
     sectionNameAr: "الشراء الرقمي والمنصات الحكومية",
@@ -1768,7 +2194,7 @@ export const FAQ_DATA: FaqItem[] = [
     sourceLabel: "Saudi Properties Portal"
   },
   {
-    id: 150,
+    id: 186,
     sectionCode: "X",
     sectionNameEn: "Digital Buying Journey",
     sectionNameAr: "الشراء الرقمي والمنصات الحكومية",
@@ -1779,7 +2205,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، تتيح منصة العقارات السعودية فحص الأهلية الفوري برقم الهوية أو الإقامة."
   },
   {
-    id: 151,
+    id: 187,
     sectionCode: "X",
     sectionNameEn: "Digital Buying Journey",
     sectionNameAr: "الشراء الرقمي والمنصات الحكومية",
@@ -1790,7 +2216,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "نعم، عبر لوحة التحكم الخاصة بالمستفيد على منصة العقارات."
   },
   {
-    id: 152,
+    id: 188,
     sectionCode: "X",
     sectionNameEn: "Digital Buying Journey",
     sectionNameAr: "الشراء الرقمي والمنصات الحكومية",
@@ -1802,10 +2228,8 @@ export const FAQ_DATA: FaqItem[] = [
     sourceUrl: "https://saudiproperties.rega.gov.sa/",
     sourceLabel: "Saudi Properties Portal Maps"
   },
-
-  // Y. Safety & Scam Questions (153-157)
   {
-    id: 153,
+    id: 189,
     sectionCode: "Y",
     sectionNameEn: "Safety & Scam Prevention",
     sectionNameAr: "الأمان العقاري والوقاية من الاحتيال",
@@ -1816,7 +2240,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "تأكد من وجود رقم ترخيص فال الإعلاني، ومطابقة الصك الإلكتروني وبيانات البائع في المنصات الحكومية."
   },
   {
-    id: 154,
+    id: 190,
     sectionCode: "Y",
     sectionNameEn: "Safety & Scam Prevention",
     sectionNameAr: "الأمان العقاري والوقاية من الاحتيال",
@@ -1827,7 +2251,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "احذر تماماً؛ تسدد المبالغ حصراً عبر القنوات الحكومية أو الشيكات المصرفية المصدقة أو حسابات الضمان البنكية."
   },
   {
-    id: 155,
+    id: 191,
     sectionCode: "Y",
     sectionNameEn: "Safety & Scam Prevention",
     sectionNameAr: "الأمان العقاري والوقاية من الاحتيال",
@@ -1838,7 +2262,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا، تحقق دائماً من الصك الإلكتروني وترخيص العقار قبل سداد أي مبلغ."
   },
   {
-    id: 156,
+    id: 192,
     sectionCode: "Y",
     sectionNameEn: "Safety & Scam Prevention",
     sectionNameAr: "الأمان العقاري والوقاية من الاحتيال",
@@ -1849,7 +2273,7 @@ export const FAQ_DATA: FaqItem[] = [
     answerAr: "لا تعتمد أي عرض عقاري دون ترخيص إعلاني معتمد من الهيئة العامة للعقار."
   },
   {
-    id: 157,
+    id: 193,
     sectionCode: "Y",
     sectionNameEn: "Safety & Scam Prevention",
     sectionNameAr: "الأمان العقاري والوقاية من الاحتيال",
