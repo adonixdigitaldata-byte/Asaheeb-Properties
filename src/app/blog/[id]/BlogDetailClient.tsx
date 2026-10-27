@@ -10,6 +10,117 @@ import MobileBottomNav from "@/components/sections/MobileBottomNav";
 import { BlogDetail } from "@/types/database";
 import ShareModal from "@/components/shared/ShareModal";
 
+/**
+ * Safely parses markdown-style links [anchor text](url), **bold**, and *italics*
+ * without introducing unsafe raw HTML injection or XSS vulnerabilities.
+ */
+function parseInlineMarkdown(text: string): React.ReactNode[] {
+  if (!text) return [];
+  // Tokenize [text](url) OR **bold** OR *italic*
+  const tokenRegex = /(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)/g;
+  const nodes: React.ReactNode[] = [];
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tokenRegex.exec(text)) !== null) {
+    if (match.index > lastIdx) {
+      nodes.push(text.substring(lastIdx, match.index));
+    }
+
+    if (match[1]) {
+      // Link: [text](url)
+      const linkText = match[2];
+      const linkUrl = match[3];
+      const isInternal = linkUrl.startsWith("/") || linkUrl.includes("asaheebrealestate.com");
+
+      nodes.push(
+        isInternal ? (
+          <Link
+            key={`l-${match.index}`}
+            href={linkUrl}
+            className="text-[#B8873B] underline underline-offset-4 hover:text-[#d49e4d] font-medium transition-colors"
+          >
+            {parseInlineMarkdown(linkText)}
+          </Link>
+        ) : (
+          <a
+            key={`a-${match.index}`}
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#B8873B] underline underline-offset-4 hover:text-[#d49e4d] font-medium transition-colors"
+          >
+            {parseInlineMarkdown(linkText)}
+          </a>
+        )
+      );
+    } else if (match[4]) {
+      // Bold: **text**
+      nodes.push(
+        <strong key={`b-${match.index}`} className="text-[#E8DFCE] font-semibold">
+          {parseInlineMarkdown(match[5])}
+        </strong>
+      );
+    } else if (match[6]) {
+      // Italic: *text*
+      nodes.push(
+        <em key={`i-${match.index}`} className="text-[#E8DFCE]/90 italic">
+          {match[7]}
+        </em>
+      );
+    }
+
+    lastIdx = tokenRegex.lastIndex;
+  }
+
+  if (lastIdx < text.length) {
+    nodes.push(text.substring(lastIdx));
+  }
+
+  return nodes.length > 0 ? nodes : [text];
+}
+
+/**
+ * Formats body content sections:
+ * - Normalizes inline bullets (` • ` or `\n• `) into structured luxury lists
+ * - Parses paragraphs and bold formatting
+ */
+function renderFormattedSectionBody(text: string, isAr: boolean) {
+  if (!text) return null;
+
+  // Normalize inline bullets " • " or " - " into distinct lines
+  const normalized = text
+    .replace(/([^\n])\s+•\s+/g, "$1\n• ")
+    .replace(/([^\n])\s+-\s+/g, "$1\n- ");
+
+  const lines = normalized.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+
+  return (
+    <div className={`space-y-4 font-sans text-base sm:text-lg text-[#8C8477] leading-[1.85] ${isAr ? "text-right" : ""}`}>
+      {lines.map((line, idx) => {
+        const isBullet = line.startsWith("•") || line.startsWith("-") || line.startsWith("*");
+        if (isBullet) {
+          const cleanText = line.replace(/^[•*-]\s*/, "");
+          return (
+            <div
+              key={idx}
+              className={`flex items-start gap-3 my-2 text-sm sm:text-base text-[#E8DFCE]/90 ${isAr ? "flex-row-reverse text-right" : ""}`}
+            >
+              <span className="text-[#B8873B] font-bold mt-1 text-xs shrink-0">◈</span>
+              <span className="leading-relaxed">{parseInlineMarkdown(cleanText)}</span>
+            </div>
+          );
+        }
+        return (
+          <p key={idx} className="leading-[1.85]">
+            {parseInlineMarkdown(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export function BlogDetailView({ post }: { post: BlogDetail | null }) {
   const { lang } = useLanguage();
   const isAr = lang === "ar";
@@ -41,6 +152,21 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
   const summary = (isAr ? post.summaryAr : post.summaryEn) || [];
   const sections = (isAr ? post.sectionsAr : post.sectionsEn) || [];
   const quote = isAr ? (post.quoteAr || post.quoteEn) : (post.quoteEn || post.quoteAr);
+  const coverImgAlt = isAr
+    ? (post.coverImageAltAr || post.coverImageAltEn || post.titleAr || post.titleEn)
+    : (post.coverImageAltEn || post.coverImageAltAr || post.titleEn || post.titleAr);
+
+  const focusKw = isAr
+    ? (post.focusKeywordAr || post.focusKeywordEn)
+    : (post.focusKeywordEn || post.focusKeywordAr);
+  const secondaryKws = isAr
+    ? (post.secondaryKeywordsAr && post.secondaryKeywordsAr.length > 0
+        ? post.secondaryKeywordsAr
+        : post.secondaryKeywordsEn) || []
+    : (post.secondaryKeywordsEn && post.secondaryKeywordsEn.length > 0
+        ? post.secondaryKeywordsEn
+        : post.secondaryKeywordsAr) || [];
+  const allKeywords = [focusKw, ...secondaryKws].filter(Boolean) as string[];
 
   return (
     <main className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0" dir={isAr ? "rtl" : "ltr"}>
@@ -96,6 +222,18 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
             <span>•</span>
             <span>{isAr ? (post.readTimeAr || post.readTimeEn) : (post.readTimeEn || post.readTimeAr)}</span>
           </div>
+
+          {/* Cover Image Rendering */}
+          {post.coverImageUrl && (
+            <div className="mt-8 rounded-sm overflow-hidden border border-white/10 aspect-[16/9] relative bg-black/40 shadow-2xl">
+              <img
+                src={post.coverImageUrl}
+                alt={coverImgAlt}
+                className="w-full h-full object-cover"
+                loading="eager"
+              />
+            </div>
+          )}
         </div>
       </section>
 
@@ -119,7 +257,7 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
                 {summary.map((item, idx) => (
                   <li key={idx} className={`flex items-start gap-3 text-sm sm:text-base text-[#E8DFCE]/90 font-sans leading-relaxed ${isAr ? "flex-row-reverse" : ""}`}>
                     <span className="text-[#B8873B] font-bold mt-0.5">•</span>
-                    <span>{item}</span>
+                    <span>{parseInlineMarkdown(item)}</span>
                   </li>
                 ))}
               </ul>
@@ -148,16 +286,14 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
                   <h2 className="font-display text-2xl sm:text-3xl text-[#E8DFCE] font-normal tracking-tight">
                     {sec.heading}
                   </h2>
-                  <p className="font-sans text-base sm:text-lg text-[#8C8477] leading-[1.85]">
-                    {sec.body}
-                  </p>
+                  {renderFormattedSectionBody(sec.body, isAr)}
 
                   {sec.highlights && sec.highlights.length > 0 && (
                     <div className="my-6 p-6 border-l-2 border-[#B8873B] bg-white/[0.02] space-y-2">
                       {sec.highlights.map((hl, hIdx) => (
                         <div key={hIdx} className={`text-sm text-[#E8DFCE]/90 font-sans flex items-start gap-2 ${isAr ? "flex-row-reverse text-right" : ""}`}>
                           <span className="text-[#B8873B] font-bold">◈</span>
-                          <span>{hl}</span>
+                          <span>{parseInlineMarkdown(hl)}</span>
                         </div>
                       ))}
                     </div>
@@ -180,6 +316,26 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
             </blockquote>
           )}
 
+          {/* Key Topics & Keywords */}
+          {allKeywords && allKeywords.length > 0 && (
+            <div className={`pt-6 pb-2 border-t border-white/10 ${isAr ? "text-right" : ""}`}>
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#8C8477] block mb-3 font-semibold">
+                {isAr ? "المواضيع والكلمات المفتاحية" : "Key Topics & Related Queries"}
+              </span>
+              <div className={`flex flex-wrap gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
+                {allKeywords.map((kw, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-1 px-3 py-1 font-mono text-[11px] tracking-wide text-[#E8DFCE]/90 bg-[#B8873B]/10 border border-[#B8873B]/30 rounded-full hover:border-[#B8873B] transition-colors"
+                  >
+                    <span className="text-[#B8873B] font-semibold">#</span>
+                    <span>{kw}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* CTA Banner */}
           <div
             className={`p-8 sm:p-10 border border-[#B8873B]/40 text-center rounded-sm ${isAr ? "text-right sm:text-center" : ""}`}
@@ -196,6 +352,8 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
+                data-cta="blog-book-advisory"
+                data-article-id={post.id}
                 className="w-full sm:w-auto px-8 py-4 font-mono text-[11px] tracking-[0.2em] uppercase border border-[#B8873B] bg-[#B8873B] text-[#12130F] font-semibold hover:bg-transparent hover:text-[#B8873B] transition-all duration-300"
               >
                 {isAr ? "تواصل معنا الآن" : "Book Advisory Session"}
@@ -204,6 +362,8 @@ export function BlogDetailView({ post }: { post: BlogDetail | null }) {
                 href={getWhatsAppLink(undefined, undefined, isAr)}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cta="blog-whatsapp-direct"
+                data-article-id={post.id}
                 className="w-full sm:w-auto px-8 py-4 font-mono text-[11px] tracking-[0.2em] uppercase border border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10 transition-all duration-300 font-semibold"
               >
                 {isAr ? "محادثة واتساب" : "WhatsApp Instant Reply"}

@@ -76,7 +76,8 @@ export async function POST(request: NextRequest) {
   try {
     if (table === "blogs") {
       revalidatePath("/blog");
-      revalidatedPaths.push("/blog");
+      revalidatePath("/sitemap.xml");
+      revalidatedPaths.push("/blog", "/sitemap.xml");
       if (recordId) {
         revalidatePath(`/blog/${recordId}`);
         revalidatedPaths.push(`/blog/${recordId}`);

@@ -35,6 +35,19 @@ export interface BlogDetail {
   statBox?: { val: string; labelEn: string; labelAr: string }[];
   quoteEn?: string;
   quoteAr?: string;
+  coverImageUrl?: string;
+  coverImageAltEn?: string;
+  coverImageAltAr?: string;
+  seoTitleEn?: string;
+  seoTitleAr?: string;
+  metaDescriptionEn?: string;
+  metaDescriptionAr?: string;
+  focusKeywordEn?: string;
+  focusKeywordAr?: string;
+  secondaryKeywordsEn?: string[];
+  secondaryKeywordsAr?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const POSTS: PostMetadata[] = [

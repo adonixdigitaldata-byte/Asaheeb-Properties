@@ -135,6 +135,8 @@ export default function BlogClient({
   const [postsList] = useState<PostMetadata[]>(initialPosts);
   const [featuredPost] = useState<PostMetadata | null>(initialFeatured || (initialPosts.length > 0 ? initialPosts[0] : null));
   const [activeCategory, setActiveCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const POSTS_PER_PAGE = 15;
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [isSubmittingNewsletter, setIsSubmittingNewsletter] = useState(false);
   const [newsletterSent, setNewsletterSent] = useState(false);
@@ -173,6 +175,18 @@ export default function BlogClient({
     ? nonFeatured
     : nonFeatured.filter((p) => p.category.toLowerCase() === activeCategory.toLowerCase());
 
+  const totalPages = Math.ceil(filtered.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const currentPosts = filtered.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setCurrentPage(newPage);
+    if (gridRef.current) {
+      gridRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
@@ -202,10 +216,10 @@ export default function BlogClient({
       const cards = gridRef.current.querySelectorAll(".blog-card");
       if (cards.length > 0) {
         gsap.set(cards, { opacity: 0, y: 30 });
-        gsap.to(cards, { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: "power2.out" });
+        gsap.to(cards, { opacity: 1, y: 0, duration: 0.6, stagger: 0.06, ease: "power2.out" });
       }
     }
-  }, [activeCategory]);
+  }, [activeCategory, currentPage]);
 
   return (
     <main className="relative bg-[#12130F] min-h-screen pb-20 md:pb-0" dir={isAr ? "rtl" : "ltr"}>
@@ -292,7 +306,10 @@ export default function BlogClient({
               return (
                 <button
                   key={cat.key}
-                  onClick={() => setActiveCategory(cat.key)}
+                  onClick={() => {
+                    setActiveCategory(cat.key);
+                    setCurrentPage(1);
+                  }}
                   className="px-5 py-2 font-mono text-[10px] tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer font-medium"
                   style={{
                     borderBottom: isActive ? "2px solid #B8873B" : "2px solid transparent",
@@ -312,11 +329,66 @@ export default function BlogClient({
       <section className="py-8 px-6 sm:px-10 lg:px-20">
         <div className="max-w-5xl mx-auto">
           {filtered.length > 0 ? (
-            <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((post) => (
-                <PostCard key={post.id} post={post} isAr={isAr} readMore={c.readMore} />
-              ))}
-            </div>
+            <>
+              <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {currentPosts.map((post) => (
+                  <PostCard key={post.id} post={post} isAr={isAr} readMore={c.readMore} />
+                ))}
+              </div>
+
+              {/* ── PAGINATION CONTROLS (15 per page) ────────────────────────── */}
+              {totalPages > 1 && (
+                <div className={`mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 ${isAr ? "sm:flex-row-reverse" : ""}`}>
+                  {/* Article count indicator */}
+                  <div className="font-mono text-xs text-[#8C8477] tracking-wider">
+                    {isAr
+                      ? `عرض ${startIndex + 1}–${Math.min(startIndex + POSTS_PER_PAGE, filtered.length)} من أصل ${filtered.length} مقالاً`
+                      : `Showing ${startIndex + 1}–${Math.min(startIndex + POSTS_PER_PAGE, filtered.length)} of ${filtered.length} articles`}
+                  </div>
+
+                  {/* Page selector buttons */}
+                  <div className={`flex items-center gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
+                    {/* Previous button */}
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      aria-label={isAr ? "الصفحة السابقة" : "Previous Page"}
+                      className="px-3.5 py-2 font-mono text-xs tracking-widest uppercase border border-white/15 text-[#E8DFCE] hover:border-[#B8873B] hover:text-[#B8873B] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 rounded-sm flex items-center gap-1.5 cursor-pointer disabled:pointer-events-none"
+                    >
+                      <span className={isAr ? "rotate-180 inline-block" : "inline-block"}>←</span>
+                      <span>{isAr ? "السابق" : "Prev"}</span>
+                    </button>
+
+                    {/* Numeric buttons */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        aria-label={`Page ${pageNum}`}
+                        className={`w-9 h-9 font-mono text-xs flex items-center justify-center transition-all duration-300 rounded-sm border cursor-pointer ${
+                          currentPage === pageNum
+                            ? "bg-[#B8873B] text-[#12130F] font-bold border-[#B8873B] shadow-[0_0_15px_rgba(184,135,59,0.3)]"
+                            : "border-white/10 text-[#C5BCAD] hover:border-[#B8873B]/50 hover:text-[#E8DFCE] bg-white/[0.02]"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+
+                    {/* Next button */}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      aria-label={isAr ? "الصفحة التالية" : "Next Page"}
+                      className="px-3.5 py-2 font-mono text-xs tracking-widest uppercase border border-white/15 text-[#E8DFCE] hover:border-[#B8873B] hover:text-[#B8873B] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 rounded-sm flex items-center gap-1.5 cursor-pointer disabled:pointer-events-none"
+                    >
+                      <span>{isAr ? "التالي" : "Next"}</span>
+                      <span className={isAr ? "rotate-180 inline-block" : "inline-block"}>→</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
             <div className="py-20 text-center text-[#8C8477]">
               <p className="font-mono text-sm uppercase tracking-widest">

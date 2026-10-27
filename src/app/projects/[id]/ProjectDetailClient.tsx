@@ -18,6 +18,7 @@ import { ProjectPromotionalHeroBanner } from "@/components/shared/ProjectPromoti
 import { ProjectCardPriceAndOffer } from "@/components/shared/ProjectCardPriceAndOffer";
 import { ZoomableLightboxStage } from "./ZoomableLightboxStage";
 import PropertyAIChatWidget from "@/components/ai-agent/PropertyAIChatWidget";
+import FloatingProjectCTA from "@/components/shared/FloatingProjectCTA";
 
 import { ParsedFloorPlan, parseFloorPlan, stripEmojis } from "@/lib/floorPlanParser";
 
@@ -888,9 +889,10 @@ export function ProjectDetailView({
             <div className="space-y-2.5">
               <a
                 href="#section-inquiry"
-                className="w-full block text-center py-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-bold border border-[#B8873B] bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] transition-all duration-300 rounded-xs shadow-sm"
+                className="w-full flex items-center justify-center gap-2 py-3.5 font-mono text-[10.5px] sm:text-[11px] tracking-[0.2em] uppercase font-bold border border-[#B8873B] bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] transition-all duration-300 rounded-xs shadow-md group"
               >
-                {isAr ? "استفسر عن هذا المشروع" : "Inquire For This Property"}
+                <span>{isAr ? "سجّل اهتمامك بالوحدة" : "Register Your Interest"}</span>
+                <span className="transition-transform group-hover:translate-x-1 font-bold">→</span>
               </a>
 
               <a
@@ -1190,7 +1192,7 @@ export function ProjectDetailView({
                           onClick={() => handleInquireOnLayout(plan)}
                           className="flex-1 py-2 font-mono text-[10px] tracking-wider uppercase bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] font-bold transition-all text-center rounded-xs cursor-pointer shadow-sm"
                         >
-                          {isAr ? "طلب حجز النموذج" : "Inquire Layout"}
+                          {isAr ? "تسجيل الاهتمام بالنموذج" : "Register Interest"}
                         </button>
                       </div>
                     </div>
@@ -1441,15 +1443,15 @@ export function ProjectDetailView({
             <div className={`lg:col-span-5 flex flex-col justify-between space-y-6 ${isAr ? "text-right" : ""}`}>
               <div>
                 <span className="font-mono text-[9px] tracking-[0.25em] uppercase text-[#C99A49] block mb-2 font-bold">
-                  {isAr ? "حجز استشارة خاصة وتخصيص مباشر" : "Priority Allocation & Advisory"}
+                  {isAr ? "تسجيل اهتمام رسمي وتخصيص مباشر" : "Priority Allocation & Investor Registration"}
                 </span>
                 <h2 className="font-display text-2xl sm:text-3xl text-[#FAF6EE] mb-3 leading-tight">
-                  {isAr ? `استفسار عن ${project.nameAr}` : `Inquire About ${project.nameEn}`}
+                  {isAr ? `تسجيل الاهتمام بـ ${project.nameAr}` : `Register Your Interest — ${project.nameEn}`}
                 </h2>
                 <p className="font-sans text-xs sm:text-[13px] text-[#A89F91] leading-relaxed mb-5">
                   {isAr
-                    ? "احصل على استشارة استثمارية خاصة من فريق أصاهيب العقارية المرخص للاطلاع على أحدث المخططات، خطط السداد الدقيقة، وحجز أفضل الوحدات المتاحة مباشرة."
-                    : "Connect directly with our licensed Asaheeb portfolio advisors to access verified real-time availability, customized installment structures, and priority unit allocations."}
+                    ? "سجّل اهتمامك الاستثماري المباشر مع فريق أصاهيب العقارية المرخص لتثبيت أولوية تخصيص الوحدات، الحصول على جدول الدفعات والخصومات المعتمدة."
+                    : "Register your serious investment interest with our licensed Asaheeb advisors to lock in priority unit allocation, verified real-time availability, and direct developer pricing."}
                 </p>
 
                 {/* Featured Architectural Project Image Card */}
@@ -1477,7 +1479,7 @@ export function ProjectDetailView({
                 {/* VIP Investor Guarantees & Benefits */}
                 <div className="space-y-3 p-4 bg-[#12140F] border border-white/10 rounded-sm">
                   <h4 className="font-mono text-[9.5px] uppercase tracking-wider text-[#E2B768] font-bold">
-                    {isAr ? "مزايا الحجز والاستشارة مع أصاهيب" : "Why Inquire Through Asaheeb"}
+                    {isAr ? "مزايا تسجيل الاهتمام مع أصاهيب" : "Why Register Through Asaheeb"}
                   </h4>
                   <div className="space-y-2 text-xs text-[#FAF6EE]/85 font-sans">
                     <div className={`flex items-start gap-2 ${isAr ? "flex-row-reverse" : ""}`}>
@@ -1505,12 +1507,12 @@ export function ProjectDetailView({
                     ✓
                   </div>
                   <h3 className="font-display text-2xl text-[#FAF6EE]">
-                    {isAr ? "تم استلام طلبكم بنجاح" : "Inquiry Received Successfully"}
+                    {isAr ? "تم تسجيل اهتمامكم بنجاح" : "Interest Registered Successfully"}
                   </h3>
                   <p className="font-sans text-xs sm:text-sm text-[#D4CDC1] max-w-md mx-auto leading-relaxed">
                     {isAr
-                      ? "شكراً لاهتمامكم. سيقوم مستشار أصاهيب العقاري بالتواصل معكم فوراً لتزويدكم بكافة التفاصيل."
-                      : "Thank you for reaching out. An Asaheeb investment advisor will contact you shortly with full documentation."}
+                      ? "شكراً لتسجيل اهتمامكم. سيقوم مستشار استثماري مرخص من أصاهيب بالتواصل معكم فوراً لتزويدكم بكافة تفاصيل الحجز وتخصيص الوحدة."
+                      : "Thank you for registering your interest. An accredited Asaheeb investment advisor will contact you shortly with allocation priority and documentation."}
                   </p>
                   <div className="pt-3">
                     <a
@@ -1606,11 +1608,16 @@ export function ProjectDetailView({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-3.5 font-mono text-[10.5px] sm:text-[11px] tracking-[0.2em] uppercase font-bold border border-[#B8873B] bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-md rounded-xs"
+                      className="w-full py-3.5 font-mono text-[10.5px] sm:text-[11px] tracking-[0.2em] uppercase font-bold border border-[#B8873B] bg-[#B8873B] text-[#080907] hover:bg-[#c99a49] transition-all duration-300 disabled:opacity-50 cursor-pointer shadow-md rounded-xs flex items-center justify-center gap-2"
                     >
-                      {isSubmitting
-                        ? isAr ? "جاري الإرسال..." : "Submitting..."
-                        : isAr ? "إرسال طلب الاستفسار" : "Submit Priority Inquiry"}
+                      {isSubmitting ? (
+                        <span>{isAr ? "جاري تسجيل الاهتمام..." : "Registering Interest..."}</span>
+                      ) : (
+                        <>
+                          <span>{isAr ? "سجّل اهتمامك الآن" : "Register Your Interest"}</span>
+                          <span className="font-bold">→</span>
+                        </>
+                      )}
                     </button>
 
                     <a
@@ -1622,7 +1629,7 @@ export function ProjectDetailView({
                       <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                       </svg>
-                      <span>{isAr ? "استفسار مباشر عبر واتساب" : "Direct WhatsApp Inquiry"}</span>
+                      <span>{isAr ? "تسجيل اهتمام فوري عبر واتساب" : "Register via Direct WhatsApp"}</span>
                     </a>
 
                     {/* Privacy Badge */}
@@ -1884,7 +1891,7 @@ export function ProjectDetailView({
                 }}
                 className="hidden sm:inline-block px-5 py-2 bg-[#B8873B] text-[#080907] font-mono text-[10px] tracking-wider uppercase font-bold hover:bg-[#c99a49] transition-all cursor-pointer rounded-xs shadow-md text-center"
               >
-                {isAr ? "طلب حجز هذا النموذج" : "Inquire On This Layout"}
+                {isAr ? "تسجيل الاهتمام بهذا النموذج" : "Register Interest on Layout"}
               </button>
             </div>
 
@@ -2329,6 +2336,14 @@ export function ProjectDetailView({
           project={project}
           initialLanguage={isAr ? "ar" : "en"}
           onOpenBrochureModal={() => setShowBrochureModal(true)}
+        />
+      )}
+
+      {project && (
+        <FloatingProjectCTA
+          project={project}
+          isAr={isAr}
+          whatsAppLink={getProjectWhatsAppLink(project.nameEn, project.nameAr, isAr)}
         />
       )}
 

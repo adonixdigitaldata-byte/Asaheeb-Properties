@@ -273,6 +273,19 @@ export function mapBlogToDetail(b: Blog): BlogDetail {
     statBox: b.stat_box,
     quoteEn,
     quoteAr,
+    coverImageUrl: b.cover_image_url,
+    coverImageAltEn: b.cover_image_alt_en,
+    coverImageAltAr: b.cover_image_alt_ar,
+    seoTitleEn: b.seo_title_en,
+    seoTitleAr: b.seo_title_ar,
+    metaDescriptionEn: b.meta_description_en,
+    metaDescriptionAr: b.meta_description_ar,
+    focusKeywordEn: b.focus_keyword_en,
+    focusKeywordAr: b.focus_keyword_ar,
+    secondaryKeywordsEn: b.secondary_keywords_en,
+    secondaryKeywordsAr: b.secondary_keywords_ar,
+    createdAt: b.created_at,
+    updatedAt: b.updated_at,
   };
 }
 

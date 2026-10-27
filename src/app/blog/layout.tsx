@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   keywords: [
     "Saudi real estate market blog",
     "Vision 2030 property news",
-    "Riyadh rental yields 2025",
+    "Riyadh rental yields 2026",
     "buying property in Saudi Arabia foreigner guide",
     "مدونة العقارات السعودية",
   ],

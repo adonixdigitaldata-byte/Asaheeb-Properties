@@ -178,6 +178,18 @@ export interface Blog {
   quote_en?: string;
   quote_ar?: string;
   cover_image_url?: string;
+  cover_image_alt_en?: string;
+  cover_image_alt_ar?: string;
+  seo_title_en?: string;
+  seo_title_ar?: string;
+  meta_description_en?: string;
+  meta_description_ar?: string;
+  focus_keyword_en?: string;
+  focus_keyword_ar?: string;
+  secondary_keywords_en?: string[];
+  secondary_keywords_ar?: string[];
+  seo_review_status?: "NEEDS_REVIEW" | "IN_PROGRESS" | "OPTIMIZED" | "NEEDS_UPDATE" | string;
+  seo_reviewed_at?: string;
   featured: boolean;
   is_published: boolean;
   sort_order: number;
@@ -302,6 +314,19 @@ export interface BlogDetail {
   statBox?: BlogStatBox[];
   quoteEn?: string;
   quoteAr?: string;
+  coverImageUrl?: string;
+  coverImageAltEn?: string;
+  coverImageAltAr?: string;
+  seoTitleEn?: string;
+  seoTitleAr?: string;
+  metaDescriptionEn?: string;
+  metaDescriptionAr?: string;
+  focusKeywordEn?: string;
+  focusKeywordAr?: string;
+  secondaryKeywordsEn?: string[];
+  secondaryKeywordsAr?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface NewsletterSubscriber {

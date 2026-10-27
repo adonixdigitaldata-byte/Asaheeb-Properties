@@ -204,6 +204,8 @@ const CONTENT = {
     ctaTitle: "Need a Custom Portfolio?",
     ctaSub: "We have off-market institutional assets not publicly listed. Connect with an Asaheeb advisor.",
     ctaBtn: "Talk to an Advisor",
+    foreignFilterBtn: "Foreign Eligible",
+    foreignFreeholdShort: "100% Freehold",
   },
   ar: {
     badge: "محفظة استثمارية منتقاة",
@@ -222,6 +224,8 @@ const CONTENT = {
     ctaTitle: "هل تحتاج محفظة مخصصة؟",
     ctaSub: "لدينا أصول مؤسسية خارج السوق غير مدرجة علناً. تواصل مع مستشار أصاهيب.",
     ctaBtn: "تحدث مع مستشار",
+    foreignFilterBtn: "متاح لغير السعوديين",
+    foreignFreeholdShort: "تملك حر للأجانب",
   },
 };
 
@@ -503,6 +507,28 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
   const [activePriceRange, setActivePriceRange] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showForeignQuickMenu, setShowForeignQuickMenu] = useState(false);
+  const foreignQuickMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close foreign quick menu on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (foreignQuickMenuRef.current && !foreignQuickMenuRef.current.contains(event.target as Node)) {
+        setShowForeignQuickMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleForeignQuickFilter = (statusKey: string = "ELIGIBLE") => {
+    if (activeForeignStatus === statusKey) {
+      handleForeignStatusChange("all");
+    } else {
+      handleForeignStatusChange(statusKey);
+    }
+    setShowForeignQuickMenu(false);
+  };
 
   // Draft States inside Modal (Staged until user clicks Apply)
   const [draftPropertyType, setDraftPropertyType] = useState(initialType);
@@ -808,7 +834,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
       <section ref={filterSectionRef} className="px-4 sm:px-10 lg:px-20 py-8 border-y border-white/10 bg-[#0F1117]/60">
         <div className="max-w-7xl mx-auto space-y-4">
           
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
             
             {/* Search input with live text typing */}
             <div className="relative flex-1">
@@ -829,7 +855,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                 }}
                 placeholder={c.searchPlaceholder}
                 dir={isAr ? "rtl" : "ltr"}
-                className={`w-full py-4 text-xs sm:text-sm text-[#E8DFCE] bg-[#12130F] border border-white/10 rounded-sm focus:border-[#B8873B] outline-none transition-all duration-300 placeholder-[#8C8477] ${
+                className={`w-full py-3.5 sm:py-4 text-xs sm:text-sm text-[#E8DFCE] bg-[#12130F] border border-white/10 rounded-sm focus:border-[#B8873B] outline-none transition-all duration-300 placeholder-[#8C8477] ${
                   isAr ? "pr-11 pl-4" : "pl-11 pr-4"
                 }`}
               />
@@ -845,31 +871,125 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
               )}
             </div>
 
-            {/* Filters Trigger Button (Opens Refine Modal) */}
-            <button
-              onClick={openFilterModal}
-              className="h-[52px] sm:h-[56px] px-5 sm:px-7 border border-white/15 hover:border-[#B8873B] text-[#E8DFCE] hover:text-[#B8873B] bg-[#12130F] transition-all duration-300 font-mono text-[11px] sm:text-xs tracking-[0.2em] uppercase font-semibold flex items-center gap-2.5 shrink-0 rounded-sm cursor-pointer shadow-lg"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
-                <line x1="4" y1="21" x2="4" y2="14" />
-                <line x1="4" y1="10" x2="4" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12" y2="3" />
-                <line x1="20" y1="21" x2="20" y2="16" />
-                <line x1="20" y1="12" x2="20" y2="3" />
-                <line x1="1" y1="14" x2="7" y2="14" />
-                <line x1="9" y1="8" x2="15" y2="8" />
-                <line x1="17" y1="16" x2="23" y2="16" />
-              </svg>
-              <span>{isAr ? "تصفية" : "Filters"}</span>
-              {activeFiltersCount > 0 && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                  activeFiltersCount > 0 ? "bg-[#B8873B] text-[#12130F]" : "bg-white/10 text-[#E8DFCE]"
-                }`}>
-                  {activeFiltersCount}
-                </span>
-              )}
-            </button>
+            {/* Quick Actions Bar (Foreign Eligible Filter + Filters Modal Trigger) */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              {/* Foreign Eligible Filter with Globe Icon */}
+              <div ref={foreignQuickMenuRef} className="relative flex-1 sm:flex-initial">
+                <button
+                  type="button"
+                  onClick={() => toggleForeignQuickFilter("ELIGIBLE")}
+                  className={`w-full sm:w-auto h-[48px] sm:h-[56px] px-3.5 sm:px-5 border font-mono text-[10.5px] sm:text-xs tracking-[0.16em] uppercase font-semibold flex items-center justify-center gap-2 rounded-sm cursor-pointer shadow-lg transition-all duration-300 group ${
+                    activeForeignStatus !== "all"
+                      ? "border-emerald-500/80 bg-emerald-950/40 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
+                      : "border-white/15 hover:border-emerald-500/50 text-[#E8DFCE] hover:text-emerald-300 bg-[#12130F]"
+                  }`}
+                  title={isAr ? "تصفية المشاريع المتاحة لتملك الأجانب (تملك حر)" : "Quick filter: Foreign freehold eligible projects"}
+                >
+                  {/* Globe SVG Icon with glowing styling */}
+                  <svg
+                    className={`w-4 h-4 shrink-0 transition-transform duration-300 group-hover:rotate-45 ${
+                      activeForeignStatus !== "all" ? "text-emerald-400 scale-110" : "text-[#B8873B]"
+                    }`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+
+                  <span className="whitespace-nowrap">
+                    {activeForeignStatus === "ELIGIBLE"
+                      ? isAr ? "تملك حر للأجانب" : "Foreign Freehold"
+                      : activeForeignStatus === "ELIGIBLE_MUSLIMS_ONLY"
+                      ? isAr ? "متاح للمسلمين" : "Muslims Only"
+                      : activeForeignStatus === "REQUIRES_PREMIUM_RESIDENCY"
+                      ? isAr ? "إقامة مميزة" : "Premium Residency"
+                      : isAr ? "متاح للأجانب" : "Foreign Eligible"}
+                  </span>
+
+                  {activeForeignStatus !== "all" && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  )}
+
+                  {/* Dropdown chevron to pick sub-types (e.g. Holy Cities vs 100% Freehold) */}
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowForeignQuickMenu((prev) => !prev);
+                    }}
+                    className={`text-[9px] text-[#8C8477] hover:text-emerald-300 p-1 transition-transform duration-200 ${
+                      showForeignQuickMenu ? "rotate-180" : ""
+                    }`}
+                    title={isAr ? "خيارات التملك لغير السعوديين" : "All foreign status options"}
+                  >
+                    ▼
+                  </span>
+                </button>
+
+                {/* Dropdown Popover */}
+                {showForeignQuickMenu && (
+                  <div
+                    className={`absolute top-full mt-2 z-50 w-64 bg-[#0F1117] border border-emerald-500/30 rounded-sm shadow-[0_12px_36px_rgba(0,0,0,0.85)] p-2 space-y-1 ${
+                      isAr ? "right-0 text-right" : "left-0 sm:right-0 sm:left-auto text-left"
+                    }`}
+                  >
+                    <div className="px-2.5 py-1 text-[9px] font-mono tracking-widest uppercase text-[#8C8477] border-b border-white/5 pb-1 mb-1">
+                      {isAr ? "خيارات أهلية التملك" : "Foreign Ownership Status"}
+                    </div>
+                    {FOREIGN_STATUS_OPTIONS.map((opt) => {
+                      const isSelected = activeForeignStatus === opt.key;
+                      return (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => {
+                            handleForeignStatusChange(opt.key);
+                            setShowForeignQuickMenu(false);
+                          }}
+                          className={`w-full px-3 py-2 text-xs font-mono rounded-xs flex items-center justify-between gap-2 transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/40"
+                              : "text-[#E8DFCE] hover:bg-white/5 hover:text-emerald-300"
+                          }`}
+                        >
+                          <span className="truncate">{isAr ? opt.ar : opt.en}</span>
+                          {isSelected && <span className="text-emerald-400 font-bold shrink-0">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Filters Trigger Button (Opens Refine Modal) */}
+              <button
+                onClick={openFilterModal}
+                className="flex-1 sm:flex-initial h-[48px] sm:h-[56px] px-4 sm:px-7 border border-white/15 hover:border-[#B8873B] text-[#E8DFCE] hover:text-[#B8873B] bg-[#12130F] transition-all duration-300 font-mono text-[11px] sm:text-xs tracking-[0.2em] uppercase font-semibold flex items-center justify-center gap-2.5 shrink-0 rounded-sm cursor-pointer shadow-lg"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
+                  <line x1="4" y1="21" x2="4" y2="14" />
+                  <line x1="4" y1="10" x2="4" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12" y2="3" />
+                  <line x1="20" y1="21" x2="20" y2="16" />
+                  <line x1="20" y1="12" x2="20" y2="3" />
+                  <line x1="1" y1="14" x2="7" y2="14" />
+                  <line x1="9" y1="8" x2="15" y2="8" />
+                  <line x1="17" y1="16" x2="23" y2="16" />
+                </svg>
+                <span>{isAr ? "تصفية" : "Filters"}</span>
+                {activeFiltersCount > 0 && (
+                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                    activeFiltersCount > 0 ? "bg-[#B8873B] text-[#12130F]" : "bg-white/10 text-[#E8DFCE]"
+                  }`}>
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+            </div>
 
           </div>
 
