@@ -125,8 +125,8 @@ export function mapProjectToDetail(p: Project): ProjectDetail {
     ai_agent_welcome_ar: p.ai_agent_welcome_ar,
     ai_agent_custom_instructions: p.ai_agent_custom_instructions,
     foreign_eligibility: p.foreign_eligibility || (p.city_en?.toLowerCase().includes("medina") || p.city_en?.toLowerCase().includes("madinah") ? "ELIGIBLE_MUSLIMS_ONLY" : "ELIGIBLE"),
-    foreign_eligibility_en: p.foreign_eligibility_en || "Available for foreign nationals and expatriates with Iqama or Premium Residency via official licensing.",
-    foreign_eligibility_ar: p.foreign_eligibility_ar || "متاح للتملك لغير السعوديين والمقيمين أو حاملي الإقامة المميزة بموجب تراخيص الهيئة العامة للعقار.",
+    foreign_eligibility_en: p.foreign_eligibility_en || (p.foreign_eligibility === "LEASEHOLD" ? "Long-term leasehold / usufruct rights (up to 99 years) available for foreign and international investors." : "Available for foreign nationals and expatriates with Iqama or Premium Residency via official licensing."),
+    foreign_eligibility_ar: p.foreign_eligibility_ar || (p.foreign_eligibility === "LEASEHOLD" ? "حق انتفاع طويل الأجل (حتى 99 سنة) متاح للمستثمرين الأجانب والدوليين وفق اللوائح التنظيمية." : "متاح للتملك لغير السعوديين والمقيمين أو حاملي الإقامة المميزة بموجب تراخيص الهيئة العامة للعقار."),
   };
 }
 

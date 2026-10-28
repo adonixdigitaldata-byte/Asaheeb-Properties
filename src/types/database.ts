@@ -133,7 +133,7 @@ export interface Project {
   ai_agent_welcome_en?: string;
   ai_agent_welcome_ar?: string;
   ai_agent_custom_instructions?: string;
-  foreign_eligibility?: "ELIGIBLE" | "ELIGIBLE_MUSLIMS_ONLY" | "NOT_ELIGIBLE" | "REQUIRES_PREMIUM_RESIDENCY" | string;
+  foreign_eligibility?: "ELIGIBLE" | "LEASEHOLD" | "ELIGIBLE_MUSLIMS_ONLY" | "NOT_ELIGIBLE" | "REQUIRES_PREMIUM_RESIDENCY" | string;
   foreign_eligibility_en?: string;
   foreign_eligibility_ar?: string;
   is_published: boolean;
@@ -272,7 +272,7 @@ export interface ProjectDetail {
   ai_agent_welcome_en?: string;
   ai_agent_welcome_ar?: string;
   ai_agent_custom_instructions?: string;
-  foreign_eligibility?: "ELIGIBLE" | "ELIGIBLE_MUSLIMS_ONLY" | "NOT_ELIGIBLE" | "REQUIRES_PREMIUM_RESIDENCY" | string;
+  foreign_eligibility?: "ELIGIBLE" | "LEASEHOLD" | "ELIGIBLE_MUSLIMS_ONLY" | "NOT_ELIGIBLE" | "REQUIRES_PREMIUM_RESIDENCY" | string;
   foreign_eligibility_en?: string;
   foreign_eligibility_ar?: string;
 }

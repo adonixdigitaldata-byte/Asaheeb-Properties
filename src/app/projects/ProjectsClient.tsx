@@ -129,6 +129,7 @@ const PAYMENT_OPTIONS = [
 export const FOREIGN_STATUS_OPTIONS = [
   { key: "all", en: "All Foreign Statuses", ar: "جميع حالات التملك" },
   { key: "ELIGIBLE", en: "100% Foreign Freehold", ar: "تملك حر لغير السعوديين" },
+  { key: "LEASEHOLD", en: "Leasehold (Usufruct Rights)", ar: "حق انتفاع (إيجار طويل الأجل)" },
   { key: "ELIGIBLE_MUSLIMS_ONLY", en: "Muslims Only (Holy Cities)", ar: "متاح للمسلمين (المدينة المنورة)" },
   { key: "REQUIRES_PREMIUM_RESIDENCY", en: "Requires Premium Residency", ar: "يتطلب إقامة مميزة" },
 ];
@@ -352,6 +353,8 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
                   className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-mono tracking-wider uppercase shrink-0 ${
                     project.foreign_eligibility === "ELIGIBLE"
                       ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                      : project.foreign_eligibility === "LEASEHOLD"
+                      ? "bg-purple-500/15 text-purple-300 border border-purple-500/30"
                       : project.foreign_eligibility === "ELIGIBLE_MUSLIMS_ONLY"
                       ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
                       : project.foreign_eligibility === "REQUIRES_PREMIUM_RESIDENCY"
@@ -360,15 +363,26 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
                   }`}
                   title={isAr ? project.foreign_eligibility_ar : project.foreign_eligibility_en}
                 >
-                  <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
+                  {project.foreign_eligibility === "LEASEHOLD" ? (
+                    <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                  ) : (
+                    <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  )}
                   <span>
                     {isAr
                       ? project.foreign_eligibility === "ELIGIBLE"
                         ? "تملك أجنبي"
+                        : project.foreign_eligibility === "LEASEHOLD"
+                        ? "حق انتفاع"
                         : project.foreign_eligibility === "ELIGIBLE_MUSLIMS_ONLY"
                         ? "للمسلمين"
                         : project.foreign_eligibility === "REQUIRES_PREMIUM_RESIDENCY"
@@ -376,6 +390,8 @@ function ProjectCard({ project, isAr, priority = false }: { project: ProjectDeta
                         : "سعوديين فقط"
                       : project.foreign_eligibility === "ELIGIBLE"
                       ? "Foreign Freehold"
+                      : project.foreign_eligibility === "LEASEHOLD"
+                      ? "Leasehold"
                       : project.foreign_eligibility === "ELIGIBLE_MUSLIMS_ONLY"
                       ? "Muslim Freehold"
                       : project.foreign_eligibility === "REQUIRES_PREMIUM_RESIDENCY"
@@ -872,37 +888,50 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
             </div>
 
             {/* Quick Actions Bar (Foreign Eligible Filter + Filters Modal Trigger) */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              {/* Foreign Eligible Filter with Globe Icon */}
-              <div ref={foreignQuickMenuRef} className="relative flex-1 sm:flex-initial">
+            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto shrink-0">
+              {/* Foreign Eligible Filter with Globe / Document Icon */}
+              <div ref={foreignQuickMenuRef} className="relative flex-1 sm:flex-initial min-w-0">
                 <button
                   type="button"
                   onClick={() => toggleForeignQuickFilter("ELIGIBLE")}
-                  className={`w-full sm:w-auto h-[48px] sm:h-[56px] px-3.5 sm:px-5 border font-mono text-[10.5px] sm:text-xs tracking-[0.16em] uppercase font-semibold flex items-center justify-center gap-2 rounded-sm cursor-pointer shadow-lg transition-all duration-300 group ${
+                  className={`w-full sm:w-auto h-[46px] sm:h-[56px] px-2.5 sm:px-5 border font-mono text-[10px] sm:text-xs tracking-wider sm:tracking-[0.16em] uppercase font-semibold flex items-center justify-center gap-1.5 sm:gap-2 rounded-sm cursor-pointer shadow-lg transition-all duration-300 group min-w-0 ${
                     activeForeignStatus !== "all"
-                      ? "border-emerald-500/80 bg-emerald-950/40 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
+                      ? activeForeignStatus === "LEASEHOLD"
+                        ? "border-purple-500/80 bg-purple-950/40 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.25)]"
+                        : "border-emerald-500/80 bg-emerald-950/40 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
                       : "border-white/15 hover:border-emerald-500/50 text-[#E8DFCE] hover:text-emerald-300 bg-[#12130F]"
                   }`}
-                  title={isAr ? "تصفية المشاريع المتاحة لتملك الأجانب (تملك حر)" : "Quick filter: Foreign freehold eligible projects"}
+                  title={isAr ? "تصفية المشاريع المتاحة لتملك الأجانب" : "Quick filter: Foreign freehold & eligible projects"}
                 >
-                  {/* Globe SVG Icon with glowing styling */}
-                  <svg
-                    className={`w-4 h-4 shrink-0 transition-transform duration-300 group-hover:rotate-45 ${
-                      activeForeignStatus !== "all" ? "text-emerald-400 scale-110" : "text-[#B8873B]"
-                    }`}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
+                  {/* SVG Icon */}
+                  {activeForeignStatus === "LEASEHOLD" ? (
+                    <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                  ) : (
+                    <svg
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform duration-300 group-hover:rotate-45 ${
+                        activeForeignStatus !== "all" ? "text-emerald-400 scale-110" : "text-[#B8873B]"
+                      }`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  )}
 
-                  <span className="whitespace-nowrap">
+                  <span className="truncate">
                     {activeForeignStatus === "ELIGIBLE"
                       ? isAr ? "تملك حر للأجانب" : "Foreign Freehold"
+                      : activeForeignStatus === "LEASEHOLD"
+                      ? isAr ? "حق انتفاع" : "Leasehold"
                       : activeForeignStatus === "ELIGIBLE_MUSLIMS_ONLY"
                       ? isAr ? "متاح للمسلمين" : "Muslims Only"
                       : activeForeignStatus === "REQUIRES_PREMIUM_RESIDENCY"
@@ -911,18 +940,18 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                   </span>
 
                   {activeForeignStatus !== "all" && (
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                    <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full animate-pulse shrink-0 ${
+                      activeForeignStatus === "LEASEHOLD" ? "bg-purple-400" : "bg-emerald-400"
+                    }`} />
                   )}
 
-                  {/* Dropdown chevron to pick sub-types (e.g. Holy Cities vs 100% Freehold) */}
+                  {/* Dropdown chevron to pick sub-types (e.g. Holy Cities vs 100% Freehold vs Leasehold) */}
                   <span
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowForeignQuickMenu((prev) => !prev);
                     }}
-                    className={`text-[9px] text-[#8C8477] hover:text-emerald-300 p-1 transition-transform duration-200 ${
-                      showForeignQuickMenu ? "rotate-180" : ""
-                    }`}
+                    className="text-[9px] text-[#8C8477] hover:text-emerald-300 p-0.5 sm:p-1 transition-transform duration-200"
                     title={isAr ? "خيارات التملك لغير السعوديين" : "All foreign status options"}
                   >
                     ▼
@@ -932,7 +961,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                 {/* Dropdown Popover */}
                 {showForeignQuickMenu && (
                   <div
-                    className={`absolute top-full mt-2 z-50 w-64 bg-[#0F1117] border border-emerald-500/30 rounded-sm shadow-[0_12px_36px_rgba(0,0,0,0.85)] p-2 space-y-1 ${
+                    className={`absolute top-full mt-2 z-50 w-64 max-w-[calc(100vw-2rem)] bg-[#0F1117] border border-emerald-500/30 rounded-sm shadow-[0_12px_36px_rgba(0,0,0,0.85)] p-2 space-y-1 ${
                       isAr ? "right-0 text-right" : "left-0 sm:right-0 sm:left-auto text-left"
                     }`}
                   >
@@ -951,12 +980,18 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                           }}
                           className={`w-full px-3 py-2 text-xs font-mono rounded-xs flex items-center justify-between gap-2 transition-all cursor-pointer ${
                             isSelected
-                              ? "bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/40"
+                              ? opt.key === "LEASEHOLD"
+                                ? "bg-purple-500/20 text-purple-300 font-semibold border border-purple-500/40"
+                                : "bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/40"
                               : "text-[#E8DFCE] hover:bg-white/5 hover:text-emerald-300"
                           }`}
                         >
                           <span className="truncate">{isAr ? opt.ar : opt.en}</span>
-                          {isSelected && <span className="text-emerald-400 font-bold shrink-0">✓</span>}
+                          {isSelected && (
+                            <span className={`font-bold shrink-0 ${opt.key === "LEASEHOLD" ? "text-purple-400" : "text-emerald-400"}`}>
+                              ✓
+                            </span>
+                          )}
                         </button>
                       );
                     })}
@@ -967,9 +1002,9 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
               {/* Filters Trigger Button (Opens Refine Modal) */}
               <button
                 onClick={openFilterModal}
-                className="flex-1 sm:flex-initial h-[48px] sm:h-[56px] px-4 sm:px-7 border border-white/15 hover:border-[#B8873B] text-[#E8DFCE] hover:text-[#B8873B] bg-[#12130F] transition-all duration-300 font-mono text-[11px] sm:text-xs tracking-[0.2em] uppercase font-semibold flex items-center justify-center gap-2.5 shrink-0 rounded-sm cursor-pointer shadow-lg"
+                className="flex-initial h-[46px] sm:h-[56px] px-3 sm:px-7 border border-white/15 hover:border-[#B8873B] text-[#E8DFCE] hover:text-[#B8873B] bg-[#12130F] transition-all duration-300 font-mono text-[10px] sm:text-xs tracking-wider sm:tracking-[0.2em] uppercase font-semibold flex items-center justify-center gap-1.5 sm:gap-2.5 rounded-sm cursor-pointer shadow-lg shrink-0"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                   <line x1="4" y1="21" x2="4" y2="14" />
                   <line x1="4" y1="10" x2="4" y2="3" />
                   <line x1="12" y1="21" x2="12" y2="12" />
@@ -982,7 +1017,7 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                 </svg>
                 <span>{isAr ? "تصفية" : "Filters"}</span>
                 {activeFiltersCount > 0 && (
-                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                  <span className={`px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold shrink-0 ${
                     activeFiltersCount > 0 ? "bg-[#B8873B] text-[#12130F]" : "bg-white/10 text-[#E8DFCE]"
                   }`}>
                     {activeFiltersCount}
@@ -1046,12 +1081,25 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                   </span>
                 )}
                 {activeForeignStatus !== "all" && (
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 bg-[#171914] border border-emerald-500/40 text-emerald-300 rounded-xs shadow-sm">
-                    <svg className="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="2" y1="12" x2="22" y2="12" />
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
+                  <span className={`inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-wider px-2.5 py-1 rounded-xs shadow-sm ${
+                    activeForeignStatus === "LEASEHOLD"
+                      ? "bg-[#171914] border border-purple-500/40 text-purple-300"
+                      : "bg-[#171914] border border-emerald-500/40 text-emerald-300"
+                  }`}>
+                    {activeForeignStatus === "LEASEHOLD" ? (
+                      <svg className="w-3 h-3 text-purple-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                      </svg>
+                    ) : (
+                      <svg className="w-3 h-3 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                      </svg>
+                    )}
                     <span>{FOREIGN_STATUS_OPTIONS.find((fs) => fs.key === activeForeignStatus)?.[isAr ? "ar" : "en"]}</span>
                     <button onClick={() => handleForeignStatusChange("all")} className="text-[#8C8477] hover:text-[#B8873B] cursor-pointer">✕</button>
                   </span>
@@ -1226,11 +1274,20 @@ export default function ProjectsClient({ initialProjects = [] }: { initialProjec
                             : "border-white/10 bg-[#171914] text-[#8C8477] hover:border-white/25 hover:text-[#C5BCAD]"
                         }`}
                       >
-                        <svg className={`w-3.5 h-3.5 ${isSelected ? "text-[#12130F]" : "text-emerald-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="10" />
-                          <line x1="2" y1="12" x2="22" y2="12" />
-                          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                        </svg>
+                        {fs.key === "LEASEHOLD" ? (
+                          <svg className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-[#12130F]" : "text-purple-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                          </svg>
+                        ) : (
+                          <svg className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-[#12130F]" : "text-emerald-400"}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                          </svg>
+                        )}
                         <span>{isAr ? fs.ar : fs.en}</span>
                       </button>
                     );
