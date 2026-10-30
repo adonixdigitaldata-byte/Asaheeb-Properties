@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "1-on-1 Strategic Real Estate Advisory with Founder Nabeel | Asaheeb Real Estate",
   description:
-    "Schedule a private 1-on-1 real estate investment consultation with Nabeel, Founder of Asaheeb Real Estate. Capped at 10 sessions/week. 100% credited towards your property purchase in Saudi Arabia.",
+    "Book a private 1-on-1 real estate investment consultation with Founder Nabeel. Pay the advisory fee upfront to secure your slot, and get your fee credited back toward your property purchase down payment when you buy with Asaheeb.",
   keywords: [
     "Saudi real estate consultation",
     "Nabeel Asaheeb Real Estate",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "1-on-1 Strategic Real Estate Advisory with Founder Nabeel | Asaheeb Real Estate",
     description:
-      "Exclusive 1-on-1 investment consultation with Nabeel. Limited to 10 executive sessions per week. Booking fee is 100% credited towards your property purchase.",
+      "Exclusive 1-on-1 investment consultation with Founder Nabeel. Limited to 10 executive sessions per week. Pay upfront to book, fee credited back when you purchase any property through Asaheeb.",
     url: "https://www.asaheebrealestate.com/consultation",
     siteName: "Asaheeb Real Estate",
     images: [

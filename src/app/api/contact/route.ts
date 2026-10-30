@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { resend, isResendConfigured, DEFAULT_RESEND_FROM } from "@/lib/resend";
 import nodemailer from "nodemailer";
 import { CONTACT_EMAIL } from "@/data/contactConfig";
 
@@ -93,39 +94,54 @@ export async function POST(req: Request) {
     </html>
     `;
 
-    // Setup SMTP Transporter if credentials configured in process.env, otherwise fallback cleanly
-    const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
-    const smtpPort = Number(process.env.SMTP_PORT) || 587;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (smtpUser && smtpPass) {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
-
-      await transporter.sendMail({
-        from: `"Asaheeb Website Leads" <${smtpUser}>`,
-        to: CONTACT_EMAIL,
-        replyTo: email !== "N/A" ? email : undefined,
-        subject: emailSubject,
-        html: htmlTemplate,
-      });
+    // Primary: Resend Email Engine
+    if (isResendConfigured() && resend) {
+      try {
+        await resend.emails.send({
+          from: DEFAULT_RESEND_FROM,
+          to: CONTACT_EMAIL,
+          replyTo: email !== "N/A" && email.includes("@") ? email : undefined,
+          subject: emailSubject,
+          html: htmlTemplate,
+        });
+      } catch (resendErr) {
+        console.error("Resend error sending contact lead:", resendErr);
+      }
     } else {
-      console.log("==========================================");
-      console.log(`[INSTANT LEAD EMAIL NOTIFICATION] To: ${CONTACT_EMAIL}`);
-      console.log(`Subject: ${emailSubject}`);
-      console.log(`Name: ${name} | Phone: ${phone} | Email: ${email}`);
-      console.log(`Form Type: ${formType} | Project: ${projectName}`);
-      console.log(`Budget: ${budget} | Interest: ${interest}`);
-      console.log(`Message: ${message}`);
-      console.log("==========================================");
+      // Secondary fallback: SMTP Transporter if credentials configured in process.env
+      const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+      const smtpPort = Number(process.env.SMTP_PORT) || 587;
+      const smtpUser = process.env.SMTP_USER;
+      const smtpPass = process.env.SMTP_PASS;
+
+      if (smtpUser && smtpPass) {
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: smtpPort === 465,
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+        });
+
+        await transporter.sendMail({
+          from: `"Asaheeb Website Leads" <${smtpUser}>`,
+          to: CONTACT_EMAIL,
+          replyTo: email !== "N/A" ? email : undefined,
+          subject: emailSubject,
+          html: htmlTemplate,
+        });
+      } else {
+        console.log("==========================================");
+        console.log(`[INSTANT LEAD EMAIL NOTIFICATION] To: ${CONTACT_EMAIL}`);
+        console.log(`Subject: ${emailSubject}`);
+        console.log(`Name: ${name} | Phone: ${phone} | Email: ${email}`);
+        console.log(`Form Type: ${formType} | Project: ${projectName}`);
+        console.log(`Budget: ${budget} | Interest: ${interest}`);
+        console.log(`Message: ${message}`);
+        console.log("==========================================");
+      }
     }
 
     return NextResponse.json({ success: true, message: "Lead submitted and emailed successfully" });

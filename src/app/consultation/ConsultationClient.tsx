@@ -9,7 +9,7 @@ import PhoneInputWithCountry from "@/components/ui/PhoneInputWithCountry";
 import {
   DEFAULT_CONSULTATION_SETTINGS,
   CONSULTATION_TOPICS,
-  CONSULTATION_FAQS,
+  getConsultationFaqs,
   ConsultationSettings,
 } from "@/data/consultationConfig";
 import { WHATSAPP_NUMBER } from "@/data/contactConfig";
@@ -183,10 +183,67 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
     syncSettings();
   }, []);
 
+  // Verify Stripe Session ID if returning from Stripe Checkout
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get("session_id");
+    const ref = urlParams.get("booking_reference");
+
+    if (sessionId) {
+      setIsSubmitting(true);
+      fetch(`/api/consultations/verify-session?session_id=${encodeURIComponent(sessionId)}&booking_reference=${encodeURIComponent(ref || "")}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setBookingResult({
+              bookingReference: data.bookingReference,
+              voucherCode: data.voucherCode,
+              creditValue: data.creditValue,
+              amountPaid: data.amountPaid,
+              currency: data.currency,
+              meetingMode: data.meetingMode,
+            });
+            window.scrollTo({ top: 100, behavior: "smooth" });
+          } else {
+            setStepError({
+              step: 4,
+              field: "general",
+              message: isAr
+                ? "تعذر التحقق من الدفع، يرجى التواصل مع فريق الدعم"
+                : "Could not verify Stripe payment. Please contact concierge.",
+            });
+          }
+        })
+        .catch((err) => {
+          console.error("Session verification error:", err);
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
+    } else if (urlParams.get("cancelled")) {
+      setStepError({
+        step: 4,
+        field: "general",
+        message: isAr
+          ? "تم إلغاء عملية الدفع، يمكنك المحاولة مرة أخرى في أي وقت."
+          : "Checkout was cancelled. You can try again at any time.",
+      });
+    }
+  }, [isAr]);
+
   const slotsRemaining = Math.max(0, settings.weeklySlotCapacity - settings.slotsBookedThisWeek);
   const isFullyBooked = slotsRemaining === 0;
   const isHighUrgency = slotsRemaining <= 2 && slotsRemaining > 0;
   const creditValue = settings.feeAmount * settings.creditMultiplier;
+
+  // Fully dynamic currency & credit labels strictly derived from database settings
+  const formattedFee = `${settings.currency} ${settings.feeAmount.toLocaleString()}`;
+  const formattedCredit = `${settings.currency} ${creditValue.toLocaleString()}`;
+  const formattedFeeAr = `${settings.feeAmount.toLocaleString()} ${settings.currency === "SAR" ? "ر.س" : settings.currency}`;
+  const formattedCreditAr = `${creditValue.toLocaleString()} ${settings.currency === "SAR" ? "ر.س" : settings.currency}`;
+  const creditMultiplierLabel = `${settings.creditMultiplier}x`;
+  const faqs = getConsultationFaqs(settings);
 
   // Safe Navigation Handler: Completely wipes error state when moving between steps
   const goToStep = (step: 1 | 2 | 3 | 4) => {
@@ -238,7 +295,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/consultations", {
+      const res = await fetch("/api/consultations/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -257,6 +314,13 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
       const data = await res.json();
 
       if (data.success) {
+        // If Stripe checkout URL is returned, redirect customer to Stripe payment
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        // Test/dev mode or instant confirmation fallback
         setBookingResult({
           bookingReference: data.bookingReference,
           voucherCode: data.voucherCode,
@@ -306,11 +370,13 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
           
           {/* Status Label */}
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="w-2 h-2 rounded-full bg-[#B8873B] animate-pulse shrink-0" />
+            <span className={`w-2 h-2 rounded-full shrink-0 ${!settings.isActive ? "bg-amber-400" : "bg-[#B8873B] animate-pulse"}`} />
             
             {/* Mobile View: Clean, readable 12px */}
             <div className="sm:hidden font-mono text-xs tracking-wider uppercase text-[#D4C7B5] truncate">
-              {isFullyBooked ? (
+              {!settings.isActive ? (
+                <span className="text-amber-400 font-bold">{isAr ? "الجلسات متوقفة مؤقتاً" : "Bookings Paused"}</span>
+              ) : isFullyBooked ? (
                 <span className="text-red-400 font-bold">{isAr ? "مكتمل · حجز مسبق" : "Fully Booked · Pre-book"}</span>
               ) : isHighUrgency ? (
                 <span className="text-[#B8873B] font-bold">{isAr ? `مقعد 1 متبقي` : `Only 1 Slot Left`}</span>
@@ -319,12 +385,18 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                   <strong className="text-[#B8873B]">{slotsRemaining}/{settings.weeklySlotCapacity}</strong> {isAr ? "مقاعد متاحة" : "Slots Open"}
                 </span>
               )}
-              <span className="text-[#8C8477] ml-1.5">· {settings.currentWeekCycle}</span>
+              {settings.currentWeekCycle && <span className="text-[#8C8477] ml-1.5">· {settings.currentWeekCycle}</span>}
             </div>
 
             {/* Desktop View: Full descriptive text */}
             <div className="hidden sm:block font-mono text-xs tracking-wider uppercase text-[#D4C7B5]">
-              {isFullyBooked ? (
+              {!settings.isActive ? (
+                <span className="text-amber-400 font-semibold">
+                  {isAr
+                    ? `حجوزات الاستشارة متوقفة مؤقتاً من الإدارة${settings.currentWeekCycle ? ` (${settings.currentWeekCycle})` : ""}`
+                    : `Advisory Bookings Temporarily Paused by Management${settings.currentWeekCycle ? ` (${settings.currentWeekCycle})` : ""}`}
+                </span>
+              ) : isFullyBooked ? (
                 <span className="text-red-400 font-semibold">
                   {isAr
                     ? `اكتملت حصة هذا الأسبوع (${settings.weeklySlotCapacity}/${settings.weeklySlotCapacity}) · أولوية الحجز المسبق مفتوحة`
@@ -343,7 +415,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                       ? `متبقي ${slotsRemaining} من أصل ${settings.weeklySlotCapacity} جلسات استشارية متاحة`
                       : `Only ${slotsRemaining} of ${settings.weeklySlotCapacity} strategic advisory sessions remaining`}
                   </strong>{" "}
-                  <span className="text-[#8C8477]">· {settings.currentWeekCycle}</span>
+                  {settings.currentWeekCycle && <span className="text-[#8C8477]">· {settings.currentWeekCycle}</span>}
                 </span>
               )}
             </div>
@@ -375,7 +447,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 relative z-10 pb-28 lg:pb-16">
         
         {/* ─── MOBILE-FIRST COMPACT HEADER (MOBILE ONLY) ─── */}
-        <div className="lg:hidden mb-5 space-y-2 text-center">
+        <div className="lg:hidden mb-5 space-y-2.5 text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#B8873B]/10 border border-[#B8873B]/30 text-[#B8873B] font-mono text-xs uppercase tracking-wider">
             <SvgShield className="w-3.5 h-3.5 text-[#B8873B]" />
             <span>{isAr ? "استشارة تنفيذية خاصة · أ. نبيل" : "Executive 1-on-1 Advisory · Nabeel"}</span>
@@ -395,12 +467,25 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
             )}
           </h1>
 
-          {/* Guarantee Tag Mobile */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#161813] border border-[#B8873B]/40 text-xs sm:text-sm">
-            <span className="text-[#8C8477]">{isAr ? "عربون:" : "Deposit:"}</span>
-            <span className="font-bold text-[#E8DFCE]">{settings.currency} {settings.feeAmount.toLocaleString()}</span>
-            <span className="text-[#B8873B] font-bold">→ {settings.currency} {creditValue.toLocaleString()} {isAr ? "خصم مضمون" : "Credit"}</span>
+          {/* Guarantee Tag Mobile - Clear Upfront Pay & Credit Back (100% Dynamic from DB) */}
+          <div className="inline-flex flex-col sm:flex-row items-center gap-1 sm:gap-2 px-3.5 py-2 rounded-lg bg-[#161813] border border-[#B8873B]/40 text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[#8C8477]">{isAr ? "رسوم حجز مسبقة:" : "Upfront Fee:"}</span>
+              <span className="font-bold text-[#E8DFCE]">{isAr ? formattedFeeAr : formattedFee}</span>
+            </div>
+            <span className="hidden sm:inline text-[#8C8477]">→</span>
+            <div className="text-emerald-400 font-bold">
+              {isAr
+                ? `رصيد شراء ${formattedCreditAr} يُخصم عند الشراء معنا`
+                : `${formattedCredit} Credited Back When You Buy With Us`}
+            </div>
           </div>
+
+          <p className="text-xs text-[#C5BCAD] leading-relaxed font-light px-2">
+            {isAr
+              ? `تدفع ${formattedFeeAr} مسبقاً لتأكيد حجز جلستك الخاصة مع المؤسس، ويتم استرداد ${formattedCreditAr} كرصيد يُخصم من دفعة التعاقد عند شرائك أي عقار عبر أصاهيب.`
+              : `Pay ${formattedFee} upfront to secure your 1-on-1 session. When you purchase any property through Asaheeb, ${formattedCredit} is credited back toward your purchase.`}
+          </p>
         </div>
 
         {/* ─── HERO SPLIT-SCREEN: VALUE PROPOSITION (LEFT) + 4-STAGE WIZARD (RIGHT) ─── */}
@@ -429,36 +514,59 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
 
             <p className="font-sans text-sm sm:text-base text-[#C5BCAD] leading-relaxed font-light">
               {isAr
-                ? "جلسة تحليلية مغلقة مدتها 45 دقيقة مخصصة لإدارة محفظتك الاستثمارية، والوصول إلى صفقات رؤية 2030 قبل الإعلان عنها في السوق. رسوم الاستشارة تُخصم بالكامل عند حجز أي أصل عقاري عبر أصاهيب."
-                : "An executive 45-minute confidential consultation focused on your capital allocation, risk-weighted yield models, and unreleased Vision 2030 off-market assets. 100% credited against your property acquisition."}
+                ? `جلسة تحليلية مغلقة مدتها 45 دقيقة مع المؤسس أ. نبيل مخصصة لإدارة محفظتك العقارية والوصول لفرص رؤية 2030 الحصرية قبل طرحها. تدفع رسم الاستشارة (${formattedFeeAr}) مسبقاً لتأكيد حجزك، وتسترد رصيداً بقيمة ${formattedCreditAr} مخصوماً من دفعة التعاقد عند شرائك أي عقار معنا عبر أصاهيب.`
+                : `An executive 45-minute confidential consultation with Founder Nabeel focused on your capital allocation and unreleased Vision 2030 off-market assets. Pay ${formattedFee} upfront to reserve your slot, and get ${formattedCredit} credited back against your down payment when you purchase any property through us.`}
             </p>
 
-            {/* Zero-Risk Guarantee Callout */}
-            <div className="p-5 rounded-xl bg-[#161813] border border-[#B8873B]/40 space-y-2.5">
+            {/* Zero-Risk Guarantee Callout (100% Dynamic from DB) */}
+            <div className="p-5 rounded-xl bg-[#161813] border border-[#B8873B]/40 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs uppercase tracking-wider text-[#B8873B] font-semibold">
-                  {isAr ? "سند ضمان القيمة 100%" : "Capital Deposit Guarantee"}
+                  {isAr ? "سند ضمان رصيد الشراء المعتمد" : "Purchase Credit Guarantee"}
                 </span>
                 <span className="font-mono text-xs text-emerald-400 font-bold">
-                  {settings.creditMultiplier}x Credit Voucher
+                  {creditMultiplierLabel} Purchase Credit
                 </span>
               </div>
               
               <div className="flex flex-wrap items-baseline gap-2">
                 <span className="text-sm sm:text-base text-[#C5BCAD]">
-                  {settings.currency} {settings.feeAmount.toLocaleString()}{" "}
-                  {isAr ? "يتحول إلى قسيمة شراء بقيمة:" : "converts into a"}
+                  {isAr ? "تدفع مسبقاً:" : "Pay Upfront:"}{" "}
+                  <strong className="text-[#E8DFCE]">{isAr ? formattedFeeAr : formattedFee}</strong>
+                  {" → "}
+                  {isAr ? "يُخصم عند الشراء:" : "Credited When You Buy:"}
                 </span>
                 <span className="font-serif text-xl sm:text-2xl font-bold text-[#B8873B] whitespace-nowrap">
-                  {settings.currency} {creditValue.toLocaleString()}
+                  {isAr ? formattedCreditAr : formattedCredit}
                 </span>
               </div>
 
-              <p className="font-sans text-xs sm:text-sm text-[#8C8477] font-light leading-relaxed">
-                {isAr
-                  ? `لا توجد أي خسارة مالية. القسيمة المعتمدة تُخصم بالكامل من عربون الشراء أو الدفعة الأولى عند التعاقد على أي مشروع مع أصاهيب خلال 12 شهراً.`
-                  : `Zero risk. Your deposit voucher is deducted in full from your down payment or token booking when acquiring any property through Asaheeb within 12 months.`}
-              </p>
+              <div className="space-y-2 pt-2 border-t border-[#B8873B]/20 text-xs sm:text-sm text-[#C5BCAD] font-light leading-relaxed">
+                <div className="flex items-start gap-2">
+                  <span className="font-mono font-bold text-[#B8873B]">1.</span>
+                  <span>
+                    {isAr
+                      ? `سداد رسوم الحجز (${formattedFeeAr}) مسبقاً لتأكيد موعدك المباشر مع المؤسس (محددة بـ ${settings.weeklySlotCapacity} جلسات أسبوعياً فقط).`
+                      : `Pay the booking fee (${formattedFee}) upfront to lock in your direct session with the Founder (strictly capped at ${settings.weeklySlotCapacity} sessions/week).`}
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="font-mono font-bold text-[#B8873B]">2.</span>
+                  <span>
+                    {isAr
+                      ? `استلام فوري لقسيمة شراء معتمدة بقيمة ${formattedCreditAr} صالحة لمدة 12 شهراً.`
+                      : `Instantly receive an official acquisition credit voucher worth ${formattedCredit} valid for 12 months.`}
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="font-mono font-bold text-emerald-400">3.</span>
+                  <span className="text-emerald-200">
+                    {isAr
+                      ? `عند شرائك أي عقار معنا، يُخصم المبلغ بالكامل (${formattedCreditAr}) من دفعتك الأولى — لتكون استشارتك مجانية بالكامل!`
+                      : `When you buy any property with us, the full ${formattedCredit} is credited against your purchase down payment — your consultation becomes 100% free!`}
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Trust Metrics Desktop */}
@@ -540,10 +648,17 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                   </div>
                 </div>
 
-                <div className="text-xs sm:text-sm text-[#C5BCAD] bg-[#1A1C16] p-4 rounded-xl border border-[#B8873B]/20 leading-relaxed text-left rtl:text-right">
-                  {isAr
-                    ? "سيتواصل معك منسق كبار المستثمرين خلال 60 دقيقة لتأكيد موعد الجلسة في جدول أ. نبيل وإرسال الرابط المشفر أو تفاصيل الاستقبال بالصالة."
-                    : "Our executive concierge will contact you within 60 minutes to coordinate Nabeel's open calendar windows and confirm your encrypted link or office reception."}
+                <div className="text-xs sm:text-sm text-[#C5BCAD] bg-[#1A1C16] p-4 rounded-xl border border-[#B8873B]/20 leading-relaxed text-left rtl:text-right space-y-2">
+                  <p>
+                    {isAr
+                      ? `تم استلام سداد رسوم الحجز (${formattedFeeAr}) بنجاح. قسيمتك الرقمية أعلاه معتمدة بقيمة ${formattedCreditAr} وستُخصم بالكامل من دفعة شرائك القادمة عند التعاقد على أي عقار معنا عبر أصاهيب.`
+                      : `Your upfront payment of ${formattedFee} has been received successfully. Your digital voucher above is valid for ${formattedCredit} and will be credited back against your purchase deposit when you acquire any property through Asaheeb.`}
+                  </p>
+                  <p className="text-[#8C8477]">
+                    {isAr
+                      ? "سيتواصل معك منسق كبار المستثمرين خلال 60 دقيقة لتأكيد موعد الجلسة في جدول أ. نبيل وإرسال الرابط المشفر أو تفاصيل الاستقبال بالصالة."
+                      : "Our executive concierge will contact you within 60 minutes to coordinate Nabeel's open calendar windows and confirm your encrypted link or office reception."}
+                  </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -567,6 +682,44 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                   >
                     {isAr ? "استعراض المشاريع الحالية" : "Explore Active Projects"}
                   </Link>
+                </div>
+              </div>
+            ) : !settings.isActive ? (
+              /* ─── PAUSED / STOPPED FROM CRM NOTICE ─── */
+              <div className="text-center space-y-6 py-8 animate-fadeIn">
+                <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/40 flex items-center justify-center mx-auto">
+                  <SvgShield className="w-7 h-7 text-amber-400" />
+                </div>
+
+                <div>
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-amber-400 font-bold">
+                    {isAr ? "الجلسات مغلقة مؤقتاً" : "Advisory Bookings Paused"}
+                  </span>
+                  <h2 className="font-serif text-2xl sm:text-3xl text-[#E8DFCE] font-normal mt-2">
+                    {isAr ? "استشارات المؤسس الخاصة غير متاحة حالياً" : "Founder Advisory Schedule Currently Closed"}
+                  </h2>
+                </div>
+
+                <div className="p-5 rounded-xl bg-[#12130F] border border-amber-500/30 text-amber-200/90 text-sm leading-relaxed max-w-xl mx-auto">
+                  {isAr
+                    ? (settings.customUrgencyBannerAr || settings.customUrgencyBannerEn || "نظراً لجدول أعمال المؤسس أ. نبيل والتزاماته الميدانية، تم إيقاف استقبال حجوزات جديدة لهذه الفترة. يمكنك الاستفسار ومتابعة المواعيد القادمة عبر واتساب مباشرة.")
+                    : (settings.customUrgencyBannerEn || "Founder Nabeel's private consultation schedule is temporarily closed for this cycle. Direct inquiries and upcoming priority queues remain open via WhatsApp.")}
+                </div>
+
+                <div className="pt-2">
+                  <a
+                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                      isAr
+                        ? "مرحباً، أود الاستفسار حول موعد فتح حجوزات الاستشارة الخاصة القادمة مع أ. نبيل."
+                        : "Hello, I would like to inquire about the upcoming schedule and priority waitlist for Founder Nabeel advisory sessions."
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-lg bg-[#25D366] text-[#12130F] font-mono text-xs sm:text-sm uppercase font-bold tracking-wider hover:brightness-110 transition-all shadow-lg"
+                  >
+                    <SvgWhatsApp className="w-4 h-4 fill-[#12130F]" />
+                    <span>{isAr ? "الاستفسار والحجز المسبق عبر واتساب" : "Inquire via WhatsApp Priority Line"}</span>
+                  </a>
                 </div>
               </div>
             ) : (
@@ -598,6 +751,23 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                     ))}
                   </div>
                 </div>
+
+                {/* Clear Upfront Fee & Purchase Credit Reassurance Banner (100% Dynamic from DB) */}
+                {currentStep < 4 && (
+                  <div className="mb-5 p-3 sm:p-3.5 rounded-lg bg-[#B8873B]/10 border border-[#B8873B]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#B8873B] shrink-0" />
+                      <span className="text-[#E8DFCE] font-sans">
+                        {isAr
+                          ? `سداد ${formattedFeeAr} مسبقاً لتأكيد حجز الجلسة ← يُخصم ${formattedCreditAr} كرصيد شراء عند التعاقد معنا`
+                          : `Pay ${formattedFee} upfront to reserve session ← ${formattedCredit} credited back when you buy with us`}
+                      </span>
+                    </div>
+                    <span className="font-mono text-[11px] text-emerald-400 font-bold uppercase shrink-0">
+                      {isAr ? `رصيد شراء ${formattedCreditAr}` : `${creditMultiplierLabel} Credit Upon Purchase`}
+                    </span>
+                  </div>
+                )}
 
                 {/* Step-Specific Error Alert (STRICTLY rendered ONLY if error belongs to the active step) */}
                 {stepError && stepError.step === currentStep && (
@@ -901,27 +1071,42 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                 {/* ─── STAGE 4: REVIEW & CONFIRM DEPOSIT ─── */}
                 {currentStep === 4 && (
                   <form onSubmit={handleSubmitBooking} className="space-y-4 animate-fadeIn">
-                    {/* Live Financial Breakdown */}
-                    <div className="bg-[#12130F] border border-[#B8873B]/40 rounded-xl p-4 sm:p-5 space-y-2">
+                    {/* Live Financial Breakdown (100% Dynamic from DB) */}
+                    <div className="bg-[#12130F] border border-[#B8873B]/40 rounded-xl p-4 sm:p-5 space-y-2.5">
                       <div className="flex justify-between font-mono text-xs sm:text-sm text-[#8C8477]">
-                        <span>{isAr ? "عربون الاستشارة التنفيذية" : "Executive Advisory Deposit"}</span>
-                        <span className="text-[#E8DFCE] font-bold whitespace-nowrap">{settings.currency} {settings.feeAmount.toLocaleString()}</span>
+                        <span>{isAr ? "رسوم الاستشارة (تدفع مسبقاً لتأكيد الحجز)" : "Advisory Fee (Paid upfront to confirm slot)"}</span>
+                        <span className="text-[#E8DFCE] font-bold whitespace-nowrap">{isAr ? formattedFeeAr : formattedFee}</span>
                       </div>
                       <div className="flex justify-between font-mono text-xs sm:text-sm text-emerald-400">
-                        <span>{isAr ? `قسيمة خصم معتمدة (${settings.creditMultiplier}x مضاعف)` : `Acquisition Credit (${settings.creditMultiplier}x Multiplier)`}</span>
-                        <span className="font-bold whitespace-nowrap">+{settings.currency} {creditValue.toLocaleString()}</span>
+                        <span>{isAr ? `رصيد شراء يُخصم بالكامل عند التعاقد معنا (${creditMultiplierLabel})` : `Purchase Credit (${creditMultiplierLabel} Multiplier)`}</span>
+                        <span className="font-bold whitespace-nowrap">-{isAr ? formattedCreditAr : formattedCredit}</span>
                       </div>
                       <div className="border-t border-[#B8873B]/20 pt-2 flex justify-between font-mono text-sm sm:text-base font-bold text-[#E8DFCE]">
-                        <span>{isAr ? "التكلفة الصافية عند الشراء" : "Net Cost Upon Acquisition"}</span>
-                        <span className="text-[#B8873B] whitespace-nowrap">0 {settings.currency} (100% Free)</span>
+                        <span>{isAr ? "التكلفة الصافية للاستشارة بعد الشراء" : "Net Advisory Cost Upon Property Purchase"}</span>
+                        <span className="text-[#B8873B] whitespace-nowrap">
+                          {creditValue >= settings.feeAmount
+                            ? `0 ${settings.currency} (${isAr ? "مجانية بالكامل" : "100% Free"})`
+                            : `${settings.currency} ${(settings.feeAmount - creditValue).toLocaleString()}`}
+                        </span>
                       </div>
+                      <p className="text-[11px] sm:text-xs text-[#8C8477] font-light leading-relaxed pt-1.5 border-t border-[#B8873B]/10">
+                        {isAr
+                          ? `💡 تدفع ${formattedFeeAr} الآن لتأكيد جلستك الخاصة مع المؤسس، ويتم خصم ${formattedCreditAr} بالكامل من الدفعة الأولى عند شرائك أي عقار عبر أصاهيب خلال 12 شهراً.`
+                          : `💡 You pay ${formattedFee} upfront now to reserve your founder session. The full ${formattedCredit} is deducted in full from your down payment when you purchase any property through Asaheeb within 12 months.`}
+                      </p>
                     </div>
 
                     {/* Payment Selector */}
                     <div>
-                      <label className="block font-mono text-xs uppercase tracking-wider text-[#B8873B] mb-2 font-semibold">
-                        {isAr ? "بوابة السداد الآمنة" : "Payment Instrument"}
-                      </label>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="block font-mono text-xs uppercase tracking-wider text-[#B8873B] font-semibold">
+                          {isAr ? "بوابة السداد الآمنة" : "Payment Instrument"}
+                        </label>
+                        <span className="font-mono text-[10px] text-[#8C8477] uppercase tracking-wider flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          <span>{isAr ? "سداد مشفر وآمن عبر Stripe" : "Encrypted via Stripe"}</span>
+                        </span>
+                      </div>
                       <div className="grid grid-cols-3 gap-2 sm:gap-3">
                         <button
                           type="button"
@@ -984,8 +1169,8 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                         ) : (
                           <span className="truncate">
                             {isAr
-                              ? `تأكيد وسداد ${settings.currency} ${settings.feeAmount.toLocaleString()} (مخصومة بالكامل)`
-                              : `Confirm & Pay ${settings.currency} ${settings.feeAmount.toLocaleString()} (100% Credited)`}
+                              ? `سداد ${formattedFeeAr} مسبقاً · رصيد شراء ${formattedCreditAr} عند الشراء معنا`
+                              : `Pay ${formattedFee} Upfront · ${formattedCredit} Credited When You Buy`}
                           </span>
                         )}
                       </button>
@@ -993,8 +1178,8 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
 
                     <p className="font-mono text-xs text-center text-[#8C8477] tracking-wider uppercase pt-2">
                       {isAr
-                        ? "معاملة مشفرة 256-Bit · قسيمة فورية معتمدة · تواصل المنسق خلال 60 دقيقة"
-                        : "Encrypted 256-Bit · Instant Voucher · Concierge in 60 Min"}
+                        ? "معاملة مشفرة 256-Bit · سداد رسمي عبر Stripe · قسيمة فورية معتمدة · تواصل المنسق خلال 60 دقيقة"
+                        : "Encrypted 256-Bit · Secured by Stripe · Instant Voucher · Concierge in 60 Min"}
                     </p>
                   </form>
                 )}
@@ -1051,7 +1236,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
           </div>
 
           <div className="space-y-3">
-            {CONSULTATION_FAQS.map((faq, idx) => {
+            {faqs.map((faq, idx) => {
               const isOpen = openFaqIndex === idx;
               return (
                 <div

@@ -1,12 +1,14 @@
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin, supabase } from "@/lib/supabase";
 import { DEFAULT_CONSULTATION_SETTINGS, ConsultationSettings } from "@/data/consultationConfig";
 
 export async function getLiveConsultationSettings(): Promise<ConsultationSettings> {
   try {
-    const { data, error } = await supabase
+    const client = supabaseAdmin || supabase;
+    // Query the latest settings row regardless of is_active so we know when bookings are paused!
+    const { data, error } = await client
       .from("consultation_settings")
       .select("*")
-      .eq("is_active", true)
+      .order("updated_at", { ascending: false })
       .limit(1)
       .maybeSingle();
 
@@ -17,7 +19,7 @@ export async function getLiveConsultationSettings(): Promise<ConsultationSetting
         titleAr: data.consultation_title_ar || DEFAULT_CONSULTATION_SETTINGS.titleAr,
         subtitleEn: DEFAULT_CONSULTATION_SETTINGS.subtitleEn,
         subtitleAr: DEFAULT_CONSULTATION_SETTINGS.subtitleAr,
-        feeAmount: Number(data.fee_amount) || DEFAULT_CONSULTATION_SETTINGS.feeAmount,
+        feeAmount: Number(data.fee_amount) ?? DEFAULT_CONSULTATION_SETTINGS.feeAmount,
         currency: data.currency || DEFAULT_CONSULTATION_SETTINGS.currency,
         creditMultiplier: Number(data.credit_multiplier) || DEFAULT_CONSULTATION_SETTINGS.creditMultiplier,
         weeklySlotCapacity: Number(data.weekly_slot_capacity) || DEFAULT_CONSULTATION_SETTINGS.weeklySlotCapacity,
