@@ -136,8 +136,8 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
   const [email, setEmail] = useState("");
   const [cityOrCountry, setCityOrCountry] = useState(isAr ? "المملكة العربية السعودية" : "Saudi Arabia");
 
-  // Step 4: Payment Instrument
-  const [paymentMethod, setPaymentMethod] = useState<"APPLE_PAY" | "MADA" | "CREDIT_CARD">("APPLE_PAY");
+  // Step 4: Payment Instrument (Unified Stripe Gateway)
+  const [paymentMethod, setPaymentMethod] = useState<string>("STRIPE");
 
   // Submission State
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -232,9 +232,20 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
     }
   }, [isAr]);
 
+  const totalCapacity = Math.max(1, settings.weeklySlotCapacity);
   const slotsRemaining = Math.max(0, settings.weeklySlotCapacity - settings.slotsBookedThisWeek);
+  const percentRemaining = (slotsRemaining / totalCapacity) * 100;
+  const percentBooked = Math.min(100, Math.max(0, (settings.slotsBookedThisWeek / totalCapacity) * 100));
+
   const isFullyBooked = slotsRemaining === 0;
-  const isHighUrgency = slotsRemaining <= 2 && slotsRemaining > 0;
+  // Dynamic Psychological Urgency Tiers (Prevents displaying high empty counts like "18 of 20 remaining")
+  // Tier 1 (Urgent): 0% – 20% left (or <= 2 slots left, or fully booked)
+  const isUrgentTier = isFullyBooked || percentRemaining <= 20 || slotsRemaining <= 2;
+  // Tier 2 (Medium): 20% – 60% left (velocity indication)
+  const isMediumTier = !isUrgentTier && percentRemaining <= 60;
+  // Tier 3 (Cool): 60% – 100% left (curated limited quota presentation)
+  const isCoolTier = !isUrgentTier && !isMediumTier;
+
   const creditValue = settings.feeAmount * settings.creditMultiplier;
 
   // Fully dynamic currency & credit labels strictly derived from database settings
@@ -370,25 +381,35 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
           
           {/* Status Label */}
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className={`w-2 h-2 rounded-full shrink-0 ${!settings.isActive ? "bg-amber-400" : "bg-[#B8873B] animate-pulse"}`} />
+            <span
+              className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                !settings.isActive
+                  ? "bg-amber-400"
+                  : isUrgentTier
+                  ? "bg-red-500 animate-pulse"
+                  : isMediumTier
+                  ? "bg-amber-400 animate-pulse"
+                  : "bg-[#B8873B] animate-pulse"
+              }`}
+            />
             
-            {/* Mobile View: Clean, readable 12px */}
+            {/* Mobile View: Dynamic Urgency Status */}
             <div className="sm:hidden font-mono text-xs tracking-wider uppercase text-[#D4C7B5] truncate">
               {!settings.isActive ? (
                 <span className="text-amber-400 font-bold">{isAr ? "الجلسات متوقفة مؤقتاً" : "Bookings Paused"}</span>
               ) : isFullyBooked ? (
-                <span className="text-red-400 font-bold">{isAr ? "مكتمل · حجز مسبق" : "Fully Booked · Pre-book"}</span>
-              ) : isHighUrgency ? (
-                <span className="text-[#B8873B] font-bold">{isAr ? `مقعد 1 متبقي` : `Only 1 Slot Left`}</span>
+                <span className="text-red-400 font-bold">{isAr ? "اكتملت المقاعد · حجز مسبق" : "Fully Booked · Pre-Book"}</span>
+              ) : isUrgentTier ? (
+                <span className="text-red-400 font-bold">{isAr ? `آخر ${slotsRemaining} مقاعد متبقية` : `Final ${slotsRemaining} Slots Left`}</span>
+              ) : isMediumTier ? (
+                <span className="text-amber-400 font-bold">{isAr ? "طلب استثنائي · المقاعد تنفد" : "High Demand · Fast-Filling"}</span>
               ) : (
-                <span>
-                  <strong className="text-[#B8873B]">{slotsRemaining}/{settings.weeklySlotCapacity}</strong> {isAr ? "مقاعد متاحة" : "Slots Open"}
-                </span>
+                <span className="text-[#B8873B] font-bold">{isAr ? "جدول الاستشارات متاح" : "Advisory Calendar Open"}</span>
               )}
               {settings.currentWeekCycle && <span className="text-[#8C8477] ml-1.5">· {settings.currentWeekCycle}</span>}
             </div>
 
-            {/* Desktop View: Full descriptive text */}
+            {/* Desktop View: Full descriptive psychological urgency text */}
             <div className="hidden sm:block font-mono text-xs tracking-wider uppercase text-[#D4C7B5]">
               {!settings.isActive ? (
                 <span className="text-amber-400 font-semibold">
@@ -399,47 +420,73 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
               ) : isFullyBooked ? (
                 <span className="text-red-400 font-semibold">
                   {isAr
-                    ? `اكتملت حصة هذا الأسبوع (${settings.weeklySlotCapacity}/${settings.weeklySlotCapacity}) · أولوية الحجز المسبق مفتوحة`
-                    : `Capacity Reached (${settings.weeklySlotCapacity}/${settings.weeklySlotCapacity}) · Pre-Booking Priority Active`}
+                    ? `اكتملت حصة هذا الأسبوع · أولوية الحجز المسبق مفتوحة للأسبوع القادم`
+                    : `Weekly Capacity Reached · Pre-Booking Priority Active for Next Cycle`}
                 </span>
-              ) : isHighUrgency ? (
-                <span className="text-[#B8873B] font-semibold">
+              ) : isUrgentTier ? (
+                <span className="text-red-400 font-bold">
                   {isAr
-                    ? `طلب استثنائي: متبقي مقعد واحد فقط (${settings.currentWeekCycle})`
-                    : `High Allocation: Only ${slotsRemaining} session remaining for ${settings.currentWeekCycle}`}
+                    ? `⚡ مقاعد محدودة جداً: متبقي آخر ${slotsRemaining === 1 ? "مقعد واحد" : `${slotsRemaining} مقاعد`} فقط لجدول ${settings.currentWeekCycle || "هذا الأسبوع"}`
+                    : `⚡ Critical Allocation: Final ${slotsRemaining} ${slotsRemaining === 1 ? "slot" : "slots"} remaining for ${settings.currentWeekCycle || "this week"}`}
+                </span>
+              ) : isMediumTier ? (
+                <span className="text-amber-400 font-semibold">
+                  {isAr
+                    ? `⏳ طلب استثنائي: تم حجز أكثر من ${Math.max(40, Math.floor(percentBooked))}% من جدول استشارات المؤسس (${settings.currentWeekCycle || "هذا الأسبوع"})`
+                    : `⏳ High Velocity: Over ${Math.max(40, Math.floor(percentBooked))}% of Founder schedule reserved (${settings.currentWeekCycle || "this week"})`}
                 </span>
               ) : (
                 <span>
                   <strong className="text-[#B8873B]">
                     {isAr
-                      ? `متبقي ${slotsRemaining} من أصل ${settings.weeklySlotCapacity} جلسات استشارية متاحة`
-                      : `Only ${slotsRemaining} of ${settings.weeklySlotCapacity} strategic advisory sessions remaining`}
-                  </strong>{" "}
-                  {settings.currentWeekCycle && <span className="text-[#8C8477]">· {settings.currentWeekCycle}</span>}
+                      ? `✦ حجز استثنائي: جدول الاستشارات مفتوح حالياً (${settings.currentWeekCycle || "لهذا الأسبوع"})`
+                      : `✦ Private Allocation: Founder Advisory Schedule Open (${settings.currentWeekCycle || "This Week"})`}
+                  </strong>
                 </span>
               )}
             </div>
           </div>
 
-          {/* Capsule Meter Based on Exact DB Capacity */}
-          <div className="flex items-center gap-1 shrink-0">
-            {Array.from({ length: settings.weeklySlotCapacity }).map((_, index) => {
-              const isBooked = index < settings.slotsBookedThisWeek;
-              return (
-                <div
-                  key={index}
-                  title={isBooked ? "Reserved" : "Open Allocation"}
-                  className={`w-2.5 sm:w-3.5 h-2.5 sm:h-3.5 rounded-xs transition-all duration-500 border ${
-                    isBooked
-                      ? "bg-[#B8873B]/30 border-[#B8873B]/50"
-                      : "bg-[#1F2937]/40 border-[#B8873B] shadow-[0_0_6px_rgba(184,135,59,0.3)]"
-                  }`}
-                />
-              );
-            })}
-            <span className="font-mono text-xs text-[#8C8477] ml-2 tracking-wider">
-              {settings.slotsBookedThisWeek}/{settings.weeklySlotCapacity}
-            </span>
+          {/* Dynamic Urgency Meter (Eliminates empty raw boxes that show high vacancy) */}
+          <div className="flex items-center gap-2 shrink-0">
+            {!settings.isActive ? (
+              <span className="font-mono text-[11px] text-amber-400 bg-amber-950/40 border border-amber-500/30 px-2.5 py-0.5 rounded-full uppercase">
+                {isAr ? "متوقف مؤقتاً" : "Paused"}
+              </span>
+            ) : isUrgentTier ? (
+              <div className="flex items-center gap-2">
+                <div className="w-16 sm:w-24 h-2 rounded-full bg-red-950/60 border border-red-500/50 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-red-600 to-amber-500 rounded-full animate-pulse transition-all duration-500"
+                    style={{ width: `${Math.max(85, percentBooked)}%` }}
+                  />
+                </div>
+                <span className="font-mono text-[11px] sm:text-xs text-red-400 font-bold uppercase tracking-wider">
+                  {isFullyBooked ? (isAr ? "مكتمل" : "Full") : (isAr ? "مقاعد أخيرة" : "Final Slots")}
+                </span>
+              </div>
+            ) : isMediumTier ? (
+              <div className="flex items-center gap-2">
+                <div className="w-16 sm:w-24 h-2 rounded-full bg-[#12130F] border border-amber-500/40 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#B8873B] to-amber-400 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.max(40, percentBooked)}%` }}
+                  />
+                </div>
+                <span className="font-mono text-[11px] sm:text-xs text-amber-400 font-semibold uppercase tracking-wider">
+                  {isAr ? "طلب مرتفع" : "Fast-Filling"}
+                </span>
+              </div>
+            ) : (
+              <div className="px-2.5 py-1 rounded-full bg-[#B8873B]/10 border border-[#B8873B]/30 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span className="font-mono text-[10px] sm:text-xs text-[#E8DFCE] uppercase tracking-wider">
+                  {isAr
+                    ? `حصة أسبوعية محدودة: ${settings.weeklySlotCapacity} فقط`
+                    : `Capped: ${settings.weeklySlotCapacity}/Week`}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -1096,56 +1143,71 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                       </p>
                     </div>
 
-                    {/* Payment Selector */}
+                    {/* Unified Stripe Payment Instrument */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <label className="block font-mono text-xs uppercase tracking-wider text-[#B8873B] font-semibold">
-                          {isAr ? "بوابة السداد الآمنة" : "Payment Instrument"}
+                          {isAr ? "بوابة السداد المعتمدة" : "Payment Gateway"}
                         </label>
                         <span className="font-mono text-[10px] text-[#8C8477] uppercase tracking-wider flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                           <span>{isAr ? "سداد مشفر وآمن عبر Stripe" : "Encrypted via Stripe"}</span>
                         </span>
                       </div>
-                      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod("APPLE_PAY")}
-                          className={`p-3 sm:p-4 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
-                            paymentMethod === "APPLE_PAY"
-                              ? "bg-[#B8873B]/15 border-[#B8873B] text-[#E8DFCE] shadow-md"
-                              : "bg-[#12130F] border-[#B8873B]/20 text-[#8C8477]"
-                          }`}
-                        >
-                          <SvgApple className="w-4 sm:w-5 h-4 sm:h-5 fill-current" />
-                          <span className="font-mono text-xs sm:text-sm uppercase font-bold">Apple Pay</span>
-                        </button>
 
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod("MADA")}
-                          className={`p-3 sm:p-4 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
-                            paymentMethod === "MADA"
-                              ? "bg-[#B8873B]/15 border-[#B8873B] text-[#E8DFCE] shadow-md"
-                              : "bg-[#12130F] border-[#B8873B]/20 text-[#8C8477]"
-                          }`}
-                        >
-                          <span className="font-mono text-sm sm:text-base font-bold text-[#B8873B]">mada</span>
-                          <span className="font-mono text-xs sm:text-sm uppercase font-bold">{isAr ? "مدى" : "Mada"}</span>
-                        </button>
+                      {/* Unified Stripe Gateway Container - Clean, Neutral & Un-highlighted */}
+                      <div className="p-4 sm:p-5 rounded-xl bg-[#12130F] border border-[#B8873B]/30 space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-[#B8873B]/15">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-[#B8873B]/10 border border-[#B8873B]/30 flex items-center justify-center shrink-0 text-[#B8873B]">
+                              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                              </svg>
+                            </div>
+                            <div>
+                              <div className="font-serif text-sm sm:text-base font-bold text-[#E8DFCE]">
+                                {isAr ? "الدفع الآمن عبر Stripe" : "Pay via Stripe (Secure Checkout)"}
+                              </div>
+                              <p className="text-xs text-[#8C8477] mt-0.5">
+                                {isAr
+                                  ? "ستتمكن من اختيار وسيلة الدفع داخل بوابة Stripe الرسمية"
+                                  : "Choose your preferred payment method on the official gateway"}
+                              </p>
+                            </div>
+                          </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod("CREDIT_CARD")}
-                          className={`p-3 sm:p-4 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
-                            paymentMethod === "CREDIT_CARD"
-                              ? "bg-[#B8873B]/15 border-[#B8873B] text-[#E8DFCE] shadow-md"
-                              : "bg-[#12130F] border-[#B8873B]/20 text-[#8C8477]"
-                          }`}
-                        >
-                          <SvgCard className="w-4 sm:w-5 h-4 sm:h-5 text-current" />
-                          <span className="font-mono text-xs sm:text-sm uppercase font-bold">{isAr ? "بطاقة" : "Card"}</span>
-                        </button>
+                          <div className="flex items-center gap-1.5 self-start sm:self-center font-mono text-[10px] text-emerald-400 bg-emerald-950/30 border border-emerald-500/20 px-2 py-0.5 rounded">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                            <span>256-Bit SSL</span>
+                          </div>
+                        </div>
+
+                        {/* Supported Methods (Muted & Un-highlighted, Informational Only) */}
+                        <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-[#8C8477]">
+                          <span className="font-mono text-[11px] uppercase tracking-wider text-[#A39988]">
+                            {isAr ? "الوسائل المدعومة:" : "Accepted Methods:"}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#161713] border border-white/5 text-[#D4C7B5]">
+                            <SvgApple className="w-3.5 h-3.5 fill-current" />
+                            <span className="font-mono text-xs">Apple Pay</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#161713] border border-white/5 text-[#D4C7B5]">
+                            <span className="font-mono text-xs font-bold text-[#B8873B]">mada</span>
+                            <span className="font-mono text-xs">{isAr ? "مدى" : ""}</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#161713] border border-white/5 text-[#D4C7B5]">
+                            <SvgCard className="w-3.5 h-3.5 text-current" />
+                            <span className="font-mono text-xs">{isAr ? "بطاقات مدى والائتمان" : "Debit & Credit Cards"}</span>
+                          </span>
+                        </div>
+
+                        {/* Reassurance text */}
+                        <p className="text-[11px] sm:text-xs text-[#8C8477] leading-relaxed pt-1">
+                          {isAr
+                            ? "سيتم تحويلك بأمان إلى صفحة الدفع الرسمية من Stripe لإتمام السداد عبر Apple Pay أو بطاقة مدى أو بطاقتك الائتمانية."
+                            : "You will be securely redirected to Stripe's checkout page to complete payment with Apple Pay, mada, or your Credit/Debit Card."}
+                        </p>
                       </div>
                     </div>
 
@@ -1165,12 +1227,12 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                         className="flex-1 py-3.5 px-4 sm:px-6 rounded-lg bg-[#B8873B] hover:bg-[#c99544] text-[#12130F] font-mono text-xs sm:text-sm uppercase tracking-wider font-bold shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer truncate"
                       >
                         {isSubmitting ? (
-                          <span>{isAr ? "جاري التثبيت..." : "Securing Allocation..."}</span>
+                          <span>{isAr ? "جاري التوجيه إلى Stripe..." : "Redirecting to Stripe..."}</span>
                         ) : (
                           <span className="truncate">
                             {isAr
-                              ? `سداد ${formattedFeeAr} مسبقاً · رصيد شراء ${formattedCreditAr} عند الشراء معنا`
-                              : `Pay ${formattedFee} Upfront · ${formattedCredit} Credited When You Buy`}
+                              ? `الانتقال إلى الدفع عبر Stripe · سداد ${formattedFeeAr}`
+                              : `Proceed to Stripe Checkout · Pay ${formattedFee}`}
                           </span>
                         )}
                       </button>
