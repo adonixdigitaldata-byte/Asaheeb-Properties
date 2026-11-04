@@ -1,5 +1,5 @@
 import { supabaseAdmin, supabase } from "@/lib/supabase";
-import { DEFAULT_CONSULTATION_SETTINGS, ConsultationSettings } from "@/data/consultationConfig";
+import { DEFAULT_CONSULTATION_SETTINGS, ConsultationSettings, getSaturdayToThursdayCycleString } from "@/data/consultationConfig";
 
 export async function getLiveConsultationSettings(): Promise<ConsultationSettings> {
   try {
@@ -24,7 +24,7 @@ export async function getLiveConsultationSettings(): Promise<ConsultationSetting
         creditMultiplier: Number(data.credit_multiplier) || DEFAULT_CONSULTATION_SETTINGS.creditMultiplier,
         weeklySlotCapacity: Number(data.weekly_slot_capacity) || DEFAULT_CONSULTATION_SETTINGS.weeklySlotCapacity,
         slotsBookedThisWeek: Number(data.slots_booked_this_week) || 0,
-        currentWeekCycle: data.current_week_cycle || DEFAULT_CONSULTATION_SETTINGS.currentWeekCycle,
+        currentWeekCycle: getSaturdayToThursdayCycleString(false),
         customUrgencyBannerEn: data.custom_urgency_banner_en,
         customUrgencyBannerAr: data.custom_urgency_banner_ar,
         ownerNotificationEmail: data.owner_notification_email || DEFAULT_CONSULTATION_SETTINGS.ownerNotificationEmail,

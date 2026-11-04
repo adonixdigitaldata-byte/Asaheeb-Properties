@@ -10,6 +10,7 @@ import {
   DEFAULT_CONSULTATION_SETTINGS,
   CONSULTATION_TOPICS,
   getConsultationFaqs,
+  getSaturdayToThursdayCycleString,
   ConsultationSettings,
 } from "@/data/consultationConfig";
 import { WHATSAPP_NUMBER } from "@/data/contactConfig";
@@ -112,6 +113,7 @@ interface ConsultationClientProps {
 export default function ConsultationClient({ initialSettings }: ConsultationClientProps) {
   const { lang } = useLanguage();
   const isAr = lang === "ar";
+  const dynamicCycle = getSaturdayToThursdayCycleString(isAr);
 
   // Dynamic Settings (Initialized directly from Supabase Server Component)
   const [settings, setSettings] = useState<ConsultationSettings>(
@@ -161,6 +163,28 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
 
   // Accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  // Luxury Entrance Animation & Sensory Haptic State
+  const [mounted, setMounted] = useState(false);
+
+  const triggerHaptic = (pattern: number | number[] = 15) => {
+    if (typeof window !== "undefined" && "vibrate" in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch {
+        // Silently catch unsupported devices
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Tactile arrival pulse on page load
+    triggerHaptic([15, 35, 20]);
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 40);
+    return () => clearTimeout(timer);
+  }, []);
 
   // CRITICAL FIX: Instantly clear any error whenever the active step changes
   useEffect(() => {
@@ -376,7 +400,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
       <PageNav />
 
       {/* ─── LIVE CAPACITY HEADER BANNER ─── */}
-      <div className="pt-20 sm:pt-24 pb-2.5 sm:pb-3 border-b border-[#B8873B]/20 bg-[#141511]/95 backdrop-blur-xl sticky top-0 z-40 transition-all">
+      <div className={`pt-20 sm:pt-24 pb-2.5 sm:pb-3 border-b border-[#B8873B]/20 bg-[#141511]/95 backdrop-blur-xl sticky top-0 z-40 transition-all duration-700 ease-out transform ${mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
           
           {/* Status Label */}
@@ -406,7 +430,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
               ) : (
                 <span className="text-[#B8873B] font-bold">{isAr ? "جدول الاستشارات متاح" : "Advisory Calendar Open"}</span>
               )}
-              {settings.currentWeekCycle && <span className="text-[#8C8477] ml-1.5">· {settings.currentWeekCycle}</span>}
+              <span className="text-[#8C8477] ml-1.5">· {dynamicCycle}</span>
             </div>
 
             {/* Desktop View: Full descriptive psychological urgency text */}
@@ -414,8 +438,8 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
               {!settings.isActive ? (
                 <span className="text-amber-400 font-semibold">
                   {isAr
-                    ? `حجوزات الاستشارة متوقفة مؤقتاً من الإدارة${settings.currentWeekCycle ? ` (${settings.currentWeekCycle})` : ""}`
-                    : `Advisory Bookings Temporarily Paused by Management${settings.currentWeekCycle ? ` (${settings.currentWeekCycle})` : ""}`}
+                    ? `حجوزات الاستشارة متوقفة مؤقتاً من الإدارة (${dynamicCycle})`
+                    : `Advisory Bookings Temporarily Paused by Management (${dynamicCycle})`}
                 </span>
               ) : isFullyBooked ? (
                 <span className="text-red-400 font-semibold">
@@ -426,21 +450,21 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
               ) : isUrgentTier ? (
                 <span className="text-red-400 font-bold">
                   {isAr
-                    ? `⚡ مقاعد محدودة جداً: متبقي آخر ${slotsRemaining === 1 ? "مقعد واحد" : `${slotsRemaining} مقاعد`} فقط لجدول ${settings.currentWeekCycle || "هذا الأسبوع"}`
-                    : `⚡ Critical Allocation: Final ${slotsRemaining} ${slotsRemaining === 1 ? "slot" : "slots"} remaining for ${settings.currentWeekCycle || "this week"}`}
+                    ? `⚡ مقاعد محدودة جداً: متبقي آخر ${slotsRemaining === 1 ? "مقعد واحد" : `${slotsRemaining} مقاعد`} فقط لجدول ${dynamicCycle}`
+                    : `⚡ Critical Allocation: Final ${slotsRemaining} ${slotsRemaining === 1 ? "slot" : "slots"} remaining for ${dynamicCycle}`}
                 </span>
               ) : isMediumTier ? (
                 <span className="text-amber-400 font-semibold">
                   {isAr
-                    ? `⏳ طلب استثنائي: تم حجز أكثر من ${Math.max(40, Math.floor(percentBooked))}% من جدول استشارات المؤسس (${settings.currentWeekCycle || "هذا الأسبوع"})`
-                    : `⏳ High Velocity: Over ${Math.max(40, Math.floor(percentBooked))}% of Founder schedule reserved (${settings.currentWeekCycle || "this week"})`}
+                    ? `⏳ طلب استثنائي: تم حجز أكثر من ${Math.max(40, Math.floor(percentBooked))}% من جدول استشارات المؤسس (${dynamicCycle})`
+                    : `⏳ High Velocity: Over ${Math.max(40, Math.floor(percentBooked))}% of Founder schedule reserved (${dynamicCycle})`}
                 </span>
               ) : (
                 <span>
                   <strong className="text-[#B8873B]">
                     {isAr
-                      ? `✦ حجز استثنائي: جدول الاستشارات مفتوح حالياً (${settings.currentWeekCycle || "لهذا الأسبوع"})`
-                      : `✦ Private Allocation: Founder Advisory Schedule Open (${settings.currentWeekCycle || "This Week"})`}
+                      ? `✦ حجز استثنائي: جدول الاستشارات مفتوح حالياً (${dynamicCycle})`
+                      : `✦ Private Allocation: Founder Advisory Schedule Open (${dynamicCycle})`}
                   </strong>
                 </span>
               )}
@@ -494,7 +518,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 relative z-10 pb-28 lg:pb-16">
         
         {/* ─── MOBILE-FIRST COMPACT HEADER (MOBILE ONLY) ─── */}
-        <div className="lg:hidden mb-5 space-y-2.5 text-center">
+        <div className={`lg:hidden mb-5 space-y-2.5 text-center transition-all duration-700 ease-out transform ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#B8873B]/10 border border-[#B8873B]/30 text-[#B8873B] font-mono text-xs uppercase tracking-wider">
             <SvgShield className="w-3.5 h-3.5 text-[#B8873B]" />
             <span>{isAr ? "استشارة تنفيذية خاصة · أ. نبيل" : "Executive 1-on-1 Advisory · Nabeel"}</span>
@@ -539,7 +563,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
           
           {/* LEFT COLUMN: HERO CREDIBILITY & GUARANTEE */}
-          <div className="hidden lg:block lg:col-span-5 space-y-6">
+          <div className={`hidden lg:block lg:col-span-5 space-y-6 transition-all duration-700 delay-100 ease-out transform ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#B8873B]/10 border border-[#B8873B]/30 text-[#B8873B] font-mono text-xs uppercase tracking-wider">
               <SvgShield className="w-3.5 h-3.5 text-[#B8873B]" />
               <span>{isAr ? "استشارة تنفيذية خاصة · أ. نبيل" : "Executive 1-on-1 Advisory · Nabeel"}</span>
@@ -656,7 +680,11 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
           </div>
 
           {/* RIGHT COLUMN: 4-STAGE PROGRESSIVE WIZARD */}
-          <div className="lg:col-span-7 bg-[#161712] border border-[#B8873B]/40 rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-2xl relative">
+          <div className={`lg:col-span-7 relative transition-all duration-700 delay-200 ease-out transform ${mounted ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-[0.98]"}`}>
+            {/* Ambient Breathing Gold Halo */}
+            <div className="absolute -inset-1.5 bg-gradient-to-br from-[#B8873B]/20 via-amber-500/10 to-[#B8873B]/15 rounded-2xl blur-xl opacity-75 pointer-events-none animate-pulse" />
+
+            <div className="relative bg-[#161712] border border-[#B8873B]/40 rounded-xl sm:rounded-2xl p-4 sm:p-8 shadow-2xl">
             
             {bookingResult ? (
               /* ─── SUCCESS RESULT (VOUCHER CERTIFICATE) ─── */
@@ -733,13 +761,13 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
               </div>
             ) : !settings.isActive ? (
               /* ─── PAUSED / STOPPED FROM CRM NOTICE ─── */
-              <div className="text-center space-y-6 py-8 animate-fadeIn">
-                <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/40 flex items-center justify-center mx-auto">
-                  <SvgShield className="w-7 h-7 text-amber-400" />
+              <div className="text-center space-y-6 py-8">
+                <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/40 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(245,158,11,0.25)] animate-pulse">
+                  <SvgShield className="w-8 h-8 text-amber-400" />
                 </div>
 
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-amber-400 font-bold">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-amber-400 font-bold inline-block">
                     {isAr ? "الجلسات مغلقة مؤقتاً" : "Advisory Bookings Paused"}
                   </span>
                   <h2 className="font-serif text-2xl sm:text-3xl text-[#E8DFCE] font-normal mt-2">
@@ -747,7 +775,7 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                   </h2>
                 </div>
 
-                <div className="p-5 rounded-xl bg-[#12130F] border border-amber-500/30 text-amber-200/90 text-sm leading-relaxed max-w-xl mx-auto">
+                <div className="p-5 rounded-xl bg-[#12130F] border border-amber-500/30 text-amber-200/90 text-sm leading-relaxed max-w-xl mx-auto shadow-inner">
                   {isAr
                     ? (settings.customUrgencyBannerAr || settings.customUrgencyBannerEn || "نظراً لجدول أعمال المؤسس أ. نبيل والتزاماته الميدانية، تم إيقاف استقبال حجوزات جديدة لهذه الفترة. يمكنك الاستفسار ومتابعة المواعيد القادمة عبر واتساب مباشرة.")
                     : (settings.customUrgencyBannerEn || "Founder Nabeel's private consultation schedule is temporarily closed for this cycle. Direct inquiries and upcoming priority queues remain open via WhatsApp.")}
@@ -760,9 +788,10 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
                         ? "مرحباً، أود الاستفسار حول موعد فتح حجوزات الاستشارة الخاصة القادمة مع أ. نبيل."
                         : "Hello, I would like to inquire about the upcoming schedule and priority waitlist for Founder Nabeel advisory sessions."
                     )}`}
+                    onClick={() => triggerHaptic([20, 40, 20])}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-lg bg-[#25D366] text-[#12130F] font-mono text-xs sm:text-sm uppercase font-bold tracking-wider hover:brightness-110 transition-all shadow-lg"
+                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-lg bg-[#25D366] text-[#12130F] font-mono text-xs sm:text-sm uppercase font-bold tracking-wider hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_4px_20px_rgba(37,211,102,0.35)] cursor-pointer"
                   >
                     <SvgWhatsApp className="w-4 h-4 fill-[#12130F]" />
                     <span>{isAr ? "الاستفسار والحجز المسبق عبر واتساب" : "Inquire via WhatsApp Priority Line"}</span>
@@ -1248,7 +1277,8 @@ export default function ConsultationClient({ initialSettings }: ConsultationClie
               </div>
             )}
           </div>
-        </section>
+        </div>
+      </section>
 
         {/* ─── 4 PILLARS OF ADVISORY (CUSTOM ARCHITECTURAL SVGS) ─── */}
         <section className="mb-16">

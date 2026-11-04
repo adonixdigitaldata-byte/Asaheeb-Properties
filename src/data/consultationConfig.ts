@@ -31,12 +31,19 @@ export function getSaturdayToThursdayCycleString(isAr: boolean = false): string 
   const thuDate = new Date(satDate);
   thuDate.setDate(satDate.getDate() + 5);
 
-  const satFormatted = satDate.toLocaleDateString(isAr ? "ar-SA" : "en-US", { month: "short", day: "numeric" });
-  const thuFormatted = thuDate.toLocaleDateString(isAr ? "ar-SA" : "en-US", { month: "short", day: "numeric" });
+  const satFormatted = satDate.toLocaleDateString(isAr ? "ar-SA" : "en-US", {
+    month: "short",
+    day: "numeric",
+  });
+  const thuFormatted = thuDate.toLocaleDateString(isAr ? "ar-SA" : "en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 
   return isAr
-    ? `دورة: ${satFormatted} – ${thuFormatted}`
-    : `Cycle: ${satFormatted} – ${thuFormatted}`;
+    ? `السبت ${satFormatted} – الخميس ${thuFormatted}`
+    : `Sat ${satFormatted} – Thu ${thuFormatted}`;
 }
 
 export const DEFAULT_CONSULTATION_SETTINGS: ConsultationSettings = {
