@@ -117,7 +117,7 @@ export default function PageNav() {
         {/* Logo and Nav Links */}
         <div className="flex items-center gap-1 lg:gap-2 flex-shrink-0">
           <Link href="/" className="flex items-center flex-shrink-0">
-            <div className="relative h-10 sm:h-12 lg:h-14 w-40 sm:w-48 lg:w-56 xl:w-60 overflow-hidden">
+            <div className="relative h-9 sm:h-12 lg:h-14 w-28 sm:w-48 lg:w-56 xl:w-60 overflow-hidden">
               <Image
                 src="/images/asaheeb-horizontal-logo.webp"
                 alt="Asaheeb Real Estate"
@@ -361,14 +361,14 @@ export default function PageNav() {
           </div>
         </div>
 
-        {/* Right actions: Language Switch, Invest Now, and Hamburger (Compulsory on Mobile & Desktop) */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
+        {/* Right actions: Language Switch, Book Advisory, and Hamburger (Compulsory on Mobile & Desktop) */}
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           {/* Language toggle */}
           <button
             onClick={toggleLanguage}
-            className="flex-shrink-0 font-mono text-[9px] sm:text-[10px] xl:text-[11px] tracking-[0.1em] sm:tracking-[0.14em] uppercase px-2 sm:px-2.5 py-1.5 rounded-full border border-[#B8873B]/50 hover:bg-[#B8873B] hover:text-[#12130F] text-[#E8DFCE] transition-all duration-300 cursor-pointer flex items-center gap-1 shadow-sm whitespace-nowrap"
+            className="flex-shrink-0 font-mono text-[8.5px] sm:text-[10px] xl:text-[11px] tracking-[0.06em] sm:tracking-[0.14em] uppercase px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full border border-[#B8873B]/50 hover:bg-[#B8873B] hover:text-[#12130F] text-[#E8DFCE] transition-all duration-300 cursor-pointer flex items-center gap-1 shadow-sm whitespace-nowrap"
           >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
               <circle cx="12" cy="12" r="10" />
               <line x1="2" y1="12" x2="22" y2="12" />
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -389,22 +389,28 @@ export default function PageNav() {
             <span>{isAr ? "واتساب" : "WhatsApp"}</span>
           </a>
 
-          {/* Invest Now CTA Button */}
+          {/* Book Advisory CTA Button */}
           <Link
-            href="/contact"
-            className="flex-shrink-0 font-mono text-[9px] sm:text-[10px] xl:text-[11px] tracking-[0.1em] sm:tracking-[0.14em] uppercase px-2.5 sm:px-3.5 py-1.5 sm:py-2 border text-[#E8DFCE] hover:text-[#12130F] hover:bg-[#B8873B] transition-all duration-300 font-medium whitespace-nowrap shadow-sm"
+            href="/consultation"
+            className="flex-shrink-0 font-mono text-[8.5px] sm:text-[10px] xl:text-[11px] tracking-[0.05em] sm:tracking-[0.14em] uppercase px-2 sm:px-3.5 py-1 sm:py-2 border text-[#E8DFCE] hover:text-[#12130F] hover:bg-[#B8873B] transition-all duration-300 font-medium whitespace-nowrap shadow-sm flex items-center gap-1 sm:gap-1.5"
             style={{ borderColor: "rgba(184,135,59,0.45)" }}
           >
-            {t.investNow}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 hidden min-[400px]:block">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            <span>{t.bookAdvisory || (isAr ? "احجز استشارة" : "Book Advisory")}</span>
           </Link>
 
           {/* Mobile Hamburger Menu Icon */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 border border-[#B8873B]/30 rounded text-[#E8DFCE] hover:text-[#B8873B] transition-colors focus:outline-none"
+            className="md:hidden p-1 sm:p-1.5 border border-[#B8873B]/30 rounded text-[#E8DFCE] hover:text-[#B8873B] transition-colors focus:outline-none flex-shrink-0"
             aria-label="Toggle menu"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="sm:w-5 sm:h-5 shrink-0">
               {mobileMenuOpen ? (
                 <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
               ) : (
@@ -579,11 +585,17 @@ export default function PageNav() {
               <span>{isAr ? "محادثة واتساب مباشرة" : "Chat on WhatsApp"}</span>
             </a>
             <Link
-              href="/contact"
+              href="/consultation"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3 px-4 rounded bg-[#B8873B] text-[#0D0E0B] font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center shadow-md"
+              className="w-full py-3 px-4 rounded bg-[#B8873B] text-[#0D0E0B] font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-md"
             >
-              {t.investNow}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>{t.bookAdvisory || (isAr ? "احجز استشارة" : "Book Advisory")}</span>
             </Link>
           </div>
         </div>

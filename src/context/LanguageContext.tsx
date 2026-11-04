@@ -9,6 +9,7 @@ export const translations = {
     // Nav & Common
     brandName: "ASAHEEB REAL ESTATE",
     investNow: "Invest Now",
+    bookAdvisory: "Book Advisory",
     switchLang: "عربي",
     scrollExplore: "Scroll to Explore",
     
@@ -169,6 +170,7 @@ export const translations = {
     // Nav & Common
     brandName: "أصاهيب العقارية",
     investNow: "استثمر الآن",
+    bookAdvisory: "احجز استشارة",
     switchLang: "English",
     scrollExplore: "تمرير للتصفح",
 
