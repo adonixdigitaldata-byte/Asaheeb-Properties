@@ -96,8 +96,7 @@ function PostCard({ post, isAr, readMore }: {
               >
                 {isAr ? post.categoryAr : post.categoryEn}
               </span>
-              <span className="font-mono text-[9px] text-[#C5BCAD]">{isAr ? post.dateAr : post.date}</span>
-              <span className="font-mono text-[9px] text-[#C5BCAD]/80">• {isAr ? post.readTimeAr : post.readTime}</span>
+              <span className="font-mono text-[9px] text-[#C5BCAD]/80">{isAr ? post.readTimeAr : post.readTime}</span>
             </div>
 
             <h3 className="font-display text-xl text-[#E8DFCE] mb-3 leading-snug tracking-tight group-hover:text-[#B8873B] transition-colors duration-300">
@@ -271,8 +270,7 @@ export default function BlogClient({
                     <span className="font-mono text-[9px] tracking-[0.25em] uppercase px-3 py-1 font-medium" style={{ color: "#B8873B", border: "1px solid rgba(184,135,59,0.3)", backgroundColor: "rgba(184,135,59,0.1)" }}>
                       {isAr ? featuredPost.categoryAr : featuredPost.categoryEn}
                     </span>
-                    <span className="font-mono text-[9px] text-[#C5BCAD]">{isAr ? featuredPost.dateAr : featuredPost.date}</span>
-                    <span className="font-mono text-[9px] text-[#C5BCAD]">• {isAr ? featuredPost.readTimeAr : featuredPost.readTime}</span>
+                    <span className="font-mono text-[9px] text-[#C5BCAD]">{isAr ? featuredPost.readTimeAr : featuredPost.readTime}</span>
                   </div>
 
                   <h2 className="font-display text-2xl sm:text-4xl text-[#E8DFCE] mb-4 leading-snug max-w-3xl group-hover:text-[#B8873B] transition-colors duration-300">

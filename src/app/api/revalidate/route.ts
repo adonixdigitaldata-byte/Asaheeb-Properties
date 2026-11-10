@@ -40,6 +40,10 @@ export async function GET(request: NextRequest) {
       revalidatePath("/projects");
       revalidatePath("/");
     }
+    if (path.startsWith("/blog")) {
+      revalidatePath("/blog");
+      revalidatePath("/sitemap.xml");
+    }
 
     return NextResponse.json({
       revalidated: true,

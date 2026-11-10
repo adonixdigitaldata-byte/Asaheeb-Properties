@@ -147,7 +147,6 @@ export default function BlogCtaSection() {
                     >
                       {isAr ? post.categoryAr : post.categoryEn}
                     </span>
-                    <span className="font-mono text-[8.5px] text-[#8C8477]">{isAr ? post.dateAr : post.date}</span>
                   </div>
 
                   <h3 className="font-display text-xl text-[#E8DFCE] mb-4 leading-snug tracking-tight group-hover:text-[#B8873B] transition-colors duration-300">
