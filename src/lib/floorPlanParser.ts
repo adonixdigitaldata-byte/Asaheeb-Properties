@@ -169,25 +169,70 @@ export function parseFloorPlan(plan: any, idx: number): ParsedFloorPlan {
   if (beds !== undefined && beds !== null) beds = stripEmojis(String(beds)).trim();
   if (baths !== undefined && baths !== null) baths = stripEmojis(String(baths)).trim();
 
-  // 5. Starting price
-  const rawPrice = plan.starting_price || plan.startingPrice || plan.startingPriceEn || plan.starting_price_en;
-  let startingPriceEn = "";
-  let startingPriceAr = "";
-  if (rawPrice) {
-    const strPrice = String(rawPrice).trim();
-    if (strPrice.startsWith("SAR") || strPrice.includes("SAR") || strPrice.includes("ر.س")) {
-      startingPriceEn = strPrice;
-      startingPriceAr = strPrice;
-    } else {
-      const numeric = Number(strPrice.replace(/[^0-9]/g, ""));
-      if (!isNaN(numeric) && numeric > 0) {
-        const formattedNum = String(Math.floor(numeric)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        startingPriceEn = `SAR ${formattedNum}`;
-        startingPriceAr = `${formattedNum} ر.س`;
-      } else {
-        startingPriceEn = strPrice;
-        startingPriceAr = strPrice;
+  // 5. Starting price - preserve exact text/ranges from database and CRM,
+  // and automatically show SAR / ر.س if omitted by admin, skipping if already present.
+  const rawPriceEn =
+    plan.starting_price_en ??
+    plan.startingPriceEn ??
+    plan.starting_price ??
+    plan.startingPrice;
+
+  const rawPriceAr =
+    plan.starting_price_ar ??
+    plan.startingPriceAr ??
+    rawPriceEn;
+
+  const hasCurrencyIndicator = (str: string): boolean => {
+    return /\b(SAR|SR|AED|USD|EUR|GBP)\b|ر\.س|ريال|[$€£]/i.test(str);
+  };
+
+  const hasDigits = (str: string): boolean => {
+    return /[\d\u0660-\u0669]/.test(str);
+  };
+
+  const formatPriceField = (val: any): string => {
+    if (val === undefined || val === null) return "";
+    const str = String(val).trim();
+    if (!str) return "";
+    // Only format if the value is a pure integer string without formatting (e.g. "582000")
+    if (/^\d+$/.test(str)) {
+      const num = Number(str);
+      if (!isNaN(num) && num > 0) {
+        return String(Math.floor(num)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
+    }
+    return str;
+  };
+
+  const basePriceEn = formatPriceField(rawPriceEn);
+  const basePriceAr = formatPriceField(rawPriceAr);
+
+  const attachCurrencyEn = (str: string): string => {
+    if (!str || !hasDigits(str) || hasCurrencyIndicator(str)) {
+      return str;
+    }
+    if (/^((?:starting\s+)?from\s+)/i.test(str)) {
+      return str.replace(/^((?:starting\s+)?from\s+)/i, (m) => `${m}SAR `);
+    }
+    return `SAR ${str}`;
+  };
+
+  const attachCurrencyAr = (str: string): string => {
+    if (!str || !hasDigits(str) || hasCurrencyIndicator(str)) {
+      return str;
+    }
+    return `${str} ر.س`;
+  };
+
+  const startingPriceEn = attachCurrencyEn(basePriceEn);
+  let startingPriceAr = attachCurrencyAr(basePriceAr);
+
+  // If no explicit Arabic price was provided, adapt currency if English string had SAR
+  if (!plan.starting_price_ar && !plan.startingPriceAr && basePriceEn) {
+    if (/^SAR\s+/i.test(basePriceEn)) {
+      startingPriceAr = `${basePriceEn.replace(/^SAR\s+/i, "")} ر.س`;
+    } else if (/\s*SAR$/i.test(basePriceEn)) {
+      startingPriceAr = `${basePriceEn.replace(/\s*SAR$/i, "")} ر.س`;
     }
   }
 

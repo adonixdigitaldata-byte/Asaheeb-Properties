@@ -56,6 +56,10 @@ export interface FloorPlanItem {
   featuresAr?: string[];
   startingPriceEn?: string;
   startingPriceAr?: string;
+  starting_price?: string | number;
+  starting_price_en?: string;
+  starting_price_ar?: string;
+  startingPrice?: string | number;
   sortOrder?: number;
 }
 

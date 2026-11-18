@@ -1184,11 +1184,11 @@ export function ProjectDetailView({
                     {/* 5. Bottom Price & Action Buttons */}
                     <div className="pt-3 border-t border-white/10 mt-2">
                       {(isAr ? plan.startingPriceAr : plan.startingPriceEn) && (
-                        <div className={`flex items-baseline justify-between mb-2.5 ${isAr ? "flex-row-reverse" : ""}`}>
-                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#A89F91]">
+                        <div className={`flex items-baseline justify-between gap-2 mb-2.5 ${isAr ? "flex-row-reverse" : ""}`}>
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#A89F91] shrink-0">
                             {isAr ? "السعر" : "Price"}
                           </span>
-                          <span className="font-sans text-lg sm:text-xl font-extrabold text-[#E2B768] tracking-tight">
+                          <span className="font-sans text-base sm:text-lg font-extrabold text-[#E2B768] tracking-tight text-right rtl:text-left break-words">
                             {isAr ? plan.startingPriceAr : plan.startingPriceEn}
                           </span>
                         </div>
